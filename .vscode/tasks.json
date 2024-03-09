@@ -2,11 +2,11 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "tauri:dev",
-			"group": "build",
+			"type": "shell",
+			"command": "pnpm tauri dev",
 			"problemMatcher": [],
-			"label": "npm: tauri:dev",
+			"label": "tauri:dev",
+			"group": "build"
 		}
 	]
 }
