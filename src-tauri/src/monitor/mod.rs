@@ -26,6 +26,15 @@ impl NetworkSpeed {
     }
 }
 
+fn bytes_to_string(bytes: u64) -> String {
+    match bytes {
+        0..=1023 => format!("{} B", bytes),
+        1024..=1_048_575 => format!("{:.2} KB", bytes as f64 / 1024.0),
+        1_048_576..=1_073_741_824 => format!("{:.2} MB", bytes as f64 / 1024.0 / 1024.0),
+        _ => format!("{:.2} GB", bytes as f64 / 1024.0 / 1024.0 / 1024.0),
+    }
+}
+
 async fn monitor_system(target_window: tauri::Window) {
     let mut speed = NetworkSpeed::new();
 
@@ -44,11 +53,24 @@ async fn monitor_system(target_window: tauri::Window) {
         }
         networks.refresh();
         speed.update(bytes_received, bytes_sent);
-        let emitting_result = target_window.emit("network-info", speed.clone());
-        match emitting_result {
-            Ok(_) => (),
-            Err(e) => println!("Error emitting: {}", e),
+        if (target_window.is_visible().unwrap()) {
+            let emitting_result = target_window.emit("network-info", speed.clone());
+            match emitting_result {
+                Ok(_) => (),
+                Err(e) => println!("Error emitting: {}", e),
+            }
         }
+
+        target_window
+            .app_handle()
+            .tray()
+            .unwrap()
+            .set_title(Some(&format!(
+                "D: {} U: {}",
+                bytes_to_string(speed.received_bytes),
+                bytes_to_string(speed.sent_bytes),
+            )))
+            .unwrap();
 
         tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
     }
