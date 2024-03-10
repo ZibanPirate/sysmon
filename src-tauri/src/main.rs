@@ -4,6 +4,7 @@
 mod monitor;
 use monitor::register_monitor_for_window;
 use tauri::{LogicalSize, WebviewWindowBuilder};
+use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
 
@@ -17,6 +18,10 @@ fn resize(window: tauri::Window, width: f64, height: f64) {
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_autostart::init(
+            MacosLauncher::LaunchAgent,
+            None,
+        ))
         .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())
@@ -28,6 +33,15 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![resize])
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
+            let autostart_manager = app.autolaunch();
+            // Enable autostart
+            let _ = autostart_manager.enable();
+            // Check enable state
+            println!(
+                "registered for autostart? {}",
+                autostart_manager.is_enabled().unwrap()
+            );
 
             let widget_window_builder = WebviewWindowBuilder::new(
                 app,
