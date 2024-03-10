@@ -5,20 +5,23 @@ use tauri::Manager;
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 struct NetworkSpeed {
-    packets: u64,
+    received_bytes: u64,
+    sent_bytes: u64,
     utc_timestamp: u64,
 }
 
 impl NetworkSpeed {
     fn new() -> NetworkSpeed {
         NetworkSpeed {
-            packets: 0,
+            received_bytes: 0,
+            sent_bytes: 0,
             utc_timestamp: chrono::Utc::now().timestamp_millis() as u64,
         }
     }
 
-    fn update(&mut self, packets_per_second: u64) {
-        self.packets = packets_per_second;
+    fn update(&mut self, received_bytes: u64, sent_bytes: u64) {
+        self.received_bytes = received_bytes;
+        self.sent_bytes = sent_bytes;
         self.utc_timestamp = chrono::Utc::now().timestamp_millis() as u64;
     }
 }
@@ -34,11 +37,13 @@ async fn monitor_system(target_window: tauri::Window) {
     networks.refresh();
     loop {
         let mut bytes_received = 0;
+        let mut bytes_sent = 0;
         for (_, network) in &networks {
             bytes_received += network.received();
+            bytes_sent += network.transmitted();
         }
         networks.refresh();
-        speed.update(bytes_received);
+        speed.update(bytes_received, bytes_sent);
         let emitting_result = target_window.emit("network-info", speed.clone());
         match emitting_result {
             Ok(_) => (),

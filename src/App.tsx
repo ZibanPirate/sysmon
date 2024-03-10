@@ -7,7 +7,8 @@ import { Chart } from "react-charts";
 import debounce from "lodash/debounce";
 
 type NetworkSpeed = {
-  packets: number;
+  receivedBytes: number;
+  sentBytes: number;
   utcTimestamp: number;
 };
 
@@ -21,7 +22,7 @@ listen("network-info", (...args) => callback(...args)).catch((err) => {
 
 type Series = {
   label: string;
-  data: NetworkSpeed[];
+  data: Array<Pick<NetworkSpeed, "utcTimestamp"> & { speed: number }>;
 };
 
 let resizeTriggerDebounced = debounce(() => {
@@ -57,7 +58,8 @@ try {
 
 function App() {
   const [speed, setSpeed] = useState<NetworkSpeed>({
-    packets: 0,
+    receivedBytes: 0,
+    sentBytes: 0,
     utcTimestamp: new Date().getTime(),
   });
   const [last_speeds, setLastSpeeds] = useState<NetworkSpeed[]>(
@@ -81,7 +83,23 @@ function App() {
   }, []);
 
   const data = useMemo(
-    () => [{ label: "Network Speed", data: last_speeds }] satisfies Series[],
+    () =>
+      [
+        {
+          label: "Download Speed",
+          data: last_speeds.map(({ utcTimestamp, receivedBytes }) => ({
+            utcTimestamp,
+            speed: -receivedBytes,
+          })),
+        },
+        {
+          label: "Upload Speed",
+          data: last_speeds.map(({ utcTimestamp, sentBytes }) => ({
+            utcTimestamp,
+            speed: -sentBytes,
+          })),
+        },
+      ] satisfies Series[],
     [last_speeds]
   );
 
@@ -103,20 +121,21 @@ function App() {
               : undefined,
             show: false,
           },
+          defaultColors: ["#09f9", "#f099"],
           secondaryAxes: [
             {
-              getValue: (datum) => datum.packets,
+              getValue: (datum) => datum.speed,
               scaleType: "linear",
               showGrid: false,
-              formatters: {
-                scale: () => "",
-              },
+              formatters: { scale: () => "" },
               show: false,
+              stacked: true,
             },
           ],
           primaryCursor: { show: false },
           secondaryCursor: { show: false },
           tooltip: { show: false },
+          padding: 0,
         }}
       />
     </div>
