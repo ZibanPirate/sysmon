@@ -8,15 +8,14 @@
     "beforeBuildCommand": "pnpm build",
     "frontendDist": "../dist"
   },
-  "app": {"windows": [
-      {
-        "title": "sysmon",
-        "width": 800,
-        "height": 600
-      }
-    ],
+  "app": {
+    "macOSPrivateApi": true,
+    "windows": [],
     "security": {
       "csp": null
+    },
+    "trayIcon": {
+      "iconPath": "icons/32x32.png"
     }
   },
   "bundle": {
