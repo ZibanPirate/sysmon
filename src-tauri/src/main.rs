@@ -16,6 +16,8 @@ fn main() {
         .plugin(tauri_plugin_positioner::init())
         .invoke_handler(tauri::generate_handler![close])
         .setup(|app| {
+            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
             let widget_window_builder = WebviewWindowBuilder::new(
                 app,
                 "widget",
