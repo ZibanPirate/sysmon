@@ -3,14 +3,15 @@
 
 mod monitor;
 use monitor::register_monitor_for_window;
-use tauri::WebviewWindowBuilder;
+use tauri::{LogicalSize, WebviewWindowBuilder};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn close(window: tauri::Window) {
-    window.close().unwrap();
+fn resize(window: tauri::Window, width: f64, height: f64) {
+    window.set_size(LogicalSize::new(width, height)).unwrap();
+    window.move_window(Position::TopRight).unwrap();
 }
 
 #[tokio::main]
@@ -24,7 +25,7 @@ async fn main() {
                 .targets([Target::new(TargetKind::Stdout)])
                 .build(),
         )
-        .invoke_handler(tauri::generate_handler![close])
+        .invoke_handler(tauri::generate_handler![resize])
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
@@ -39,6 +40,8 @@ async fn main() {
                 .transparent(true)
                 .always_on_top(true)
                 .skip_taskbar(true)
+                .inner_size(200.0, 50.0)
+                .shadow(false)
                 .title_bar_style(tauri::TitleBarStyle::Transparent);
 
             let widget_window = widget_window_builder.build()?;
@@ -47,6 +50,14 @@ async fn main() {
                 .window()
                 .move_window(Position::TopRight)
                 .unwrap();
+
+            widget_window.set_ignore_cursor_events(true).unwrap();
+
+            widget_window.on_window_event(|event| {
+                println!("{:?}", event);
+            });
+
+            // widget_window.open_devtools();
 
             register_monitor_for_window(widget_window.as_ref().window());
 

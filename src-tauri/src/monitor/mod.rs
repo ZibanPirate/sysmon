@@ -2,22 +2,23 @@ use serde::Serialize;
 use tauri::Manager;
 
 #[derive(Debug, Serialize, Clone)]
+#[serde(rename_all = "camelCase")]
 struct NetworkSpeed {
-    packets_per_second: u32,
+    packets: u32,
     utc_timestamp: u64,
 }
 
 impl NetworkSpeed {
     fn new() -> NetworkSpeed {
         NetworkSpeed {
-            packets_per_second: 0,
-            utc_timestamp: 0,
+            packets: 0,
+            utc_timestamp: chrono::Utc::now().timestamp_millis() as u64,
         }
     }
 
     fn update(&mut self, packets_per_second: u32) {
-        self.packets_per_second = packets_per_second;
-        self.utc_timestamp = chrono::Utc::now().timestamp() as u64;
+        self.packets = packets_per_second;
+        self.utc_timestamp = chrono::Utc::now().timestamp_millis() as u64;
     }
 }
 
@@ -32,8 +33,8 @@ async fn monitor_system(target_window: tauri::Window) {
             Err(e) => println!("Error emitting: {}", e),
         }
 
-        tokio::time::sleep(tokio::time::Duration::from_secs(1)).await;
-        index += 1;
+        tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
+        index = rand::random::<u32>() % 100;
     }
 }
 

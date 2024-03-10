@@ -3292,6 +3292,7 @@ name = "sysmon"
 version = "0.0.0"
 dependencies = [
  "chrono",
+ "rand 0.8.5",
  "serde",
  "serde_json",
  "tauri",
