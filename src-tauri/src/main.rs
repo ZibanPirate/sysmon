@@ -3,7 +3,10 @@
 
 mod monitor;
 use monitor::register_monitor_for_window;
-use tauri::{LogicalSize, WebviewWindowBuilder};
+use tauri::{
+    menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, MenuItemBuilder, SubmenuBuilder},
+    LogicalSize, Manager, WebviewWindowBuilder,
+};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -35,9 +38,8 @@ async fn main() {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             let autostart_manager = app.autolaunch();
-            // Enable autostart
+            #[cfg(not(debug_assertions))]
             let _ = autostart_manager.enable();
-            // Check enable state
             println!(
                 "registered for autostart? {}",
                 autostart_manager.is_enabled().unwrap()
@@ -75,17 +77,71 @@ async fn main() {
 
             register_monitor_for_window(widget_window.as_ref().window());
 
-            app.on_tray_icon_event(move |_, _| match widget_window.is_visible().unwrap() {
-                true => widget_window.hide().unwrap(),
-                false => {
-                    widget_window
-                        .as_ref()
-                        .window()
-                        .move_window(Position::TopRight)
-                        .unwrap();
-                    widget_window.show().unwrap();
-                }
-            });
+            app.tray().unwrap().set_menu(Some(
+                MenuBuilder::new(app)
+                    .items(&[
+                        &CheckMenuItemBuilder::new("Show Widget")
+                            .id("show-widget")
+                            .build(app)
+                            .unwrap(),
+                        &SubmenuBuilder::new(app, "Position")
+                            .items(&[
+                                &MenuItemBuilder::new("Top-Right")
+                                    .enabled(false)
+                                    .build(app)
+                                    .unwrap(),
+                                &MenuItemBuilder::new("Top-Left")
+                                    .enabled(false)
+                                    .build(app)
+                                    .unwrap(),
+                                &MenuItemBuilder::new("Bottom-Right")
+                                    .enabled(false)
+                                    .build(app)
+                                    .unwrap(),
+                                &MenuItemBuilder::new("Bottom-Left")
+                                    .enabled(false)
+                                    .build(app)
+                                    .unwrap(),
+                            ])
+                            .build()
+                            .unwrap(),
+                    ])
+                    .separator()
+                    .quit()
+                    .separator()
+                    .about(None)
+                    .build()?,
+            ))?;
+
+            app.tray()
+                .unwrap()
+                .on_menu_event(move |app, event| match event {
+                    MenuEvent { id, .. } => match id.as_ref() {
+                        "show-widget" => {
+                            let webviews = app.webview_windows();
+                            let widget_window = webviews.get("widget").unwrap();
+
+                            match widget_window.is_visible().unwrap() {
+                                true => widget_window.hide().unwrap(),
+                                false => {
+                                    widget_window
+                                        .as_ref()
+                                        .window()
+                                        .move_window(Position::TopRight)
+                                        .unwrap();
+                                    widget_window.show().unwrap();
+                                }
+                            }
+                        }
+                        _ => {
+                            println!("tray icon event: {:?}", id);
+                        }
+                    },
+
+                    _ => {
+                        println!("tray icon event: {:?}", event);
+                    }
+                });
 
             Ok(())
         })
