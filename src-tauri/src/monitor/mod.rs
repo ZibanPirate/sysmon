@@ -1,3 +1,4 @@
+use pcap::Device;
 use serde::Serialize;
 use tauri::Manager;
 
@@ -24,9 +25,14 @@ impl NetworkSpeed {
 
 async fn monitor_system(target_window: tauri::Window) {
     let mut speed = NetworkSpeed::new();
-    let mut index = 0;
+
+    let mut cap = Device::lookup().unwrap().unwrap().open().unwrap();
+    let mut last_packet_count = 0;
+
     loop {
-        speed.update(index);
+        let packet_count = cap.stats().unwrap().received;
+        speed.update(packet_count - last_packet_count);
+        last_packet_count = packet_count;
         let emitting_result = target_window.emit("network-info", speed.clone());
         match emitting_result {
             Ok(_) => (),
@@ -34,7 +40,6 @@ async fn monitor_system(target_window: tauri::Window) {
         }
 
         tokio::time::sleep(tokio::time::Duration::from_millis(1000)).await;
-        index = rand::random::<u32>() % 100;
     }
 }
 

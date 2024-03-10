@@ -15,11 +15,9 @@ let callback: EventCallback<unknown> = (_event) => {
   // info(JSON.stringify(_event, null, 2));
 };
 
-try {
-  await listen("network-info", (...args) => callback(...args));
-} catch (err) {
+listen("network-info", (...args) => callback(...args)).catch((err) => {
   error(String(err));
-}
+});
 
 type Series = {
   label: string;
@@ -39,18 +37,36 @@ let resizeTriggerDebounced = debounce(() => {
   }, 1000);
 }, 2000);
 
-// observe body and trigger resize event
 let observer = new ResizeObserver(resizeTriggerDebounced);
 observer.observe(document.body);
+
+let lastSpeedsFromLocalStorage: NetworkSpeed[];
+try {
+  lastSpeedsFromLocalStorage = JSON.parse(
+    localStorage.getItem("lastSpeeds") || "[]"
+  );
+
+  let now = new Date().getTime();
+  lastSpeedsFromLocalStorage = lastSpeedsFromLocalStorage.filter(
+    (speed) => now - speed.utcTimestamp < 60 * 1000
+  );
+} catch (err) {
+  lastSpeedsFromLocalStorage = [];
+  error(String(err));
+}
 
 function App() {
   const [speed, setSpeed] = useState<NetworkSpeed>({
     packets: 0,
     utcTimestamp: new Date().getTime(),
   });
-  const [last_speeds, setLastSpeeds] = useState<NetworkSpeed[]>([]);
+  const [last_speeds, setLastSpeeds] = useState<NetworkSpeed[]>(
+    lastSpeedsFromLocalStorage
+  );
   useEffect(() => {
-    setLastSpeeds([...last_speeds, speed].slice(-20));
+    let newLastSpeeds = [...last_speeds, speed].slice(-60);
+    localStorage.setItem("lastSpeeds", JSON.stringify(newLastSpeeds));
+    setLastSpeeds(newLastSpeeds);
   }, [speed]);
 
   useEffect(() => {
@@ -82,6 +98,9 @@ function App() {
             formatters: {
               scale: () => "",
             },
+            min: data[0]?.data[0]?.utcTimestamp
+              ? new Date(data[0]?.data[0]?.utcTimestamp)
+              : undefined,
             show: false,
           },
           secondaryAxes: [
@@ -95,7 +114,6 @@ function App() {
               show: false,
             },
           ],
-          dark: true,
           primaryCursor: { show: false },
           secondaryCursor: { show: false },
           tooltip: { show: false },

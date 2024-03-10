@@ -3,7 +3,7 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"command": "pnpm tauri dev",
+			"command": "sudo pnpm tauri dev",
 			"problemMatcher": [],
 			"label": "tauri:dev",
 			"group": "build"
