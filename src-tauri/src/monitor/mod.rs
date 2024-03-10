@@ -1,11 +1,11 @@
-use pcap::Device;
 use serde::Serialize;
+use sysinfo::Networks;
 use tauri::Manager;
 
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
 struct NetworkSpeed {
-    packets: u32,
+    packets: u64,
     utc_timestamp: u64,
 }
 
@@ -17,7 +17,7 @@ impl NetworkSpeed {
         }
     }
 
-    fn update(&mut self, packets_per_second: u32) {
+    fn update(&mut self, packets_per_second: u64) {
         self.packets = packets_per_second;
         self.utc_timestamp = chrono::Utc::now().timestamp_millis() as u64;
     }
@@ -26,13 +26,19 @@ impl NetworkSpeed {
 async fn monitor_system(target_window: tauri::Window) {
     let mut speed = NetworkSpeed::new();
 
-    let mut cap = Device::lookup().unwrap().unwrap().open().unwrap();
-    let mut last_packet_count = 0;
+    let mut networks = Networks::new_with_refreshed_list();
+    for (interface_name, network) in &networks {
+        println!("[{interface_name}]: {network:?}");
+    }
 
+    networks.refresh();
     loop {
-        let packet_count = cap.stats().unwrap().received;
-        speed.update(packet_count - last_packet_count);
-        last_packet_count = packet_count;
+        let mut bytes_received = 0;
+        for (_, network) in &networks {
+            bytes_received += network.received();
+        }
+        networks.refresh();
+        speed.update(bytes_received);
         let emitting_result = target_window.emit("network-info", speed.clone());
         match emitting_result {
             Ok(_) => (),
