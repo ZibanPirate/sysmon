@@ -1,7 +1,10 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+mod monitor;
+use monitor::register_monitor_for_window;
 use tauri::WebviewWindowBuilder;
+use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -13,8 +16,14 @@ fn close(window: tauri::Window) {
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_log::Builder::new().build())
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())
+        .plugin(
+            tauri_plugin_log::Builder::new()
+                .targets([Target::new(TargetKind::Stdout)])
+                .build(),
+        )
         .invoke_handler(tauri::generate_handler![close])
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
@@ -38,6 +47,8 @@ async fn main() {
                 .window()
                 .move_window(Position::TopRight)
                 .unwrap();
+
+            register_monitor_for_window(widget_window.as_ref().window());
 
             app.on_tray_icon_event(move |_, _| match widget_window.is_visible().unwrap() {
                 true => widget_window.hide().unwrap(),

@@ -10,7 +10,6 @@
   },
   "app": {
     "macOSPrivateApi": true,
-    "windows": [],
     "security": {
       "csp": null
     },
