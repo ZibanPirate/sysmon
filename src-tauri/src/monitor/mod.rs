@@ -53,7 +53,7 @@ async fn monitor_system(target_window: tauri::Window) {
         }
         networks.refresh();
         speed.update(bytes_received, bytes_sent);
-        if (target_window.is_visible().unwrap()) {
+        if target_window.is_visible().unwrap() {
             let emitting_result = target_window.emit("network-info", speed.clone());
             match emitting_result {
                 Ok(_) => (),

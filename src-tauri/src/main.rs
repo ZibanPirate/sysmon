@@ -137,10 +137,6 @@ async fn main() {
                             println!("tray icon event: {:?}", id);
                         }
                     },
-
-                    _ => {
-                        println!("tray icon event: {:?}", event);
-                    }
                 });
 
             Ok(())
