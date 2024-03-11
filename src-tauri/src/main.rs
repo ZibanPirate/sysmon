@@ -38,7 +38,6 @@ async fn main() {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             let autostart_manager = app.autolaunch();
-            #[cfg(not(debug_assertions))]
             let _ = autostart_manager.enable();
             println!(
                 "registered for autostart? {}",
