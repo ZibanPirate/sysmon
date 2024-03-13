@@ -1,6 +1,6 @@
 {
   "productName": "sysmon",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "identifier": "com.zak-man.sysmon",
   "build": {
     "beforeDevCommand": "pnpm dev",
