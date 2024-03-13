@@ -27,5 +27,13 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": [],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk1QThENzMzRkY0QTAzRjkKUldUNUEwci9NOWVvbGJMeHQvZlJhT1hYZ2pFbndDVFhsSldZemhlTFQxYWhtZGIwbkFwaFJZMHIK"
+    }
   }
 }
