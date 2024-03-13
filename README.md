@@ -24,9 +24,9 @@ a rough roadmap is compiled into the checklist bellow
 
 - [x] gether Network speed
 - [x] show network speed graph on an always-on-top widget
+- [ ] Auto-update
 - [ ] Windows support
 - [ ] Linux support
-- [ ] Auto-update
 - [ ] Telemetry data on user consent
 - [ ] Submit to Apple Store
 - [ ] no-unwrap
