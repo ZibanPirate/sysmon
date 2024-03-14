@@ -1,5 +1,5 @@
 {
-  "productName": "sysmon",
+  "productName": "System Monitor",
   "version": "0.0.10",
   "identifier": "com.zak-man.sysmon",
   "build": {

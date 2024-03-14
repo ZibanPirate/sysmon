@@ -38,12 +38,14 @@ async fn main() {
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
-            let autostart_manager = app.autolaunch();
-            let _ = autostart_manager.enable();
-            println!(
-                "registered for autostart? {}",
-                autostart_manager.is_enabled().unwrap()
-            );
+            if !cfg!(debug_assertions) {
+                let autostart_manager = app.autolaunch();
+                let _ = autostart_manager.enable();
+                println!(
+                    "registered for autostart? {}",
+                    autostart_manager.is_enabled().unwrap()
+                );
+            }
 
             let widget_window_builder = WebviewWindowBuilder::new(
                 app,
