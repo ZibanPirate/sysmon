@@ -40,12 +40,12 @@ async fn main() {
         )
         .invoke_handler(tauri::generate_handler![resize])
         .setup(|app| {
-            let updater = app.updater().unwrap();
-            register_updater(updater);
-
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             if !cfg!(debug_assertions) {
+                let updater = app.updater().unwrap();
+                register_updater(updater);
+
                 let autostart_manager = app.autolaunch();
                 let _ = autostart_manager.enable();
                 println!(
