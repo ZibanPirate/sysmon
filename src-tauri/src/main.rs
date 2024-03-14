@@ -27,7 +27,7 @@ async fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_autostart::init(
-            MacosLauncher::LaunchAgent,
+            MacosLauncher::AppleScript,
             None,
         ))
         .plugin(tauri_plugin_log::Builder::new().build())
