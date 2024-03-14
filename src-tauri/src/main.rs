@@ -2,6 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod monitor;
+mod update;
+
 use monitor::register_monitor_for_window;
 use tauri::{
     menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, MenuItemBuilder, SubmenuBuilder},
@@ -10,6 +12,8 @@ use tauri::{
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
+use tauri_plugin_updater::UpdaterExt;
+use update::register_updater;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -36,6 +40,9 @@ async fn main() {
         )
         .invoke_handler(tauri::generate_handler![resize])
         .setup(|app| {
+            let updater = app.updater().unwrap();
+            register_updater(updater);
+
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             if !cfg!(debug_assertions) {
