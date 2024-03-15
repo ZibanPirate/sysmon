@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
-    "v:patch": "tauri-version patch"
+    "v:patch": "tauri-version patch && cd src-tauri && cargo check && git reset HEAD~"
   },
   "dependencies": {
     "@tauri-apps/api": ">=2.0.0-beta.0",
