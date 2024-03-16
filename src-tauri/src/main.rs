@@ -2,9 +2,13 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod monitor;
+mod settings;
 mod update;
+mod utils;
 
 use monitor::register_monitor_for_window;
+use settings::SettingsState;
+use std::sync::{Arc, Mutex};
 use tauri::{
     menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, MenuItemBuilder, SubmenuBuilder},
     LogicalSize, Manager, WebviewWindowBuilder,
@@ -13,6 +17,7 @@ use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_updater::UpdaterExt;
 use update::register_updater;
+use utils::StateSubscriber;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -21,37 +26,9 @@ fn resize(window: tauri::Window, width: f64, height: f64) {
     window.move_window(Position::TopRight).unwrap();
 }
 
-#[derive(Debug, Clone)]
-enum WidgetPosition {
-    TopRight,
-    TopLeft,
-    BottomRight,
-    BottomLeft,
-}
-
-#[derive(Debug, Clone)]
-struct State {
-    show_widget: bool,
-    widget_position: WidgetPosition,
-}
-
-impl Default for State {
-    fn default() -> Self {
-        Self {
-            show_widget: true,
-            widget_position: WidgetPosition::TopRight,
-        }
-    }
-}
-
-impl State {
-    fn toggle_widget(&mut self) {
-        self.show_widget = !self.show_widget;
-    }
-
-    fn set_widget_position(&mut self, position: WidgetPosition) {
-        self.widget_position = position;
-    }
+#[derive(Default, Debug)]
+struct Store {
+    settings: Mutex<SettingsState>,
 }
 
 #[tokio::main]
@@ -64,11 +41,14 @@ async fn main() {
         ))
         .plugin(tauri_plugin_positioner::init())
         .invoke_handler(tauri::generate_handler![resize])
-        .manage(State::default())
+        .manage(Store::default())
         .setup(|app| {
-            let s = app.state::<State>();
-            println!("state: {:?}", s);
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
+            let store = app.state::<Store>();
+
+            let mut lock = store.inner().settings.lock().unwrap();
+            let state = lock.get_state();
 
             if !cfg!(debug_assertions) {
                 let updater = app.updater().unwrap();
@@ -95,6 +75,7 @@ async fn main() {
                 .skip_taskbar(true)
                 .inner_size(200.0, 50.0)
                 .shadow(false)
+                .visible(state.show_widget)
                 .title_bar_style(tauri::TitleBarStyle::Transparent);
 
             let widget_window = widget_window_builder.build()?;
@@ -105,16 +86,34 @@ async fn main() {
                 .unwrap();
 
             widget_window.set_ignore_cursor_events(true).unwrap();
+            let widget_window = Arc::new(widget_window.as_ref().window());
 
-            // widget_window.open_devtools();
+            lock.set_state(settings::Settings {
+                widget_window: Some(widget_window.clone()),
+                ..state
+            });
 
-            register_monitor_for_window(widget_window.as_ref().window());
+            lock.on_path_change(
+                settings::SettingsPath::ShowWidget,
+                Box::new(|new_state: &settings::Settings| {
+                    println!("show widget changed to {:?}", new_state.show_widget);
+                    match new_state.show_widget {
+                        true => new_state.widget_window.as_ref().unwrap().show().unwrap(),
+                        false => new_state.widget_window.as_ref().unwrap().hide().unwrap(),
+                    }
+                }),
+            );
 
-            app.tray().unwrap().set_menu(Some(
+            register_monitor_for_window(widget_window);
+
+            let tray = app.tray().unwrap();
+
+            tray.set_menu(Some(
                 MenuBuilder::new(app)
                     .items(&[
                         &CheckMenuItemBuilder::new("Show Widget")
                             .id("show-widget")
+                            .checked(state.show_widget)
                             .build(app)
                             .unwrap(),
                         &SubmenuBuilder::new(app, "Position")
@@ -146,31 +145,25 @@ async fn main() {
                     .build()?,
             ))?;
 
-            app.tray()
-                .unwrap()
-                .on_menu_event(move |app, event| match event {
+            tray.on_menu_event(move |app, event| {
+                let store = app.state::<Store>();
+                let mut lock = store.inner().settings.lock().unwrap();
+                let state = lock.get_state();
+
+                match event {
                     MenuEvent { id, .. } => match id.as_ref() {
                         "show-widget" => {
-                            let webviews = app.webview_windows();
-                            let widget_window = webviews.get("widget").unwrap();
-
-                            match widget_window.is_visible().unwrap() {
-                                true => widget_window.hide().unwrap(),
-                                false => {
-                                    widget_window
-                                        .as_ref()
-                                        .window()
-                                        .move_window(Position::TopRight)
-                                        .unwrap();
-                                    widget_window.show().unwrap();
-                                }
-                            }
+                            lock.set_state(settings::Settings {
+                                show_widget: !state.show_widget,
+                                ..state
+                            });
                         }
                         _ => {
                             println!("tray icon event: {:?}", id);
                         }
                     },
-                });
+                }
+            });
 
             Ok(())
         })

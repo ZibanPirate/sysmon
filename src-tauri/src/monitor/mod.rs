@@ -1,4 +1,5 @@
 use serde::Serialize;
+use std::sync::Arc;
 use sysinfo::Networks;
 use tauri::Manager;
 
@@ -39,7 +40,7 @@ fn bytes_to_string(bytes: u64, suffix: &str) -> String {
     )
 }
 
-async fn monitor_system(target_window: tauri::Window) {
+async fn monitor_system(target_window: Arc<tauri::Window>) {
     let mut speed = NetworkSpeed::new();
 
     let mut networks = Networks::new_with_refreshed_list();
@@ -78,6 +79,6 @@ async fn monitor_system(target_window: tauri::Window) {
     }
 }
 
-pub fn register_monitor_for_window(target_window: tauri::Window) {
+pub fn register_monitor_for_window(target_window: Arc<tauri::Window>) {
     tokio::spawn(monitor_system(target_window));
 }
