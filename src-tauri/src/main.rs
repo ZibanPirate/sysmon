@@ -3,19 +3,18 @@
 
 mod monitor;
 mod settings;
+mod tray;
 mod update;
 mod utils;
 
 use monitor::register_monitor_for_window;
 use settings::SettingsState;
 use std::sync::{Arc, Mutex};
-use tauri::{
-    menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, MenuItemBuilder, SubmenuBuilder},
-    LogicalSize, Manager, WebviewWindowBuilder,
-};
+use tauri::{LogicalSize, Manager, WebviewWindowBuilder};
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_updater::UpdaterExt;
+use tray::setup_tray;
 use update::register_updater;
 use utils::StateSubscriber;
 
@@ -44,6 +43,8 @@ async fn main() {
         .manage(Store::default())
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
+            setup_tray(app)?;
 
             let store = app.state::<Store>();
 
@@ -105,65 +106,6 @@ async fn main() {
             );
 
             register_monitor_for_window(widget_window);
-
-            let tray = app.tray().unwrap();
-
-            tray.set_menu(Some(
-                MenuBuilder::new(app)
-                    .items(&[
-                        &CheckMenuItemBuilder::new("Show Widget")
-                            .id("show-widget")
-                            .checked(state.show_widget)
-                            .build(app)
-                            .unwrap(),
-                        &SubmenuBuilder::new(app, "Position")
-                            .items(&[
-                                &MenuItemBuilder::new("Top-Right")
-                                    .enabled(false)
-                                    .build(app)
-                                    .unwrap(),
-                                &MenuItemBuilder::new("Top-Left")
-                                    .enabled(false)
-                                    .build(app)
-                                    .unwrap(),
-                                &MenuItemBuilder::new("Bottom-Right")
-                                    .enabled(false)
-                                    .build(app)
-                                    .unwrap(),
-                                &MenuItemBuilder::new("Bottom-Left")
-                                    .enabled(false)
-                                    .build(app)
-                                    .unwrap(),
-                            ])
-                            .build()
-                            .unwrap(),
-                    ])
-                    .separator()
-                    .quit()
-                    .separator()
-                    .about(None)
-                    .build()?,
-            ))?;
-
-            tray.on_menu_event(move |app, event| {
-                let store = app.state::<Store>();
-                let mut lock = store.inner().settings.lock().unwrap();
-                let state = lock.get_state();
-
-                match event {
-                    MenuEvent { id, .. } => match id.as_ref() {
-                        "show-widget" => {
-                            lock.set_state(settings::Settings {
-                                show_widget: !state.show_widget,
-                                ..state
-                            });
-                        }
-                        _ => {
-                            println!("tray icon event: {:?}", id);
-                        }
-                    },
-                }
-            });
 
             Ok(())
         })
