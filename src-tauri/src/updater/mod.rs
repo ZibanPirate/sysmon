@@ -1,6 +1,7 @@
-use tauri_plugin_updater::Updater;
+use tauri::App;
+use tauri_plugin_updater::{Updater, UpdaterExt};
 
-async fn check_and_update(updater: Updater) {
+async fn check_and_download_and_wait_for_restart(updater: Updater) {
     println!("Checking for updates");
     let check_result = updater.check().await;
     match check_result {
@@ -35,6 +36,17 @@ async fn check_and_update(updater: Updater) {
     }
 }
 
-pub fn register_updater(updater: Updater) {
-    tokio::spawn(check_and_update(updater));
+pub fn setup_updater(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
+    if cfg!(debug_assertions) {
+        println!("Skipping updater setup because debug build");
+        return Ok(());
+    }
+
+    let updater = app
+        .updater()
+        .map_err(|e| format!("Failed to get updater: {:?}", e))?;
+
+    tokio::spawn(check_and_download_and_wait_for_restart(updater));
+
+    Ok(())
 }

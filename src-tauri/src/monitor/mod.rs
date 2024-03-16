@@ -1,7 +1,9 @@
+use crate::utils::StateSubscriber;
+use crate::Store;
 use serde::Serialize;
 use std::sync::Arc;
 use sysinfo::Networks;
-use tauri::Manager;
+use tauri::{App, Manager};
 
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -79,6 +81,18 @@ async fn monitor_system(target_window: Arc<tauri::Window>) {
     }
 }
 
-pub fn register_monitor_for_window(target_window: Arc<tauri::Window>) {
-    tokio::spawn(monitor_system(target_window));
+pub fn setup_monitoring(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
+    let store = app.state::<Store>();
+    let settings_state = store
+        .inner()
+        .settings
+        .lock()
+        .map_err(|_| "Failed to lock settings")?;
+    let state = settings_state.get_state();
+
+    let widget_window = state.widget_window.expect("Failed to get widget window");
+
+    tokio::spawn(monitor_system(widget_window));
+
+    Ok(())
 }
