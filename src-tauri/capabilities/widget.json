@@ -3,5 +3,5 @@
   "identifier": "default",
   "description": "Capability for the widget window",
   "windows": ["widget"],
-  "permissions": ["event:allow-listen", "log:default"]
+  "permissions": ["event:allow-listen"]
 }

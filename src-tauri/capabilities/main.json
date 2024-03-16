@@ -10,7 +10,6 @@
     "app:default",
     "resources:default",
     "menu:default",
-    "tray:default",
-    "shell:allow-open"
+    "tray:default"
   ]
 }

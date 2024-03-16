@@ -43,9 +43,6 @@ async fn monitor_system(target_window: tauri::Window) {
     let mut speed = NetworkSpeed::new();
 
     let mut networks = Networks::new_with_refreshed_list();
-    for (interface_name, network) in &networks {
-        println!("[{interface_name}]: {network:?}");
-    }
 
     networks.refresh();
     loop {

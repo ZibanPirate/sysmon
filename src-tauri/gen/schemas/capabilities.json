@@ -1,1 +1,1 @@
-{"default":{"identifier":"default","description":"Capability for the widget window","local":true,"windows":["widget"],"permissions":["event:allow-listen","log:default"]}}
+{"default":{"identifier":"default","description":"Capability for the widget window","local":true,"windows":["widget"],"permissions":["event:allow-listen"]}}

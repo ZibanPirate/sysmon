@@ -10,7 +10,6 @@ use tauri::{
     LogicalSize, Manager, WebviewWindowBuilder,
 };
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
-use tauri_plugin_log::{Target, TargetKind};
 use tauri_plugin_positioner::{Position, WindowExt};
 use tauri_plugin_updater::UpdaterExt;
 use update::register_updater;
@@ -22,6 +21,39 @@ fn resize(window: tauri::Window, width: f64, height: f64) {
     window.move_window(Position::TopRight).unwrap();
 }
 
+#[derive(Debug, Clone)]
+enum WidgetPosition {
+    TopRight,
+    TopLeft,
+    BottomRight,
+    BottomLeft,
+}
+
+#[derive(Debug, Clone)]
+struct State {
+    show_widget: bool,
+    widget_position: WidgetPosition,
+}
+
+impl Default for State {
+    fn default() -> Self {
+        Self {
+            show_widget: true,
+            widget_position: WidgetPosition::TopRight,
+        }
+    }
+}
+
+impl State {
+    fn toggle_widget(&mut self) {
+        self.show_widget = !self.show_widget;
+    }
+
+    fn set_widget_position(&mut self, position: WidgetPosition) {
+        self.widget_position = position;
+    }
+}
+
 #[tokio::main]
 async fn main() {
     tauri::Builder::default()
@@ -30,16 +62,12 @@ async fn main() {
             MacosLauncher::AppleScript,
             None,
         ))
-        .plugin(tauri_plugin_log::Builder::new().build())
-        .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_positioner::init())
-        .plugin(
-            tauri_plugin_log::Builder::new()
-                .targets([Target::new(TargetKind::Stdout)])
-                .build(),
-        )
         .invoke_handler(tauri::generate_handler![resize])
+        .manage(State::default())
         .setup(|app| {
+            let s = app.state::<State>();
+            println!("state: {:?}", s);
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             if !cfg!(debug_assertions) {
@@ -77,10 +105,6 @@ async fn main() {
                 .unwrap();
 
             widget_window.set_ignore_cursor_events(true).unwrap();
-
-            widget_window.on_window_event(|event| {
-                println!("{:?}", event);
-            });
 
             // widget_window.open_devtools();
 
