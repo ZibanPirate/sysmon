@@ -18,8 +18,9 @@ jobs:
             arch: x86_64-apple-darwin
           - platform: windows-latest
             arch: x86_64-pc-windows-msvc
-          - platform: windows-latest
-            arch: aarch64-pc-windows-msvc
+          # arm is not yet available on GH-Actions https://github.com/actions/virtual-environments/issues/768
+          # - platform: windows-latest
+          #   arch: aarch64-pc-windows-msvc
 
     runs-on: ${{ matrix.platform }}
 

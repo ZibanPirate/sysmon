@@ -1,6 +1,6 @@
 # System Monitor
 
-Widget to see the download/upload speed at the corner of your screen, with minimal overhead.
+Cross-platform Widget showing download/upload speed at the corner of your screen, with minimal overhead.
 
 **example:**
 
@@ -8,14 +8,14 @@ Widget to see the download/upload speed at the corner of your screen, with minim
 
 ## Download
 
-| OS      | Processor     | Download                                                                                                                                                                                                                             |
-| ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_aarch64.dmg) <br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz) |
-| MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_x64.dmg) <br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)         |
-| Windows | Arm           | _coming soon_                                                                                                                                                                                                                        |
-| Windows | x86           | _coming soon_                                                                                                                                                                                                                        |
-| Linux   | Arm           | _coming soon_                                                                                                                                                                                                                        |
-| Linux   | x86           | _coming soon_                                                                                                                                                                                                                        |
+| OS      | Processor     | Download                                                                                                                                                                                                                                                                                                                                                                  |
+| ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_aarch64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz)                                                                                                                                       |
+| MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_x64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)                                                                                                                                               |
+| Windows | Arm           | Nope                                                                                                                                                                                                                                                                                                                                                                      |
+| Windows | x86           | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_x64-setup.exe)<br>- [NSIS Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_x64-setup.nsis.zip)<br>- [MSI Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.21_x64_en-US.msi) |
+| Linux   | Arm           | _coming soon_                                                                                                                                                                                                                                                                                                                                                             |
+| Linux   | x86           | _coming soon_                                                                                                                                                                                                                                                                                                                                                             |
 
 ## Contribution
 
@@ -31,7 +31,7 @@ a rough roadmap is compiled into the checklist bellow
 - [x] show network speed graph on an always-on-top widget
 - [x] Auto-update
 - [x] persist and apply settings
-- [ ] Windows support
+- [x] Windows support
 - [ ] Linux support
 - [ ] Submit to Apple Store
 - [ ] code quality: no-unwrap, tests
