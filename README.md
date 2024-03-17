@@ -30,6 +30,7 @@ a rough roadmap is compiled into the checklist bellow
 - [x] gether Network speed
 - [x] show network speed graph on an always-on-top widget
 - [x] Auto-update
+- [ ] persist and apply settings
 - [ ] Windows support
 - [ ] Linux support
 - [ ] Telemetry data on user consent
