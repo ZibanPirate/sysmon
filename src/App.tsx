@@ -2,7 +2,6 @@ import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import { EventCallback, listen } from "@tauri-apps/api/event";
 import { useEffect, useMemo, useState } from "react";
-import { error, info } from "@tauri-apps/plugin-log";
 import { Chart } from "react-charts";
 import debounce from "lodash/debounce";
 
@@ -18,21 +17,21 @@ type Settings = {
 };
 
 let networkInfoCallback: EventCallback<unknown> = (_event) => {
-  info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
+  // info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
 };
 
 listen("network-info", (...args) => networkInfoCallback(...args)).catch(
   (err) => {
-    error(String(err));
+    // error(String(err));
   }
 );
 
 let settingsCallback: EventCallback<unknown> = (_event) => {
-  info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
+  // info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
 };
 
 listen("settings", (...args) => settingsCallback(...args)).catch((err) => {
-  error(String(err));
+  // error(String(err));
 });
 
 type Series = {
@@ -68,7 +67,7 @@ try {
   );
 } catch (err) {
   lastSpeedsFromLocalStorage = [];
-  error(String(err));
+  // error(String(err));
 }
 
 function App() {
@@ -98,7 +97,7 @@ function App() {
     };
 
     settingsCallback = (event) => {
-      info(`now handled: ${JSON.stringify(event, null, 2)}`);
+      // info(`now handled: ${JSON.stringify(event, null, 2)}`);
       setSettings(event.payload as Settings);
     };
 

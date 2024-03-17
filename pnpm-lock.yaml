@@ -8,18 +8,6 @@ dependencies:
   '@tauri-apps/api':
     specifier: '>=2.0.0-beta.0'
     version: 2.0.0-beta.4
-  '@tauri-apps/plugin-autostart':
-    specifier: 2.0.0-beta.2
-    version: 2.0.0-beta.2
-  '@tauri-apps/plugin-log':
-    specifier: 2.0.0-beta.2
-    version: 2.0.0-beta.2
-  '@tauri-apps/plugin-shell':
-    specifier: '>=2.0.0-beta.0'
-    version: 2.0.0-beta.2
-  '@tauri-apps/plugin-updater':
-    specifier: 2.0.0-beta.2
-    version: 2.0.0-beta.2
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
@@ -744,30 +732,6 @@ packages:
       '@tauri-apps/cli-win32-ia32-msvc': 2.0.0-beta.8
       '@tauri-apps/cli-win32-x64-msvc': 2.0.0-beta.8
     dev: true
-
-  /@tauri-apps/plugin-autostart@2.0.0-beta.2:
-    resolution: {integrity: sha512-lrbXKEFuH79mz3abTwZpFW3wi4rVpyivD85uIdKxhM7vj4XwyVJKYfz9/1K435NP6DsHBdEqzfGxENfJCBCtLQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.4
-    dev: false
-
-  /@tauri-apps/plugin-log@2.0.0-beta.2:
-    resolution: {integrity: sha512-UiHQ5uMocYKRo+YbMd7L+SY4JD4wWWWtp+y/+RrUDzrXozISinPZEoEJHTuOJ0oXC4YLB7zyiY38sTzXeDa+HA==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.4
-    dev: false
-
-  /@tauri-apps/plugin-shell@2.0.0-beta.2:
-    resolution: {integrity: sha512-9rWsfN7Wt+EuWmpmNnK8bCs+04fzhEYrHtWyLIAYxb9diFdcJrEoctCP9YM2v+Uf8/y8qFC7VCbZ/9VQHANymQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.4
-    dev: false
-
-  /@tauri-apps/plugin-updater@2.0.0-beta.2:
-    resolution: {integrity: sha512-T8EkAXawbyV/6/Lcf1VVIWhtGuals63zKn+udYNqlC8CRM5iYQ+8bM8Nmy2E+pIzkkx93d1t6/8geFitLZPmKw==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-beta.4
-    dev: false
 
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
