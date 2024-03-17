@@ -11,14 +11,6 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [macos-latest, windows-latest]
-        arch:
-          [
-            aarch64-apple-darwin,
-            x86_64-apple-darwin,
-            x86_64-pc-windows-msvc,
-            aarch64-pc-windows-msvc,
-          ]
         include:
           - platform: macos-latest
             arch: aarch64-apple-darwin
