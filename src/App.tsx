@@ -21,7 +21,7 @@ let networkInfoCallback: EventCallback<unknown> = (_event) => {
 };
 
 listen("network-info", (...args) => networkInfoCallback(...args)).catch(
-  (err) => {
+  (_err) => {
     // error(String(err));
   }
 );
@@ -30,7 +30,7 @@ let settingsCallback: EventCallback<unknown> = (_event) => {
   // info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
 };
 
-listen("settings", (...args) => settingsCallback(...args)).catch((err) => {
+listen("settings", (...args) => settingsCallback(...args)).catch((_err) => {
   // error(String(err));
 });
 

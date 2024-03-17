@@ -1,6 +1,6 @@
 [package]
 name = "sysmon"
-version = "0.0.19"
+version = "0.0.20"
 license = "MIT"
 description = "A Tauri App"
 authors = ["you"]
