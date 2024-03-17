@@ -25,8 +25,7 @@ pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .skip_taskbar(true)
         .inner_size(200.0, 50.0)
         .shadow(false)
-        .visible(state.show_widget)
-        .title_bar_style(tauri::TitleBarStyle::Transparent);
+        .visible(state.show_widget);
 
     let widget_window = widget_window_builder
         .build()

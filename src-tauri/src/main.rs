@@ -62,6 +62,7 @@ async fn main() {
         .invoke_handler(tauri::generate_handler![resize])
         .manage(Store::default())
         .setup(|app| {
+            #[cfg(target_os = "macos")]
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
             load_settings(app)?;
