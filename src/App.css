@@ -1,5 +1,12 @@
 .container {
   width: 200px;
   height: 50px;
+}
+
+.fade-to-left {
   mask: linear-gradient(to left, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+}
+
+.fade-to-right {
+  mask: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }

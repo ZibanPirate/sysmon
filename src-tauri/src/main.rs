@@ -9,22 +9,36 @@ mod updater;
 mod utils;
 mod widget;
 
+use crate::utils::StateSubscriber;
 use autostart::setup_autostart;
 use monitor::setup_monitoring;
 use settings::SettingsState;
 use std::sync::Mutex;
-use tauri::LogicalSize;
+use tauri::{LogicalSize, State};
 use tauri_plugin_autostart::MacosLauncher;
-use tauri_plugin_positioner::{Position, WindowExt};
+use tauri_plugin_positioner::WindowExt;
 use tray::setup_tray;
 use updater::setup_updater;
 use widget::setup_widget;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn resize(window: tauri::Window, width: f64, height: f64) {
-    window.set_size(LogicalSize::new(width, height)).unwrap();
-    window.move_window(Position::TopRight).unwrap();
+fn resize(window: tauri::Window, width: f64, height: f64, store: State<Store>) {
+    let settings_state = store
+        .inner()
+        .settings
+        .lock()
+        .map_err(|_| "Failed to lock settings")
+        .expect("Failed to lock settings");
+    let state = settings_state.get_state();
+
+    window
+        .set_size(LogicalSize::new(width, height))
+        .expect("Failed to set window size");
+
+    window
+        .move_window(state.widget_position.into())
+        .expect("Failed to move window");
 }
 
 #[derive(Default, Debug)]

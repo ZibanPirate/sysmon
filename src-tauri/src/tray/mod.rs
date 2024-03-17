@@ -1,3 +1,4 @@
+use crate::settings::WidgetPosition;
 use crate::Store;
 use crate::{settings::Settings, utils::StateSubscriber};
 use tauri::{
@@ -27,19 +28,19 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                 &SubmenuBuilder::new(app, "Position")
                     .items(&[
                         &MenuItemBuilder::new("Top-Right")
-                            .enabled(false)
+                            .id("top-right")
                             .build(app)
                             .unwrap(),
                         &MenuItemBuilder::new("Top-Left")
-                            .enabled(false)
+                            .id("top-left")
                             .build(app)
                             .unwrap(),
                         &MenuItemBuilder::new("Bottom-Right")
-                            .enabled(false)
+                            .id("bottom-right")
                             .build(app)
                             .unwrap(),
                         &MenuItemBuilder::new("Bottom-Left")
-                            .enabled(false)
+                            .id("bottom-left")
                             .build(app)
                             .unwrap(),
                     ])
@@ -71,7 +72,33 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                         ..state
                     });
                 }
-                _ => {}
+                "top-right" => {
+                    settings_state.set_state(Settings {
+                        widget_position: WidgetPosition::TopRight,
+                        ..state
+                    });
+                }
+                "top-left" => {
+                    settings_state.set_state(Settings {
+                        widget_position: WidgetPosition::TopLeft,
+                        ..state
+                    });
+                }
+                "bottom-right" => {
+                    settings_state.set_state(Settings {
+                        widget_position: WidgetPosition::BottomRight,
+                        ..state
+                    });
+                }
+                "bottom-left" => {
+                    settings_state.set_state(Settings {
+                        widget_position: WidgetPosition::BottomLeft,
+                        ..state
+                    });
+                }
+                _ => {
+                    println!("unhandled menu event: {:?}", id);
+                }
             },
         }
     });

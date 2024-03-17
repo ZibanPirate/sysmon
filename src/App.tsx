@@ -2,7 +2,7 @@ import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 import { EventCallback, listen } from "@tauri-apps/api/event";
 import { useEffect, useMemo, useState } from "react";
-import { error } from "@tauri-apps/plugin-log";
+import { error, info } from "@tauri-apps/plugin-log";
 import { Chart } from "react-charts";
 import debounce from "lodash/debounce";
 
@@ -12,11 +12,26 @@ type NetworkSpeed = {
   utcTimestamp: number;
 };
 
-let callback: EventCallback<unknown> = (_event) => {
-  // info(JSON.stringify(_event, null, 2));
+type Settings = {
+  showWidget: boolean;
+  widgetPosition: "TOP_LEFT" | "TOP_RIGHT" | "BOTTOM_LEFT" | "BOTTOM_RIGHT";
 };
 
-listen("network-info", (...args) => callback(...args)).catch((err) => {
+let networkInfoCallback: EventCallback<unknown> = (_event) => {
+  info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
+};
+
+listen("network-info", (...args) => networkInfoCallback(...args)).catch(
+  (err) => {
+    error(String(err));
+  }
+);
+
+let settingsCallback: EventCallback<unknown> = (_event) => {
+  info(`unhandled event: ${JSON.stringify(_event, null, 2)}`);
+};
+
+listen("settings", (...args) => settingsCallback(...args)).catch((err) => {
   error(String(err));
 });
 
@@ -71,14 +86,25 @@ function App() {
     setLastSpeeds(newLastSpeeds);
   }, [speed]);
 
+  const [settings, setSettings] = useState<Settings>({
+    showWidget: false,
+    widgetPosition: "TOP_RIGHT",
+  });
+
   useEffect(() => {
-    callback = (event) => {
+    networkInfoCallback = (event) => {
       // info(`zako: ${JSON.stringify(event, null, 2)}`);
       setSpeed(event.payload as NetworkSpeed);
     };
 
+    settingsCallback = (event) => {
+      info(`now handled: ${JSON.stringify(event, null, 2)}`);
+      setSettings(event.payload as Settings);
+    };
+
     return () => {
-      callback = () => {};
+      networkInfoCallback = () => {};
+      settingsCallback = () => {};
     };
   }, []);
 
@@ -89,22 +115,31 @@ function App() {
           label: "Download Speed",
           data: last_speeds.map(({ utcTimestamp, receivedBytes }) => ({
             utcTimestamp,
-            speed: -receivedBytes,
+            speed: receivedBytes,
           })),
         },
         {
           label: "Upload Speed",
           data: last_speeds.map(({ utcTimestamp, sentBytes }) => ({
             utcTimestamp,
-            speed: -sentBytes,
+            speed: sentBytes,
           })),
         },
       ] satisfies Series[],
+
     [last_speeds]
   );
 
+  const { invertX, invertY } = useMemo(
+    () => ({
+      invertY: settings.widgetPosition.startsWith("TOP"),
+      invertX: settings.widgetPosition.endsWith("LEFT"),
+    }),
+    [settings.widgetPosition]
+  );
+
   return (
-    <div className="container">
+    <div className={`container ${invertX ? "fade-to-right" : "fade-to-left"}`}>
       <Chart
         className="chart"
         options={{
@@ -120,6 +155,7 @@ function App() {
               ? new Date(data[0]?.data[0]?.utcTimestamp)
               : undefined,
             show: false,
+            invert: invertX,
           },
           defaultColors: ["#09f9", "#f099"],
           secondaryAxes: [
@@ -130,6 +166,7 @@ function App() {
               formatters: { scale: () => "" },
               show: false,
               stacked: true,
+              invert: invertY,
             },
           ],
           primaryCursor: { show: false },

@@ -1,8 +1,12 @@
 use crate::utils::StateSubscriber;
 use derivative::Derivative;
+use serde::Serialize;
 use std::{collections::HashMap, sync::Arc};
+use tauri_plugin_positioner::Position;
 
-#[derive(Debug, Clone, PartialEq)]
+// @TODO-ZM: add clone to tauri_plugin_positioner
+#[derive(Debug, Clone, PartialEq, Serialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum WidgetPosition {
     TopRight,
     TopLeft,
@@ -10,10 +14,23 @@ pub enum WidgetPosition {
     BottomLeft,
 }
 
-#[derive(Debug, Clone)]
+impl Into<Position> for WidgetPosition {
+    fn into(self) -> Position {
+        match self {
+            WidgetPosition::TopRight => Position::TopRight,
+            WidgetPosition::TopLeft => Position::TopLeft,
+            WidgetPosition::BottomRight => Position::BottomRight,
+            WidgetPosition::BottomLeft => Position::BottomLeft,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize)]
+#[serde(rename_all = "camelCase")]
 pub struct Settings {
     pub show_widget: bool,
     pub widget_position: WidgetPosition,
+    #[serde(skip)]
     pub widget_window: Option<Arc<tauri::Window>>,
 }
 
@@ -66,6 +83,9 @@ impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
         id
     }
 
+    ///
+    /// Pass empty vec to `changed_paths` to trigger callback on any state change
+    ///     
     fn on_paths_change(
         &mut self,
         changed_paths: Vec<SettingsPath>,
@@ -97,7 +117,7 @@ impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
 
         for (_, subscribers) in self.subscribers.iter() {
             for (paths, callback) in subscribers.iter() {
-                if paths.iter().any(|path| changed_paths.contains(path)) {
+                if paths.is_empty() || paths.iter().any(|path| changed_paths.contains(path)) {
                     callback(&new_state);
                 }
             }

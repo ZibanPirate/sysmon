@@ -64,5 +64,31 @@ pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         }),
     );
 
+    settings_state.on_path_change(
+        SettingsPath::WidgetPosition,
+        Box::new(|new_state: &Settings| {
+            let widget_window = new_state
+                .widget_window
+                .as_ref()
+                .expect("Failed to get widget window");
+            widget_window
+                .move_window(new_state.widget_position.clone().into())
+                .expect("Failed to move widget window");
+        }),
+    );
+
+    settings_state.on_paths_change(
+        vec![],
+        Box::new(|new_state: &Settings| {
+            let widget_window = new_state
+                .widget_window
+                .as_ref()
+                .expect("Failed to get widget window");
+            widget_window
+                .emit("settings", new_state)
+                .expect("Failed to emit settings");
+        }),
+    );
+
     Ok(())
 }
