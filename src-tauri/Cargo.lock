@@ -3196,7 +3196,7 @@ dependencies = [
 
 [[package]]
 name = "sysmon"
-version = "0.0.18"
+version = "0.0.19"
 dependencies = [
  "chrono",
  "derivative",
