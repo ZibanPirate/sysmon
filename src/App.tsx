@@ -85,10 +85,7 @@ function App() {
     setLastSpeeds(newLastSpeeds);
   }, [speed]);
 
-  const [settings, setSettings] = useState<Settings>({
-    showWidget: false,
-    widgetPosition: "TOP_RIGHT",
-  });
+  const [settings, setSettings] = useState<Settings | null>(null);
 
   useEffect(() => {
     networkInfoCallback = (event) => {
@@ -131,49 +128,53 @@ function App() {
 
   const { invertX, invertY } = useMemo(
     () => ({
-      invertY: settings.widgetPosition.startsWith("TOP"),
-      invertX: settings.widgetPosition.endsWith("LEFT"),
+      invertY: settings?.widgetPosition.startsWith("TOP"),
+      invertX: settings?.widgetPosition.endsWith("LEFT"),
     }),
-    [settings.widgetPosition]
+    [settings?.widgetPosition]
   );
 
   return (
     <div className={`container ${invertX ? "fade-to-right" : "fade-to-left"}`}>
-      <Chart
-        className="chart"
-        options={{
-          data,
-          primaryAxis: {
-            getValue: (datum) => new Date(datum.utcTimestamp),
-            scaleType: "time",
-            showGrid: false,
-            formatters: {
-              scale: () => "",
-            },
-            min: data[0]?.data[0]?.utcTimestamp
-              ? new Date(data[0]?.data[0]?.utcTimestamp)
-              : undefined,
-            show: false,
-            invert: invertX,
-          },
-          defaultColors: ["#09f9", "#f099"],
-          secondaryAxes: [
-            {
-              getValue: (datum) => datum.speed,
-              scaleType: "linear",
+      {settings ? (
+        <Chart
+          className="chart"
+          options={{
+            data,
+            primaryAxis: {
+              getValue: (datum) => new Date(datum.utcTimestamp),
+              scaleType: "time",
               showGrid: false,
-              formatters: { scale: () => "" },
+              formatters: {
+                scale: () => "",
+              },
+              min: data[0]?.data[0]?.utcTimestamp
+                ? new Date(data[0]?.data[0]?.utcTimestamp)
+                : undefined,
               show: false,
-              stacked: true,
-              invert: invertY,
+              invert: invertX,
             },
-          ],
-          primaryCursor: { show: false },
-          secondaryCursor: { show: false },
-          tooltip: { show: false },
-          padding: 0,
-        }}
-      />
+            defaultColors: ["#09f9", "#f099"],
+            secondaryAxes: [
+              {
+                getValue: (datum) => datum.speed,
+                scaleType: "linear",
+                showGrid: false,
+                formatters: { scale: () => "" },
+                show: false,
+                stacked: true,
+                invert: invertY,
+              },
+            ],
+            primaryCursor: { show: false },
+            secondaryCursor: { show: false },
+            tooltip: { show: false },
+            padding: 0,
+          }}
+        />
+      ) : (
+        <div className="init">Initializing...</div>
+      )}
     </div>
   );
 }

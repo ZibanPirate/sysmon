@@ -4,7 +4,7 @@ use crate::settings::{Settings, SettingsPath};
 use crate::utils::StateSubscriber;
 use crate::Store;
 use tauri::{App, Manager, WebviewWindowBuilder};
-use tauri_plugin_positioner::{Position, WindowExt};
+use tauri_plugin_positioner::WindowExt;
 
 pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     let store = app.state::<Store>();
@@ -44,15 +44,9 @@ pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .set_ignore_cursor_events(true)
         .map_err(|err| format!("Failed to set ignore cursor events: {}", err))?;
 
-    widget_window
-        .as_ref()
-        .window()
-        .move_window(Position::TopRight)
-        .map_err(|err| format!("Failed to move window: {}", err))?;
-
     settings_state.on_path_change(
         SettingsPath::ShowWidget,
-        Box::new(|new_state: &Settings| {
+        Box::pin(|new_state: &Settings| {
             let widget_window = new_state
                 .widget_window
                 .as_ref()
@@ -64,31 +58,30 @@ pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         }),
     );
 
-    settings_state.on_path_change(
-        SettingsPath::WidgetPosition,
-        Box::new(|new_state: &Settings| {
-            let widget_window = new_state
-                .widget_window
-                .as_ref()
-                .expect("Failed to get widget window");
-            widget_window
-                .move_window(new_state.widget_position.clone().into())
-                .expect("Failed to move widget window");
-        }),
-    );
+    let move_window = Box::pin(|new_state: &Settings| {
+        let widget_window = new_state
+            .widget_window
+            .as_ref()
+            .expect("Failed to get widget window");
+        widget_window
+            .move_window(new_state.widget_position.clone().into())
+            .expect("Failed to move widget window");
+    });
+    move_window(&settings_state.get_state());
+    settings_state.on_path_change(SettingsPath::WidgetPosition, move_window);
 
-    settings_state.on_paths_change(
-        vec![],
-        Box::new(|new_state: &Settings| {
-            let widget_window = new_state
-                .widget_window
-                .as_ref()
-                .expect("Failed to get widget window");
-            widget_window
-                .emit("settings", new_state)
-                .expect("Failed to emit settings");
-        }),
-    );
+    let emit_settings_to_widget_window = Box::pin(move |new_state: &Settings| {
+        let widget_window = new_state
+            .widget_window
+            .as_ref()
+            .expect("Failed to get widget window");
+        widget_window
+            .emit("settings", new_state)
+            .expect("Failed to emit settings");
+    });
+    println!("state is {:?}", settings_state.get_state());
+    emit_settings_to_widget_window(&settings_state.get_state());
+    settings_state.on_paths_change(vec![], emit_settings_to_widget_window);
 
     Ok(())
 }

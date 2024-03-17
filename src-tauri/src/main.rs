@@ -12,9 +12,9 @@ mod widget;
 use crate::utils::StateSubscriber;
 use autostart::setup_autostart;
 use monitor::setup_monitoring;
-use settings::SettingsState;
+use settings::{load_settings, SettingsState};
 use std::sync::Mutex;
-use tauri::{LogicalSize, State};
+use tauri::{LogicalSize, Manager, State};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_positioner::WindowExt;
 use tray::setup_tray;
@@ -31,6 +31,10 @@ fn resize(window: tauri::Window, width: f64, height: f64, store: State<Store>) {
         .map_err(|_| "Failed to lock settings")
         .expect("Failed to lock settings");
     let state = settings_state.get_state();
+
+    window
+        .emit("settings", state.clone())
+        .expect("Failed to emit settings");
 
     window
         .set_size(LogicalSize::new(width, height))
@@ -60,6 +64,7 @@ async fn main() {
         .setup(|app| {
             app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
+            load_settings(app)?;
             setup_tray(app)?;
             setup_widget(app)?;
             setup_monitoring(app)?;

@@ -10,3 +10,9 @@
 .fade-to-right {
   mask: linear-gradient(to right, rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
 }
+
+.init {
+  background-color: #4caf50;
+  text-align: center;
+  border-radius: 5px;
+}
