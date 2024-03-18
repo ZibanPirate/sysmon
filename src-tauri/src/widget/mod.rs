@@ -33,18 +33,13 @@ impl<R: Runtime> WidgetWindow for Window<R> {
                         );
 
                         let maximized_window_builder = maximized_window_builder
-                            .decorations(false)
                             .maximized(true)
-                            .transparent(true)
                             .skip_taskbar(true)
-                            .visible(false)
-                            .shadow(false);
+                            .visible(false);
 
                         let maximized_window = maximized_window_builder
                             .build()
                             .map_err(|err| format!("Failed to build widget window: {}", err))?;
-
-                        maximized_window.set_ignore_cursor_events(true)?;
 
                         maximized_window
                     }
