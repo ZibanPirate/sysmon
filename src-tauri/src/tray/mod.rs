@@ -44,6 +44,12 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                             .build(app)
                             .unwrap(),
                     ])
+                    .separator()
+                    .items(&[&CheckMenuItemBuilder::new("Account for OS Taskbar/Dock")
+                        .id("safe-area")
+                        .checked(state.safe_area)
+                        .build(app)
+                        .unwrap()])
                     .build()
                     .unwrap(),
             ])
@@ -93,6 +99,12 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                 "bottom-left" => {
                     settings_state.set_state(Settings {
                         widget_position: WidgetPosition::BottomLeft,
+                        ..state
+                    });
+                }
+                "safe-area" => {
+                    settings_state.set_state(Settings {
+                        safe_area: !state.safe_area,
                         ..state
                     });
                 }

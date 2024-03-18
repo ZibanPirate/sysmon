@@ -16,10 +16,9 @@ use settings::{load_settings, SettingsState};
 use std::sync::Mutex;
 use tauri::{LogicalSize, Manager, State};
 use tauri_plugin_autostart::MacosLauncher;
-use tauri_plugin_positioner::WindowExt;
 use tray::setup_tray;
 use updater::setup_updater;
-use widget::setup_widget;
+use widget::{setup_widget, WidgetWindow};
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
@@ -41,7 +40,7 @@ fn resize(window: tauri::Window, width: f64, height: f64, store: State<Store>) {
         .expect("Failed to set window size");
 
     window
-        .move_window(state.widget_position.into())
+        .move_widget(&state.widget_position, state.safe_area)
         .expect("Failed to move window");
 }
 
@@ -58,7 +57,6 @@ async fn main() {
             MacosLauncher::AppleScript,
             None,
         ))
-        .plugin(tauri_plugin_positioner::init())
         .invoke_handler(tauri::generate_handler![resize])
         .manage(Store::default())
         .setup(|app| {

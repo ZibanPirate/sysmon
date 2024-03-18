@@ -10,7 +10,6 @@ use std::{
     sync::Arc,
 };
 use tauri::{App, Manager};
-use tauri_plugin_positioner::Position;
 
 // @TODO-ZM: add clone to tauri_plugin_positioner
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -22,17 +21,6 @@ pub enum WidgetPosition {
     BottomLeft,
 }
 
-impl Into<Position> for WidgetPosition {
-    fn into(self) -> Position {
-        match self {
-            WidgetPosition::TopRight => Position::TopRight,
-            WidgetPosition::TopLeft => Position::TopLeft,
-            WidgetPosition::BottomRight => Position::BottomRight,
-            WidgetPosition::BottomLeft => Position::BottomLeft,
-        }
-    }
-}
-
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone, Serialize, Deserialize)]
@@ -40,6 +28,7 @@ impl Into<Position> for WidgetPosition {
 pub struct Settings {
     pub show_widget: bool,
     pub widget_position: WidgetPosition,
+    pub safe_area: bool,
     #[derivative(Debug = "ignore")]
     #[serde(skip)]
     pub widget_window: Option<Arc<tauri::Window>>,
@@ -51,6 +40,7 @@ pub struct SettingsState {
     #[derivative(Debug = "ignore")]
     subscribers: HashMap<u32, Vec<(Vec<SettingsPath>, Pin<Box<dyn Fn(&Settings) -> () + Send>>)>>,
     show_widget: bool,
+    safe_area: bool,
     widget_position: WidgetPosition,
     #[derivative(Debug = "ignore")]
     widget_window: Option<Arc<tauri::Window>>,
@@ -62,6 +52,7 @@ impl Default for SettingsState {
             subscribers: HashMap::new(),
             show_widget: false,
             widget_position: WidgetPosition::TopRight,
+            safe_area: true,
             widget_window: None,
         }
     }
@@ -70,9 +61,10 @@ impl Default for SettingsState {
 impl SettingsState {
     pub fn into_state(&self) -> Settings {
         Settings {
-            show_widget: self.show_widget.clone(),
+            show_widget: self.show_widget,
             widget_position: self.widget_position.clone(),
             widget_window: self.widget_window.clone(),
+            safe_area: self.safe_area,
         }
     }
 }
@@ -81,6 +73,7 @@ impl SettingsState {
 pub enum SettingsPath {
     ShowWidget,
     WidgetPosition,
+    SafeArea,
 }
 
 impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
@@ -125,6 +118,11 @@ impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
 
         if self.widget_window != new_state.widget_window {
             self.widget_window = new_state.widget_window.clone();
+        }
+
+        if self.safe_area != new_state.safe_area {
+            self.safe_area = new_state.safe_area.clone();
+            changed_paths.push(SettingsPath::SafeArea);
         }
 
         for (_, subscribers) in self.subscribers.iter() {
