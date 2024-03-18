@@ -33,10 +33,10 @@ jobs:
         with:
           targets: ${{ matrix.arch }}
 
-      - name: Rust cache
-        uses: swatinem/rust-cache@v2
-        with:
-          workspaces: "./src-tauri -> target"
+      # - name: Rust cache
+      #   uses: swatinem/rust-cache@v2
+      #   with:
+      #     workspaces: "./src-tauri -> target"
 
       - uses: pnpm/action-setup@v3
         with:
