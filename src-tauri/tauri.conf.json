@@ -1,6 +1,6 @@
 {
   "productName": "System Monitor",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "identifier": "com.zak-man.sysmon",
   "build": {
     "beforeDevCommand": "pnpm dev",

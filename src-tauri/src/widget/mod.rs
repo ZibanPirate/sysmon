@@ -50,8 +50,8 @@ impl<R: Runtime> WidgetWindow for Window<R> {
                 };
 
                 let size = PhysicalSize::<i32> {
-                    width: maximized_window.outer_size()?.width as i32,
-                    height: maximized_window.outer_size()?.height as i32,
+                    width: maximized_window.inner_size()?.width as i32,
+                    height: maximized_window.inner_size()?.height as i32,
                 };
 
                 let max_pos: PhysicalPosition<i32> = maximized_window.outer_position()?;
