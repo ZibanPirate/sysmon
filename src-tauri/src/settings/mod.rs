@@ -50,7 +50,7 @@ impl Default for SettingsState {
     fn default() -> Self {
         Self {
             subscribers: HashMap::new(),
-            show_widget: false,
+            show_widget: true,
             widget_position: WidgetPosition::TopRight,
             safe_area: true,
             widget_window: None,
