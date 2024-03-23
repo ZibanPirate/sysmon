@@ -1,4 +1,6 @@
 use crate::settings::{Settings, SettingsPath, WidgetPosition};
+#[cfg(target_os = "windows")]
+use crate::utils::windows::get_windows_desktop_work_area;
 use crate::utils::StateSubscriber;
 use crate::Store;
 use std::sync::Arc;
@@ -21,38 +23,59 @@ impl<R: Runtime> WidgetWindow for Window<R> {
         let screen = self.current_monitor()?.unwrap();
         let (screen_size, screen_position) = match safe_area {
             true => {
-                let app = self.app_handle();
+                let work_area_left: i32;
+                let work_area_top: i32;
+                let work_area_width: i32;
+                let work_area_height: i32;
+                #[cfg(target_os = "windows")]
+                {
+                    let (lef, top, width, height) = get_windows_desktop_work_area()?;
+                    work_area_left = lef;
+                    work_area_top = top;
+                    work_area_width = width;
+                    work_area_height = height;
+                }
+                #[cfg(not(target_os = "windows"))]
+                {
+                    let app = self.app_handle();
 
-                let maximized_window = match app.get_webview_window("maximized_window") {
-                    Some(window) => window,
-                    None => {
-                        let maximized_window_builder = WebviewWindowBuilder::new(
-                            app,
-                            "maximized_window",
-                            tauri::WebviewUrl::App("maximized.html".into()),
-                        );
+                    let maximized_window = match app.get_webview_window("maximized_window") {
+                        Some(window) => window,
+                        None => {
+                            let maximized_window_builder = WebviewWindowBuilder::new(
+                                app,
+                                "maximized_window",
+                                tauri::WebviewUrl::App("maximized.html".into()),
+                            );
 
-                        let maximized_window_builder = maximized_window_builder
-                            .maximized(true)
-                            .skip_taskbar(true)
-                            .visible(false);
+                            let maximized_window_builder = maximized_window_builder
+                                .maximized(true)
+                                .skip_taskbar(true)
+                                .visible(false);
 
-                        let maximized_window = maximized_window_builder
-                            .build()
-                            .map_err(|err| format!("Failed to build widget window: {}", err))?;
+                            let maximized_window = maximized_window_builder
+                                .build()
+                                .map_err(|err| format!("Failed to build widget window: {}", err))?;
 
-                        maximized_window
-                    }
-                };
+                            maximized_window
+                        }
+                    };
 
-                let size = PhysicalSize::<i32> {
-                    width: maximized_window.outer_size()?.width as i32,
-                    height: maximized_window.outer_size()?.height as i32,
-                };
-
-                let max_pos: PhysicalPosition<i32> = maximized_window.outer_position()?;
-
-                (size, max_pos)
+                    work_area_left = maximized_window.outer_position()?.x as i32;
+                    work_area_top = maximized_window.outer_position()?.y as i32;
+                    work_area_width = maximized_window.outer_size()?.width as i32;
+                    work_area_height = maximized_window.outer_size()?.height as i32;
+                }
+                (
+                    PhysicalSize::<i32> {
+                        width: work_area_width,
+                        height: work_area_height,
+                    },
+                    PhysicalPosition {
+                        x: work_area_left,
+                        y: work_area_top,
+                    },
+                )
             }
             false => (
                 PhysicalSize::<i32> {
