@@ -1,3 +1,6 @@
+#[cfg(target_os = "windows")]
+pub mod windows;
+
 use std::pin::Pin;
 
 pub trait StateSubscriber<S, SF, CP> {
