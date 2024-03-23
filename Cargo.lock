@@ -2263,8 +2263,13 @@ dependencies = [
 name = "sysmon"
 version = "0.1.0-alpha.1"
 dependencies = [
+ "futures",
  "iced",
+ "iced_wgpu",
+ "iced_winit",
  "time",
+ "wgpu",
+ "winit",
 ]
 
 [[package]]
