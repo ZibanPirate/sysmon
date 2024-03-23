@@ -2,12 +2,21 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "type": "shell",
+      "command": [
+        "cargo install cargo-watch"
+      ],
+      "problemMatcher": [],
+      "label": "install pre-requisite"
+    },
+    {
       "type": "cargo",
       "command": "watch",
       "args": ["-x", "run"],
       "problemMatcher": ["$rustc"],
       "group": "build",
-      "label": "rust: cargo build"
+      "label": "rust: cargo build",
+      "dependsOn": ["install pre-requisite"]
     }
   ]
 }
