@@ -4,7 +4,9 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 
 **example:**
 
-![alt text](assets/jpeg/sysmon-sample.jpeg)
+|                       macOS                       |                      Windows                       |
+| :-----------------------------------------------: | :------------------------------------------------: |
+| ![alt text](assets/jpeg/sysmon-sample-macos.jpeg) | ![alt text](assets/jpeg/sysmon-sample-windows.png) |
 
 ## Download
 
@@ -12,10 +14,10 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.26_aarch64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz)                                                                                                                                       |
 | MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.26_x64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)                                                                                                                                               |
-| Windows | Arm           | Nope                                                                                                                                                                                                                                                                                                                                                                      |
+| Windows | Arm           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
 | Windows | x86           | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.26_x64-setup.exe)<br>- [NSIS Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.26_x64-setup.nsis.zip)<br>- [MSI Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.26_x64_en-US.msi) |
-| Linux   | Arm           | _coming soon_                                                                                                                                                                                                                                                                                                                                                             |
-| Linux   | x86           | _coming soon_                                                                                                                                                                                                                                                                                                                                                             |
+| Linux   | Arm           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
+| Linux   | x86           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
 
 ## Contribution
 
