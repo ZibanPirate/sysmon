@@ -1,8 +1,9 @@
 use crate::settings::WidgetPosition;
 use crate::Store;
 use crate::{settings::Settings, utils::StateSubscriber};
+use tauri::AppHandle;
 use tauri::{
-    menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, MenuItemBuilder, SubmenuBuilder},
+    menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, SubmenuBuilder},
     App, Manager,
 };
 
@@ -15,9 +16,7 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
         .map_err(|_| "Failed to lock settings")?;
     let state = settings_state.get_state();
 
-    let tray = app.tray().ok_or("Failed to create tray")?;
-
-    tray.set_menu(Some(
+    let tray_menu = |state: &Settings, app: &AppHandle| {
         MenuBuilder::new(app)
             .items(&[
                 &CheckMenuItemBuilder::new("Show Widget")
@@ -27,20 +26,24 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                     .unwrap(),
                 &SubmenuBuilder::new(app, "Position")
                     .items(&[
-                        &MenuItemBuilder::new("Top-Right")
+                        &CheckMenuItemBuilder::new(" ⌝ Top-Right")
                             .id("top-right")
+                            .checked(state.widget_position == WidgetPosition::TopRight)
                             .build(app)
                             .unwrap(),
-                        &MenuItemBuilder::new("Top-Left")
+                        &CheckMenuItemBuilder::new(" ⌜ Top-Left")
                             .id("top-left")
+                            .checked(state.widget_position == WidgetPosition::TopLeft)
                             .build(app)
                             .unwrap(),
-                        &MenuItemBuilder::new("Bottom-Right")
+                        &CheckMenuItemBuilder::new(" ⌟ Bottom-Right")
                             .id("bottom-right")
+                            .checked(state.widget_position == WidgetPosition::BottomRight)
                             .build(app)
                             .unwrap(),
-                        &MenuItemBuilder::new("Bottom-Left")
+                        &CheckMenuItemBuilder::new(" ⌞ Bottom-Left")
                             .id("bottom-left")
+                            .checked(state.widget_position == WidgetPosition::BottomLeft)
                             .build(app)
                             .unwrap(),
                     ])
@@ -57,9 +60,15 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
             .quit()
             .separator()
             .about(None)
-            .build()?,
-    ))
-    .map_err(|err| format!("Failed to set tray menu: {}", err))?;
+            .build()
+            .unwrap()
+    };
+
+    let tray = app.tray().unwrap();
+
+    tray.set_menu(Some(tray_menu(&state, app.app_handle())))
+        .map_err(|err| format!("Failed to set tray menu: {}", err))
+        .unwrap();
 
     tray.on_menu_event(move |app, event| {
         let store = app.state::<Store>();
@@ -113,6 +122,16 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                 }
             },
         }
+
+        let state = settings_state.get_state();
+
+        let tray_menu = tray_menu(&state, app);
+
+        app.tray()
+            .unwrap()
+            .set_menu(Some(tray_menu))
+            .map_err(|err| format!("Failed to set tray menu: {}", err))
+            .unwrap();
     });
 
     Ok(())
