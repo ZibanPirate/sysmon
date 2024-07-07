@@ -29,6 +29,7 @@ pub struct Settings {
     pub show_widget: bool,
     pub widget_position: WidgetPosition,
     pub safe_area: bool,
+    pub last_manually_refreshed: Option<i64>,
     #[derivative(Debug = "ignore")]
     #[serde(skip)]
     pub widget_window: Option<Arc<tauri::Window>>,
@@ -41,6 +42,7 @@ pub struct SettingsState {
     subscribers: HashMap<u32, Vec<(Vec<SettingsPath>, Pin<Box<dyn Fn(&Settings) -> () + Send>>)>>,
     show_widget: bool,
     safe_area: bool,
+    pub last_manually_refreshed: Option<i64>,
     widget_position: WidgetPosition,
     #[derivative(Debug = "ignore")]
     widget_window: Option<Arc<tauri::Window>>,
@@ -53,6 +55,7 @@ impl Default for SettingsState {
             show_widget: true,
             widget_position: WidgetPosition::TopRight,
             safe_area: true,
+            last_manually_refreshed: None,
             widget_window: None,
         }
     }
@@ -65,6 +68,7 @@ impl SettingsState {
             widget_position: self.widget_position.clone(),
             widget_window: self.widget_window.clone(),
             safe_area: self.safe_area,
+            last_manually_refreshed: self.last_manually_refreshed,
         }
     }
 }
@@ -74,6 +78,7 @@ pub enum SettingsPath {
     ShowWidget,
     WidgetPosition,
     SafeArea,
+    LastManuallyRefreshed,
 }
 
 impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
@@ -123,6 +128,11 @@ impl StateSubscriber<Settings, SettingsState, SettingsPath> for SettingsState {
         if self.safe_area != new_state.safe_area {
             self.safe_area = new_state.safe_area.clone();
             changed_paths.push(SettingsPath::SafeArea);
+        }
+
+        if self.last_manually_refreshed != new_state.last_manually_refreshed {
+            self.last_manually_refreshed = new_state.last_manually_refreshed.clone();
+            changed_paths.push(SettingsPath::LastManuallyRefreshed);
         }
 
         for (_, subscribers) in self.subscribers.iter() {

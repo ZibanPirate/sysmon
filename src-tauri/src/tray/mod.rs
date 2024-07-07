@@ -1,6 +1,7 @@
 use crate::settings::WidgetPosition;
 use crate::Store;
 use crate::{settings::Settings, utils::StateSubscriber};
+use tauri::menu::MenuItemBuilder;
 use tauri::AppHandle;
 use tauri::{
     menu::{CheckMenuItemBuilder, MenuBuilder, MenuEvent, SubmenuBuilder},
@@ -22,6 +23,10 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                 &CheckMenuItemBuilder::new("Show Widget")
                     .id("show-widget")
                     .checked(state.show_widget)
+                    .build(app)
+                    .unwrap(),
+                &MenuItemBuilder::new("Refresh Widget")
+                    .id("refresh-widget")
                     .build(app)
                     .unwrap(),
                 &SubmenuBuilder::new(app, "Position")
@@ -84,6 +89,12 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
                 "show-widget" => {
                     settings_state.set_state(Settings {
                         show_widget: !state.show_widget,
+                        ..state
+                    });
+                }
+                "refresh-widget" => {
+                    settings_state.set_state(Settings {
+                        last_manually_refreshed: Some(chrono::Utc::now().timestamp()),
                         ..state
                     });
                 }

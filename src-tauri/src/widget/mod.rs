@@ -174,7 +174,11 @@ pub fn setup_widget(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     });
     move_window(&settings_state.get_state());
     settings_state.on_paths_change(
-        vec![SettingsPath::WidgetPosition, SettingsPath::SafeArea],
+        vec![
+            SettingsPath::WidgetPosition,
+            SettingsPath::SafeArea,
+            SettingsPath::LastManuallyRefreshed,
+        ],
         move_window,
     );
 
