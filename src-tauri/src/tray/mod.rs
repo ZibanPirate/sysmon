@@ -64,7 +64,11 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
             .separator()
             .quit()
             .separator()
-            .about(None)
+            .item(
+                &MenuItemBuilder::new(format!("Sysmon v{}", env!("CARGO_PKG_VERSION")).as_str())
+                    .build(app)
+                    .unwrap(),
+            )
             .build()
             .unwrap()
     };
