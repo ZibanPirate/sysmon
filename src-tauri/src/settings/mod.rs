@@ -1,5 +1,6 @@
 use crate::{utils::StateSubscriber, Store};
 use derivative::Derivative;
+use nest_struct::nest_struct;
 use serde::{Deserialize, Serialize};
 use std::{
     collections::HashMap,
@@ -11,23 +12,24 @@ use std::{
 };
 use tauri::{App, Manager};
 
-// @TODO-ZM: add clone to tauri_plugin_positioner
-#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
-pub enum WidgetPosition {
-    TopRight,
-    TopLeft,
-    BottomRight,
-    BottomLeft,
-}
-
+#[nest_struct]
 #[derive(Derivative)]
 #[derivative(Debug)]
 #[derive(Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Settings {
     pub show_widget: bool,
-    pub widget_position: WidgetPosition,
+    pub widget_position: nest! {
+        // @TODO-ZM: add clone to tauri_plugin_positioner
+        #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+        #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+        pub enum WidgetPosition {
+            TopRight,
+            TopLeft,
+            BottomRight,
+            BottomLeft,
+        }
+    },
     pub safe_area: bool,
     pub last_manually_refreshed: Option<i64>,
     #[derivative(Debug = "ignore")]
