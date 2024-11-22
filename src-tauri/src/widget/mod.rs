@@ -4,7 +4,9 @@ use crate::utils::windows::get_windows_desktop_work_area;
 use crate::utils::StateSubscriber;
 use crate::Store;
 use std::sync::Arc;
-use tauri::{App, Manager, PhysicalPosition, PhysicalSize, Runtime, WebviewWindowBuilder, Window};
+use tauri::{
+    App, Emitter, Manager, PhysicalPosition, PhysicalSize, Runtime, WebviewWindowBuilder, Window,
+};
 
 pub trait WidgetWindow {
     fn move_widget(

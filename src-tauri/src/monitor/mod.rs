@@ -3,7 +3,7 @@ use crate::Store;
 use serde::Serialize;
 use std::sync::Arc;
 use sysinfo::Networks;
-use tauri::{App, Manager};
+use tauri::{App, Emitter, Manager};
 
 #[derive(Debug, Serialize, Clone)]
 #[serde(rename_all = "camelCase")]
@@ -72,7 +72,7 @@ async fn monitor_system(target_window: Arc<tauri::Window>) {
 
         target_window
             .app_handle()
-            .tray()
+            .tray_by_id("main")
             .unwrap()
             .set_title(Some(&bytes_to_string(chosen_speed.1, chosen_speed.0)))
             .unwrap();

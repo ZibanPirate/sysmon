@@ -12,21 +12,20 @@
     "v:patch": "node scripts/save-old-version.js && tauri-version patch && cd src-tauri && cargo check && git reset HEAD~ && cd .. && node scripts/update-readme.js"
   },
   "dependencies": {
-    "@tauri-apps/api": ">=2.0.0-beta.0",
+    "@tauri-apps/api": "^2",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-charts": "3.0.0-beta.57",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@tauri-apps/cli": ">=2.0.0-beta.0",
-    "@types/lodash": "^4.14.202",
-    "@types/node": "^20.11.28",
+    "@tauri-apps/cli": "^2",
+    "@types/lodash": "^4.17.13",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",
-    "tauri-version": "^0.2.1",
-    "typescript": "^5.0.2",
-    "vite": "^5.0.0"
+    "tauri-version": "^0.5.1",
+    "typescript": "^5.2.2",
+    "vite": "^5.3.1"
   }
 }

@@ -73,7 +73,7 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
             .unwrap()
     };
 
-    let tray = app.tray().unwrap();
+    let tray = app.tray_by_id("main").unwrap();
 
     tray.set_menu(Some(tray_menu(&state, app.app_handle())))
         .map_err(|err| format!("Failed to set tray menu: {}", err))
@@ -142,7 +142,7 @@ pub fn setup_tray(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
 
         let tray_menu = tray_menu(&state, app);
 
-        app.tray()
+        app.tray_by_id("main")
             .unwrap()
             .set_menu(Some(tray_menu))
             .map_err(|err| format!("Failed to set tray menu: {}", err))
