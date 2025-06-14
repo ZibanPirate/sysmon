@@ -1,12 +1,12 @@
 {
-	"version": "2.0.0",
-	"tasks": [
-		{
-			"type": "shell",
-			"command": "pnpm tauri dev",
-			"problemMatcher": [],
-			"label": "tauri:dev",
-			"group": "build"
-		}
-	]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "shell",
+      "command": "pnpm tauri dev",
+      "problemMatcher": [],
+      "label": "tauri:dev",
+      "group": "build"
+    }
+  ]
 }
