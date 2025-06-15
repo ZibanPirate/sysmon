@@ -4,7 +4,7 @@ import { MonitorEvent } from "../../../../common-types/bindings";
 import { Network } from "../components/network";
 import "./style.css";
 
-const MAX_EVENTS = 100;
+const MAX_EVENTS = 20;
 
 export function App() {
   const [events, setEvents] = useState<MonitorEvent[]>([]);
