@@ -19,13 +19,11 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 | Linux   | Arm           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
 | Linux   | x86           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
 
-## Contribution
+## Contributing
 
-the project is a mess now, but feel free to fork and modify the code.
+Contributions are welcome, please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) to get started.
 
-once things are a bit clear, I will update this section.
-
-a rough roadmap is compiled into the checklist bellow
+here's a rough roadmap of the project
 
 ### Checklist
 
@@ -43,7 +41,3 @@ a rough roadmap is compiled into the checklist bellow
   - [ ] RAM
   - [ ] Storage
 - [ ] optimize Widgets for low CPU consumption
-
-### Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
