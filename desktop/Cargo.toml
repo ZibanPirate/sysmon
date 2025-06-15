@@ -26,3 +26,4 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
+sysinfo = { workspace = true }

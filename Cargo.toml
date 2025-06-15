@@ -19,3 +19,4 @@ anyhow = "1"
 tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
 typeshare = "1"
+sysinfo = { version = "0.35", features = ["network"] }

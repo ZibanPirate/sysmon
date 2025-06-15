@@ -1,7 +1,7 @@
 node_modules/
 dist/
 target/
-desktop/gen/schemas/
+desktop/gen/
 desktop/icons/
 .env
 common-types/bindings/
