@@ -1,0 +1,13 @@
+.polylineReceived {
+  stroke: #09f9;
+  stroke-width: 0px;
+  fill: #09f9;
+  animation: dash 2s linear infinite;
+
+}
+
+.polylineSent {
+  stroke: #f099;
+  stroke-width: 0px;
+  fill: #f099;
+}
