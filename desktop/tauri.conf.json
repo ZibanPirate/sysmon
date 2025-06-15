@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "sysmon",
+  "version": "0.1.0",
+  "identifier": "com.zak-man.sysmon.desktop",
+  "build": {
+    "beforeDevCommand": {
+      "cwd": "./web",
+      "script": "npm run dev"
+    },
+    "beforeBuildCommand": {
+      "cwd": "./web",
+      "script": "npm run build"
+    },
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "./web/dist"
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all"
+  }
+}

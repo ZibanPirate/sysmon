@@ -1,0 +1,18 @@
+[workspace]
+resolver = "3"
+members = ["desktop"]
+exclude = ["scripts"]
+
+package.edition = "2024"
+package.authors = ["ZibanPirate <zakman.dev@gmail.com>"]
+package.readme = "README.md"
+package.license = "MIT"
+package.repository = "https://github.com/ZibanPirate/sysmon"
+package.version = "0.1.0"
+package.publish = false
+
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+target/
+desktop/gen/schemas/
+desktop/icons/
+.env
