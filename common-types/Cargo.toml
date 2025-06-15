@@ -1,0 +1,20 @@
+[package]
+name = "common-types"
+version = { workspace = true }
+edition = { workspace = true }
+publish = { workspace = true }
+authors = { workspace = true }
+readme = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+
+[features]
+export_bindings = []
+
+[build-dependencies]
+cli-run = { git = "https://github.com/zibanpirate/cli-rs.git" }
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+typeshare = { workspace = true }

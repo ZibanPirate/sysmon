@@ -4,3 +4,4 @@ target/
 desktop/gen/schemas/
 desktop/icons/
 .env
+common-types/bindings/

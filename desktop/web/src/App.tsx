@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./App.css";
-import { MonitorEvent, useMonitorEvent } from "./hooks/use-monitor-event";
+import { useMonitorEvent } from "./hooks/use-monitor-event";
+import { MonitorEvent } from "../../../common-types/bindings";
 
 export function App() {
   const [events, setEvents] = useState<{

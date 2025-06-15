@@ -7,12 +7,15 @@ package.edition = "2024"
 cli-run = { git = "https://github.com/zibanpirate/cli-rs.git" }
 ---
 
-use cli_run::CliRun;
+use cli_run::{cli_run, CliRun};
 
 fn main() {
     println!("- Installing ./desktop/web dependencies...");
     let cmd = CliRun::new().with_relative_cwd("./desktop/web");
     cmd.run("npm", vec!["install"]);
+
+    println!("- Installing typeshare...");
+    cli_run("cargo", vec!["install", "typeshare-cli"]);
 
     println!("- Generating Tauri icons...");
     let cmd = CliRun::new().with_relative_cwd("./desktop");

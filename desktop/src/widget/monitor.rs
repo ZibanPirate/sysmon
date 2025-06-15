@@ -1,11 +1,6 @@
 use anyhow::Result;
-use serde::{Deserialize, Serialize};
+use common_types::MonitorEvent;
 use tauri::{AppHandle, Emitter};
-
-#[derive(Debug, Serialize, Deserialize)]
-struct MonitorEvent {
-    working: bool,
-}
 
 pub async fn run(app_handle: AppHandle) -> Result<()> {
     let event = MonitorEvent { working: true };

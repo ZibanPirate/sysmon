@@ -1,12 +1,15 @@
-# Develop locally
-
 Inside `./scripts` you should find everything you need to start hacking locally.
 
-One time setup:
+**One time setup**
+
+set `CLI_RUN_CWD="path/to/cloned/repo/root"` in `./scripts/.env`
+then
 
 ```sh
 ./scripts/setup.rs
 ```
+
+**Develop locally**
 
 Run app in dev mode:
 
