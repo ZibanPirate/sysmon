@@ -7,7 +7,7 @@ interface NetworkProps {
 }
 
 const MIN_VALUE_BYTES = 10_000;
-const ASPECT_RATIO = 6 / 2;
+const ASPECT_RATIO = 4 / 2;
 const WIDTH = 100;
 const HEIGHT = WIDTH / ASPECT_RATIO;
 
@@ -79,24 +79,9 @@ export const Network: FC<NetworkProps> = ({ networkEvents }) => {
   }, [networkEvents]);
 
   return (
-    <>
-      <pre>
-        {JSON.stringify(
-          {
-            firstEvent: receivedPath.slice(0, 20),
-            lastEvent: receivedPath.slice(-20),
-          },
-          null,
-          2
-        )}
-      </pre>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
-      >
-        <path d={sentPath} className={styles.polylineSent} />
-        <path d={receivedPath} className={styles.polylineReceived} />
-      </svg>
-    </>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
+      <path d={sentPath} className={styles.polylineSent} />
+      <path d={receivedPath} className={styles.polylineReceived} />
+    </svg>
   );
 };

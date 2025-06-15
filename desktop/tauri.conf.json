@@ -18,5 +18,8 @@
   "bundle": {
     "active": true,
     "targets": "all"
+  },
+  "app": {
+    "macOSPrivateApi": true
   }
 }
