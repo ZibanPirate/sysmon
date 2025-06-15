@@ -4,9 +4,9 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 
 **example:**
 
-|                       macOS                       |                      Windows                       |
-| :-----------------------------------------------: | :------------------------------------------------: |
-| ![alt text](assets/jpeg/sysmon-sample-macos.jpeg) | ![alt text](assets/jpeg/sysmon-sample-windows.png) |
+|                         macOS                         |                        Windows                         |
+| :---------------------------------------------------: | :----------------------------------------------------: |
+| ![alt text](old/assets/jpeg/sysmon-sample-macos.jpeg) | ![alt text](old/assets/jpeg/sysmon-sample-windows.png) |
 
 ## Download
 
