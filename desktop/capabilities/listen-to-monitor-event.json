@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "listen-to-monitor-event",
+  "description": "Capability for windows to listen to monitor events.",
+  "windows": ["widget"],
+  "permissions": ["core:event:allow-listen"]
+}

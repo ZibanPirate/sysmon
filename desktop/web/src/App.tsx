@@ -1,35 +1,23 @@
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
+import { MonitorEvent, useMonitorEvent } from "./hooks/use-monitor-event";
 
 export function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [events, setEvents] = useState<{
+    count: number;
+    lastEvent: MonitorEvent | null;
+  }>({ count: 0, lastEvent: null });
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
-  }
+  useMonitorEvent((event) => {
+    setEvents((prevEvents) => ({
+      count: prevEvents.count + 1,
+      lastEvent: event.payload,
+    }));
+  });
 
   return (
     <main className="container">
-      <h1>Welcome</h1>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
+      <pre>{JSON.stringify(events, null, 2)}</pre>
     </main>
   );
 }

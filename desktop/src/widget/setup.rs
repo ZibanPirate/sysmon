@@ -1,13 +1,13 @@
+use crate::widget::monitor::start_monitoring;
 use anyhow::Result;
 use tauri::WebviewWindowBuilder;
 
-pub fn setup_widget(app: &mut tauri::App) -> Result<()> {
-    let network_widget_window_builder =
-        WebviewWindowBuilder::new(app, "widget", tauri::WebviewUrl::App("index.html".into()));
+// todo-zm: react to changes in settings
+pub fn setup_widget<'a>(app: &'a mut tauri::App) -> Result<()> {
+    WebviewWindowBuilder::new(app, "widget", tauri::WebviewUrl::App("index.html".into()))
+        .build()?;
 
-    let _network_widget_window = network_widget_window_builder.build()?;
+    tokio::spawn(start_monitoring(app.handle().clone()));
 
-    // todo-zm: react to changes in settings
-    // todo-zm: listen to telemetry events, should we rely on tauri commands for this?
     Ok(())
 }
