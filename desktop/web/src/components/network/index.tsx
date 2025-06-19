@@ -13,12 +13,13 @@ const HEIGHT = WIDTH / ASPECT_RATIO;
 
 export const Network: FC<NetworkProps> = ({ networkEvents }) => {
   const { receivedPath, sentPath } = useMemo(() => {
-    const max = Math.max(
+    let max = Math.max(
       ...networkEvents.map(
         (event) => event.content.received + event.content.sent
       ),
       MIN_VALUE_BYTES
     );
+    max = max * 2;
 
     // Helper function to create cubic bezier commands
     const createBezierPath = (
@@ -79,7 +80,11 @@ export const Network: FC<NetworkProps> = ({ networkEvents }) => {
   }, [networkEvents]);
 
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${WIDTH} ${HEIGHT}`}>
+    <svg
+      className={styles.fadeToLeft}
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+    >
       <path d={sentPath} className={styles.polylineSent} />
       <path d={receivedPath} className={styles.polylineReceived} />
     </svg>

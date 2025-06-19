@@ -1,11 +1,33 @@
 .polylineReceived {
-  fill: #09f9;
+  fill: #09f4;
   stroke: #2af9;
-  stroke-width: 1px;
+  stroke-width: 0.5px;
 }
 
 .polylineSent {
-  fill: #f099;
+  fill: #f094;
   stroke: #f2a9;
-  stroke-width: 1px;
+  stroke-width: 0.5px;
+}
+
+.fadeToLeft {
+  mask: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.95) 25%,
+    rgba(0, 0, 0, 0.85) 50%,
+    rgba(0, 0, 0, 0.5) 75%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.fadeToRight {
+  mask: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.95) 25%,
+    rgba(0, 0, 0, 0.85) 50%,
+    rgba(0, 0, 0, 0.5) 75%,
+    rgba(0, 0, 0, 0) 100%
+  );
 }
