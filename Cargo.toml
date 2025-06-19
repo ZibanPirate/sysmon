@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["desktop", "common-types"]
+members = ["desktop", "common-types", "macos"]
 exclude = ["scripts"]
 
 package.edition = "2024"
@@ -18,5 +18,7 @@ serde_json = "1"
 anyhow = "1"
 tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
+macos = { path = "./macos" }
 typeshare = "1"
 sysinfo = { version = "0.35", features = ["network"] }
+tauri = { version = "2", default-features = false }

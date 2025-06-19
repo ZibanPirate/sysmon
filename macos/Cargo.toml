@@ -1,0 +1,16 @@
+[package]
+name = "macos"
+edition.workspace = true
+authors.workspace = true
+readme.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[dependencies]
+swift-rs = "1"
+common-types = { workspace = true }
+
+[build-dependencies]
+swift-rs = { version = "1", features = ["build"] }

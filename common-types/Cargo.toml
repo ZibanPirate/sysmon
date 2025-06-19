@@ -18,3 +18,4 @@ cli-run = { git = "https://github.com/zibanpirate/cli-rs.git" }
 serde = { workspace = true }
 serde_json = { workspace = true }
 typeshare = { workspace = true }
+tauri = { workspace = true, default-features = false }
