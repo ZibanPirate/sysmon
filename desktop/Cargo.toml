@@ -19,10 +19,13 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = ["macos-private-api"] }
+tauri = { workspace = true, default-features = true, features = [
+    "macos-private-api",
+] }
 serde = { workspace = true }
 serde_json = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
+macos = { workspace = true }
 sysinfo = { workspace = true }
