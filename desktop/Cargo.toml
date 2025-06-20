@@ -28,4 +28,3 @@ anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
 macos = { workspace = true }
-sysinfo = { workspace = true }

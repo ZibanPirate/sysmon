@@ -20,5 +20,4 @@ tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
 macos = { path = "./macos" }
 typeshare = "1"
-sysinfo = { version = "0.35", features = ["network"] }
 tauri = { version = "2", default-features = false }

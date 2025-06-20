@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use std::time::Instant;
 use tauri::Position;
 use typeshare::typeshare;
 
@@ -32,4 +33,11 @@ impl Into<Position> for &Rect {
             y: self.y as i32,
         })
     }
+}
+
+#[derive(Debug, Clone)]
+pub struct NetworkInfo {
+    pub total_sent: isize,
+    pub total_received: isize,
+    pub timestamp: Instant,
 }

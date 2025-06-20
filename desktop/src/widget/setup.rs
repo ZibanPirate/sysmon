@@ -1,6 +1,6 @@
 use crate::widget::monitor::start_monitoring;
 use anyhow::Result;
-use macos::get_all_screen_info;
+use macos::screen_info::get_all_screen_info;
 use tauri::{LogicalPosition, Position, WebviewWindowBuilder};
 
 // todo-zm: react to changes in settings
