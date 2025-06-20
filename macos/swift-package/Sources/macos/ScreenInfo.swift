@@ -8,24 +8,24 @@ public class ScreenInfo: NSObject {
     var width: Int
     var height: Int
     var isMain: Bool
-    var safe_x: Int
-    var safe_y: Int
-    var safe_width: Int
-    var safe_height: Int
+    var safeX: Int
+    var safeY: Int
+    var safeWidth: Int
+    var safeHeight: Int
 
     init(
-        x: Int, y: Int, width: Int, height: Int, isMain: Bool, safe_x: Int = 0, safe_y: Int = 0,
-        safe_width: Int = 0, safe_height: Int = 0
+        x: Int, y: Int, width: Int, height: Int, isMain: Bool, safeX: Int, safeY: Int,
+        safeWidth: Int, safeHeight: Int
     ) {
         self.x = x
         self.y = y
         self.width = width
         self.height = height
         self.isMain = isMain
-        self.safe_x = safe_x
-        self.safe_y = safe_y
-        self.safe_width = safe_width
-        self.safe_height = safe_height
+        self.safeX = safeX
+        self.safeY = safeY
+        self.safeWidth = safeWidth
+        self.safeHeight = safeHeight
         super.init()
     }
 }
@@ -46,10 +46,10 @@ public func desktop_info() -> SRObjectArray {
             width: Int(frame.size.width),
             height: Int(frame.size.height),
             isMain: isMain,
-            safe_x: Int(safeFrame.origin.x),
-            safe_y: Int(safeFrame.origin.y),
-            safe_width: Int(safeFrame.size.width),
-            safe_height: Int(safeFrame.size.height)
+            safeX: Int(safeFrame.origin.x),
+            safeY: Int(safeFrame.origin.y),
+            safeWidth: Int(safeFrame.size.width),
+            safeHeight: Int(safeFrame.size.height)
         )
         screenInfos.append(screenInfo)
     }
