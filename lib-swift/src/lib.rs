@@ -1,5 +1,6 @@
+use anyhow::Result;
 use common_types::{NetworkInfo, Rect, ScreenInfo};
-pub use ffi::swift_multiply_by_4;
+use std::sync::{LazyLock, Mutex};
 
 #[swift_bridge::bridge]
 mod ffi {
@@ -18,15 +19,23 @@ mod ffi {
     }
 
     extern "Rust" {
-        fn rust_double_number(num: i64) -> i64;
+        type SwiftMessage;
+        #[swift_bridge(associated_to = SwiftMessage)]
+        fn new_screen_info_changed() -> SwiftMessage;
+
+        #[swift_bridge(swift_name = "messageFromSwift")]
+        fn message_from_swift(message: SwiftMessage);
     }
 
     extern "Swift" {
-        fn swift_multiply_by_4(num: i64) -> i64;
         #[swift_bridge(swift_name = "getScreenInfo")]
         fn get_screen_info() -> Vec<ScreenInfo>;
+
         #[swift_bridge(swift_name = "getNetworkInfo")]
         fn get_network_info_vec() -> Vec<NetworkInfo>;
+
+        #[swift_bridge(swift_name = "startObservingScreenInfo")]
+        fn start_observing_screen_info();
     }
 }
 
@@ -38,18 +47,40 @@ pub fn get_network_info() -> NetworkInfo {
     ffi::get_network_info_vec().first().unwrap().to_owned()
 }
 
-// todo-zm: remove sup and rust_double_number
-pub fn sup() -> String {
-    // let result = ffi::swift_multiply_by_4(10);
-    // let result = ffi::get_screen_info();
-    let result = get_network_info();
-    format!("Result from Swift: {:?}", result)
+pub fn observe_screen_info<T: Fn() -> Result<()> + Send + 'static>(callback: T) {
+    MESSAGE_CALLBACKS
+        .lock()
+        .unwrap()
+        .push((SwiftMessage::ScreenInfoChanged, Box::new(callback)));
+
+    // starts observing if not already started
+    ffi::start_observing_screen_info();
 }
 
-fn rust_double_number(num: i64) -> i64 {
-    println!("Rust double function called...");
+#[derive(Debug, PartialEq, Eq, Clone)]
+enum SwiftMessage {
+    ScreenInfoChanged,
+}
+impl SwiftMessage {
+    fn new_screen_info_changed() -> Self {
+        SwiftMessage::ScreenInfoChanged
+    }
+}
 
-    num * 4
+static MESSAGE_CALLBACKS: LazyLock<Mutex<Vec<(SwiftMessage, Box<dyn Fn() -> Result<()> + Send>)>>> =
+    LazyLock::new(|| Mutex::new(Vec::new()));
+
+fn message_from_swift(message: SwiftMessage) {
+    let callbacks = MESSAGE_CALLBACKS.lock().unwrap();
+    for (msg, callback) in callbacks.iter() {
+        if *msg == message {
+            let Ok(_) = callback() else {
+                // todo-zm: report error
+                eprintln!("Error executing callback for message: {:?}", message);
+                continue;
+            };
+        }
+    }
 }
 
 // todo-zm: add proper tests
@@ -59,7 +90,8 @@ mod tests {
 
     #[test]
     fn prints_result() {
-        let result = sup();
+        let result = get_network_info();
+        let result = format!("Result from Swift: {:?}", result);
         assert_eq!(result, "Result from Swift:");
     }
 }

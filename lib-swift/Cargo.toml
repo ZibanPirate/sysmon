@@ -11,6 +11,7 @@ publish.workspace = true
 [dependencies]
 swift-bridge = "0.1"
 common-types = { workspace = true }
+anyhow = { workspace = true }
 
 [build-dependencies]
 swift-bridge-build = "0.1"
