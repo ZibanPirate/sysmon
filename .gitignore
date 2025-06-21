@@ -5,3 +5,4 @@ desktop/gen/
 desktop/icons/
 .env
 common-types/bindings/
+.DS_Store

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["desktop", "common-types", "macos"]
+members = ["desktop", "common-types", "macos", "lib-swift"]
 exclude = ["scripts"]
 
 package.edition = "2024"
