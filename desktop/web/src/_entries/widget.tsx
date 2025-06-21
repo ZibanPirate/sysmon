@@ -1,3 +1,5 @@
+import React from "react";
+import ReactDOM from "react-dom/client";
 import { useState } from "react";
 import { useMonitorEvent } from "../hooks/use-monitor-event";
 import { MonitorEvent } from "../../../../common-types/bindings";
@@ -6,7 +8,7 @@ import "./style.css";
 
 const MAX_EVENTS = 50;
 
-export function App() {
+function App() {
   const [events, setEvents] = useState<MonitorEvent[]>(() =>
     Array.from({ length: MAX_EVENTS }, () => ({
       type: "Network",
@@ -32,3 +34,9 @@ export function App() {
     />
   );
 }
+
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);

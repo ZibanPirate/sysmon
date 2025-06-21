@@ -11,7 +11,7 @@ pub enum MonitorEvent {
 }
 
 impl MonitorEvent {
-    pub fn new_network(speed: (u64, u64)) -> Self {
+    pub fn new_network_from_tuple(speed: (u64, u64)) -> Self {
         MonitorEvent::Network {
             sent: speed.0 as f64,
             received: speed.1 as f64,

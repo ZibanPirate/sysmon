@@ -11,9 +11,6 @@ repository = { workspace = true }
 [features]
 export_bindings = []
 
-[build-dependencies]
-cli-run = { git = "https://github.com/zibanpirate/cli-rs.git" }
-
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
