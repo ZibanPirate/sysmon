@@ -1,3 +1,4 @@
+use common_types::{NetworkInfo, Rect, ScreenInfo};
 pub use ffi::swift_multiply_by_4;
 
 #[swift_bridge::bridge]
@@ -10,6 +11,10 @@ mod ffi {
         type ScreenInfo;
         #[swift_bridge(associated_to = ScreenInfo)]
         fn new(isMain: bool, full: Rect, safe: Rect) -> ScreenInfo;
+
+        type NetworkInfo;
+        #[swift_bridge(associated_to = NetworkInfo)]
+        fn new(total_sent: u32, total_received: u32) -> NetworkInfo;
     }
 
     extern "Rust" {
@@ -18,51 +23,26 @@ mod ffi {
 
     extern "Swift" {
         fn swift_multiply_by_4(num: i64) -> i64;
+        #[swift_bridge(swift_name = "getScreenInfo")]
         fn get_screen_info() -> Vec<ScreenInfo>;
+        #[swift_bridge(swift_name = "getNetworkInfo")]
+        fn get_network_info_vec() -> Vec<NetworkInfo>;
     }
 }
 
-// todo-zm: move Rect and ScreenInfo to common-types crate
-#[derive(Debug)]
-struct Rect {
-    x: i64,
-    y: i64,
-    width: i64,
-    height: i64,
+pub fn get_screen_info() -> Vec<ScreenInfo> {
+    ffi::get_screen_info()
 }
 
-impl Rect {
-    fn new(x: i64, y: i64, width: i64, height: i64) -> Self {
-        Rect {
-            x,
-            y,
-            width,
-            height,
-        }
-    }
+pub fn get_network_info() -> NetworkInfo {
+    ffi::get_network_info_vec().first().unwrap().to_owned()
 }
 
-#[derive(Debug)]
-struct ScreenInfo {
-    is_main: bool,
-    full: Rect,
-    safe: Rect,
-}
-
-impl ScreenInfo {
-    fn new(is_main: bool, full: Rect, safe: Rect) -> Self {
-        ScreenInfo {
-            is_main,
-            full,
-            safe,
-        }
-    }
-}
-
-// toodo-zm: remove sup and rust_double_number
+// todo-zm: remove sup and rust_double_number
 pub fn sup() -> String {
     // let result = ffi::swift_multiply_by_4(10);
-    let result = ffi::get_screen_info();
+    // let result = ffi::get_screen_info();
+    let result = get_network_info();
     format!("Result from Swift: {:?}", result)
 }
 

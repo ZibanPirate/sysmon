@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use std::time::Instant;
 use tauri::Position;
 use typeshare::typeshare;
 
@@ -11,19 +10,40 @@ pub enum MonitorEvent {
     Network { sent: f64, received: f64 },
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct ScreenInfo {
+    pub is_main: bool,
     pub full: Rect,
     pub safe: Rect,
-    pub is_main: bool,
 }
 
-#[derive(Debug, Clone)]
+impl ScreenInfo {
+    pub fn new(is_main: bool, full: Rect, safe: Rect) -> Self {
+        ScreenInfo {
+            is_main,
+            full,
+            safe,
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct Rect {
-    pub x: isize,
-    pub y: isize,
-    pub width: isize,
-    pub height: isize,
+    pub x: i64,
+    pub y: i64,
+    pub width: i64,
+    pub height: i64,
+}
+
+impl Rect {
+    pub fn new(x: i64, y: i64, width: i64, height: i64) -> Self {
+        Rect {
+            x,
+            y,
+            width,
+            height,
+        }
+    }
 }
 
 impl Into<Position> for &Rect {
@@ -37,7 +57,14 @@ impl Into<Position> for &Rect {
 
 #[derive(Debug, Clone)]
 pub struct NetworkInfo {
-    pub total_sent: isize,
-    pub total_received: isize,
-    pub timestamp: Instant,
+    pub total_sent: u32,
+    pub total_received: u32,
+}
+impl NetworkInfo {
+    pub fn new(total_sent: u32, total_received: u32) -> NetworkInfo {
+        NetworkInfo {
+            total_sent,
+            total_received,
+        }
+    }
 }

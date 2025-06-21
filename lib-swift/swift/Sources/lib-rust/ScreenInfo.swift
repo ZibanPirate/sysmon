@@ -1,7 +1,7 @@
 import AppKit
 import Foundation
 
-func get_screen_info() -> RustVec<ScreenInfo> {
+func getScreenInfo() -> RustVec<ScreenInfo> {
 
     let vec = RustVec<ScreenInfo>()
 

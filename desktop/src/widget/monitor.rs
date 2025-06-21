@@ -1,11 +1,7 @@
-use std::{
-    sync::{LazyLock, Mutex},
-    time::Instant,
-};
-
 use anyhow::Result;
 use common_types::{MonitorEvent, NetworkInfo};
-use macos::network_info::get_network_info;
+use lib_swift::get_network_info;
+use std::sync::{LazyLock, Mutex};
 use tauri::{AppHandle, Emitter};
 
 trait NetworkSnapshot {
@@ -29,7 +25,6 @@ static NETWORK_SNAPSHOT: LazyLock<Mutex<NetworkInfo>> = LazyLock::new(|| {
     Mutex::new(NetworkInfo {
         total_sent: 0,
         total_received: 0,
-        timestamp: Instant::now(),
     })
 });
 

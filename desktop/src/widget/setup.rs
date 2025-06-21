@@ -1,6 +1,6 @@
 use crate::widget::monitor::start_monitoring;
 use anyhow::Result;
-use macos::screen_info::get_all_screen_info;
+use lib_swift::get_screen_info;
 use tauri::{LogicalPosition, Position, WebviewWindowBuilder};
 
 // todo-zm: react to changes in settings
@@ -16,7 +16,7 @@ pub fn setup_widget<'a>(app: &'a mut tauri::App) -> Result<()> {
             .shadow(false)
             .build()?;
 
-    let screens = get_all_screen_info();
+    let screens = get_screen_info();
     let main_screen = screens
         .iter()
         .find(|screen| screen.is_main)

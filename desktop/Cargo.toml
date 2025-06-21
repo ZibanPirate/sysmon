@@ -27,4 +27,4 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
-macos = { workspace = true }
+lib-swift = { workspace = true }
