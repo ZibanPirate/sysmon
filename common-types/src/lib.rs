@@ -10,6 +10,15 @@ pub enum MonitorEvent {
     Network { sent: f64, received: f64 },
 }
 
+impl MonitorEvent {
+    pub fn new_network(speed: (u64, u64)) -> Self {
+        MonitorEvent::Network {
+            sent: speed.0 as f64,
+            received: speed.1 as f64,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct ScreenInfo {
     pub is_main: bool,

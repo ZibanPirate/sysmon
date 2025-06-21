@@ -20,6 +20,10 @@
     "targets": "all"
   },
   "app": {
-    "macOSPrivateApi": true
+    "macOSPrivateApi": true,
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "icons/32x32.png"
+    }
   }
 }

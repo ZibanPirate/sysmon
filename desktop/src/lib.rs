@@ -1,6 +1,8 @@
 use crate::_entry::app_builder;
 
 mod _entry;
+mod _utils;
+mod tray;
 mod widget;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
