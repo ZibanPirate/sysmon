@@ -1,5 +1,8 @@
 use anyhow::Result;
-use common_types::{NetworkInfo, Rect, ScreenInfo};
+use common_types::{
+    network::NetworkInfo,
+    screen::{Rect, ScreenInfo},
+};
 use std::sync::{LazyLock, Mutex};
 
 #[swift_bridge::bridge]

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMonitorEvent } from "../hooks/use-monitor-event";
 import { MonitorEvent } from "../../../../common-types/bindings";
 import { Network } from "../components/network";
-import "./style.css";
+import "../_utils/reset.css";
 
 const MAX_EVENTS = 50;
 

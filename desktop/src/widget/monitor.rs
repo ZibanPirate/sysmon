@@ -1,6 +1,6 @@
 use crate::_utils::bytes_to_string::bytes_to_string;
 use anyhow::Result;
-use common_types::{MonitorEvent, NetworkInfo};
+use common_types::{monitor::MonitorEvent, network::NetworkInfo};
 use lib_swift::get_network_info;
 use std::sync::{LazyLock, Mutex};
 use tauri::{AppHandle, Emitter, tray::TrayIcon};
