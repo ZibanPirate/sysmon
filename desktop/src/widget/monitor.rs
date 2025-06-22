@@ -1,9 +1,11 @@
 use crate::_utils::bytes_to_string::bytes_to_string;
 use anyhow::Result;
 use common_types::{monitor::MonitorEvent, network::NetworkInfo};
-use lib_swift::get_network_info;
 use std::sync::{LazyLock, Mutex};
 use tauri::{AppHandle, Emitter, tray::TrayIcon};
+
+#[cfg(target_os = "macos")]
+use lib_swift::get_network_info;
 
 pub async fn start_monitoring(app_handle: AppHandle) {
     loop {
@@ -42,7 +44,12 @@ static NETWORK_SNAPSHOT: LazyLock<Mutex<NetworkInfo>> = LazyLock::new(|| {
 static MAIN_TRAY: LazyLock<Mutex<Option<TrayIcon>>> = LazyLock::new(|| Mutex::new(None));
 
 pub async fn run(app_handle: &AppHandle) -> Result<()> {
+    #[cfg(target_os = "macos")]
     let current_network_info = get_network_info();
+    #[cfg(target_os = "windows")]
+    // todo-zm: implement windows network info retrieval
+    let current_network_info = NetworkInfo::new(0, 0);
+
     let mut snapshot = NETWORK_SNAPSHOT.lock().unwrap();
     let network_speed = snapshot.refresh_and_get_monitor_event(current_network_info);
 

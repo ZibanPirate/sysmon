@@ -1,9 +1,11 @@
 use crate::{settings::command::observe_settings, widget::monitor::start_monitoring};
 use anyhow::Result;
 use common_types::settings::{Settings, SettingsNetworkWidgetPosition};
-use lib_swift::{get_screen_info, observe_screen_info};
 use std::sync::Mutex;
 use tauri::{AppHandle, LogicalPosition, LogicalSize, Manager, WebviewWindowBuilder};
+
+#[cfg(target_os = "macos")]
+use lib_swift::{get_screen_info, observe_screen_info};
 
 fn refresh_widget(app_handle: &AppHandle) -> Result<()> {
     let settings_lock = app_handle.state::<Mutex<Settings>>();
@@ -19,7 +21,26 @@ fn refresh_widget(app_handle: &AppHandle) -> Result<()> {
     let window_width = settings.size;
     let window_height = window_width / settings.aspect_ratio;
 
+    #[cfg(target_os = "macos")]
     let screens = get_screen_info();
+    #[cfg(target_os = "windows")]
+    // todo-zm: implement windows screen info retrieval
+    let screens = vec![common_types::screen::ScreenInfo {
+        is_main: true,
+        full: common_types::screen::Rect {
+            x: 0,
+            y: 0,
+            width: 1920,
+            height: 1080,
+        },
+        safe: common_types::screen::Rect {
+            x: 0,
+            y: 0,
+            width: 1920,
+            height: 1080,
+        },
+    }];
+
     let screen_rect = {
         let main_screen = screens
             .iter()
@@ -85,7 +106,11 @@ pub fn setup_widget<'a>(app: &'a mut tauri::App) -> Result<()> {
 
     let app_handle = app.handle().clone();
 
+    #[cfg(target_os = "macos")]
     observe_screen_info(move || refresh_widget(&app_handle));
+    #[cfg(target_os = "windows")]
+    // todo-zm: implement windows screen info observation
+    {}
     observe_settings(|app_handle| {
         refresh_widget(&app_handle)?;
         Ok(())

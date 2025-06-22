@@ -9,6 +9,8 @@ cli-run = { git = "https://github.com/zibanpirate/cli-rs.git" }
 
 use cli_run::{cli_run, CliRun};
 
+// todo-zm: make this work on PowerShell
+
 fn main() {
     println!("- Installing ./desktop/web dependencies...");
     let cmd = CliRun::new().with_relative_cwd("./desktop/web");

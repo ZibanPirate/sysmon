@@ -28,4 +28,6 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
 lib-swift = { workspace = true }
