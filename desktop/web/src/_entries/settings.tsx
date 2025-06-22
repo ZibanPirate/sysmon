@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "../_utils/import-daisyui.css";
 import {
@@ -6,23 +6,45 @@ import {
   SettingsNetworkWidgetPosition,
   SettingsTrayContent,
 } from "../../../../common-types/bindings";
+import { invoke } from "@tauri-apps/api/core";
 
 function App() {
-  let [settings, setSettings] = useState<Settings>({
-    general: {
-      start_on_boot: true,
-      send_usage_telemetry: false,
-    },
-    network_widget: {
-      enabled: true,
-      position: SettingsNetworkWidgetPosition.TopRight,
-      safe_area: false,
-      size: 200,
-    },
-    tray: {
-      content: SettingsTrayContent.Network,
-    },
-  });
+  let [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+
+  async function loadSettings() {
+    try {
+      setSettings(null);
+      const result = await invoke<Settings>("get_settings");
+      setSettings(result);
+    } catch (error) {
+      // todo-zm: capture error in telemetry
+      console.error("Failed to load settings:", error);
+      setSettings("ERROR");
+    }
+  }
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
+
+  if (settings === null) {
+    return (
+      <div className="flex flex-col w-full justify-center p-6">
+        <progress className="progress w-full"></progress>
+      </div>
+    );
+  }
+
+  if (settings === "ERROR") {
+    return (
+      <div className="flex flex-col w-full justify-center items-center p-6">
+        <div className="text-red-500">Failed to load settings</div>
+        <button className="btn mt-4" onClick={loadSettings}>
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 tabs tabs-border">

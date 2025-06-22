@@ -53,3 +53,25 @@ pub struct SettingsGeneral {
     pub send_usage_telemetry: bool,
 }
 // ---
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            general: SettingsGeneral {
+                start_on_boot: true,
+                send_usage_telemetry: false,
+            },
+            network_widget: SettingsNetworkWidget {
+                enabled: true,
+                // todo-zm: change per OS
+                position: SettingsNetworkWidgetPosition::TopLeft,
+                // todo-zm: change per OS
+                safe_area: false,
+                size: 200.0,
+            },
+            tray: SettingsTray {
+                content: SettingsTrayContent::Network,
+            },
+        }
+    }
+}
