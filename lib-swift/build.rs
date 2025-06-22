@@ -3,10 +3,6 @@ use std::{path::PathBuf, process::Command};
 const SWIFT_STATIC_LIB_NAME: &str = "rust"; // this looks for `librust.a`
 
 fn main() {
-    if !cfg!(target_os = "macos") {
-        println!("cargo:warning=Skipping Swift build on non-macOS platform.");
-        return;
-    }
     let (rust_crate_dir, swift_build_dir) = swift_dirs();
 
     let mut cmd = Command::new("swift-bridge-cli");
