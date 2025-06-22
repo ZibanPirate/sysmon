@@ -1,6 +1,18 @@
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[typeshare]
+pub struct SettingsEvent {
+    updated_settings: Settings,
+}
+
+impl SettingsEvent {
+    pub fn new(updated_settings: Settings) -> Self {
+        Self { updated_settings }
+    }
+}
+
 // todo-zm: make typeshare play nicely with nest_struct (cargo-expand-only ?)
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[typeshare]

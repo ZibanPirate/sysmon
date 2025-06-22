@@ -1,17 +1,18 @@
 import { FC, useMemo } from "react";
-import { MonitorEvent } from "../../../../../common-types/bindings";
+import { MonitorEvent, Settings } from "../../../../../common-types/bindings";
 import styles from "./style.module.css";
 
 interface NetworkProps {
   networkEvents: Array<MonitorEvent & { type: "Network" }>;
+  position: Settings["network_widget"]["position"];
 }
 
 const MIN_VALUE_BYTES = 10_000;
-const ASPECT_RATIO = 4 / 2;
-const WIDTH = 100;
-const HEIGHT = WIDTH / ASPECT_RATIO;
 
-export const Network: FC<NetworkProps> = ({ networkEvents }) => {
+export const Network: FC<NetworkProps> = ({ networkEvents, position }) => {
+  const WIDTH = window.innerWidth;
+  const HEIGHT = window.innerHeight;
+
   const { receivedPath, sentPath } = useMemo(() => {
     let max = Math.max(
       ...networkEvents.map(
@@ -84,6 +85,11 @@ export const Network: FC<NetworkProps> = ({ networkEvents }) => {
       className={styles.fadeToLeft}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+      style={{
+        transform: `scaleX(${position.includes("Left") ? -1 : 1}) scaleY(${
+          position.includes("Top") ? 1 : -1
+        })`,
+      }}
     >
       <path d={sentPath} className={styles.polylineSent} />
       <path d={receivedPath} className={styles.polylineReceived} />

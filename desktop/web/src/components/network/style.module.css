@@ -20,14 +20,3 @@
     rgba(0, 0, 0, 0) 100%
   );
 }
-
-.fadeToRight {
-  mask: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 1) 0%,
-    rgba(0, 0, 0, 0.95) 25%,
-    rgba(0, 0, 0, 0.85) 50%,
-    rgba(0, 0, 0, 0.5) 75%,
-    rgba(0, 0, 0, 0) 100%
-  );
-}
