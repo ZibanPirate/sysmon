@@ -19,7 +19,10 @@ func getScreenInfo() -> RustVec<ScreenInfo> {
             ),
             // safe
             Rect.new(
-                Int64(safeFrame.origin.x), Int64(safeFrame.origin.y),
+                Int64(safeFrame.origin.x),
+                // workaround-zm: safeFrame.origin.y does not reflect the actual position of the safe-area, but instead is always 0
+                // to work around this, we use the frame's origin.y plus the difference between the safeFrame's height and the frame's height
+                Int64(frame.origin.y + frame.size.height - safeFrame.size.height),
                 Int64(safeFrame.size.width), Int64(safeFrame.size.height)
             )
 
