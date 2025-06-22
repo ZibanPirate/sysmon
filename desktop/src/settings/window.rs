@@ -13,6 +13,7 @@ pub fn show_settings_window<'a>(app: &'a AppHandle) -> Result<()> {
         tauri::WebviewUrl::App("src/_entries/settings.html".into()),
     )
     .title("Settings - Sysmon")
+    .inner_size(400.0, 400.0)
     .build()?;
 
     Ok(())
