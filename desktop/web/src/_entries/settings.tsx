@@ -10,6 +10,17 @@ import { invoke } from "@tauri-apps/api/core";
 
 function App() {
   let [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+  let saveSettings = async (updatedSettings: Settings) => {
+    try {
+      let saved_settings = await invoke<Settings>("set_settings", {
+        updatedSettings,
+      });
+      setSettings(saved_settings);
+    } catch (error) {
+      // todo-zm: capture error in telemetry
+      console.error("Failed to save settings:", error);
+    }
+  };
 
   async function loadSettings() {
     try {
@@ -63,7 +74,7 @@ function App() {
               className="toggle"
               checked={settings.general.start_on_boot}
               onChange={(e) => {
-                setSettings({
+                saveSettings({
                   ...settings,
                   general: {
                     ...settings.general,
@@ -80,7 +91,7 @@ function App() {
               className="toggle"
               checked={settings.general.send_usage_telemetry}
               onChange={(e) => {
-                setSettings({
+                saveSettings({
                   ...settings,
                   general: {
                     ...settings.general,
@@ -108,7 +119,7 @@ function App() {
               className="toggle"
               checked={settings.network_widget.enabled}
               onChange={(e) => {
-                setSettings({
+                saveSettings({
                   ...settings,
                   network_widget: {
                     ...settings.network_widget,
@@ -132,7 +143,7 @@ function App() {
                           : "btn-ghost"
                       }`}
                       onClick={() => {
-                        setSettings({
+                        saveSettings({
                           ...settings,
                           network_widget: {
                             ...settings.network_widget,
@@ -173,7 +184,7 @@ function App() {
               className="toggle"
               checked={settings.network_widget.safe_area}
               onChange={(e) => {
-                setSettings({
+                saveSettings({
                   ...settings,
                   network_widget: {
                     ...settings.network_widget,
@@ -194,7 +205,7 @@ function App() {
               value={settings.network_widget.size}
               className="range"
               onChange={(e) => {
-                setSettings({
+                saveSettings({
                   ...settings,
                   network_widget: {
                     ...settings.network_widget,
@@ -223,7 +234,7 @@ function App() {
                 key={content}
                 checked={settings.tray.content === content}
                 onChange={() => {
-                  setSettings({
+                  saveSettings({
                     ...settings,
                     tray: {
                       ...settings.tray,
