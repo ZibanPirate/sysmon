@@ -32,7 +32,7 @@ pub struct SettingsNetworkWidget {
     pub enabled: bool,
     pub position: SettingsNetworkWidgetPosition,
     pub safe_area: bool,
-    pub size: f32,
+    pub size: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
