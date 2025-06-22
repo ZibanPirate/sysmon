@@ -1,3 +1,4 @@
+use crate::settings::persist::persist_settings;
 use anyhow::Result;
 use common_types::settings::Settings;
 use std::sync::{LazyLock, Mutex};
@@ -26,6 +27,10 @@ pub fn set_settings(
             eprintln!("Error notifying observer: {}", e);
         }
     }
+
+    persist_settings(&updated_settings, app_handle)
+        .map_err(|e| format!("Failed to persist settings: {}", e))?;
+
     Ok(updated_settings)
 }
 
