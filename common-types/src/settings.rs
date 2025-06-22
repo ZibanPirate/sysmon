@@ -45,6 +45,7 @@ pub struct SettingsNetworkWidget {
     pub position: SettingsNetworkWidgetPosition,
     pub safe_area: bool,
     pub size: f64,
+    pub aspect_ratio: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -80,6 +81,7 @@ impl Default for Settings {
                 // todo-zm: change per OS
                 safe_area: false,
                 size: 200.0,
+                aspect_ratio: 3.0,
             },
             tray: SettingsTray {
                 content: SettingsTrayContent::Network,

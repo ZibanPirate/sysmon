@@ -17,7 +17,7 @@ fn refresh_widget(app_handle: &AppHandle) -> Result<()> {
     }
 
     let window_width = settings.size;
-    let window_height = window_width / 4.0;
+    let window_height = window_width / settings.aspect_ratio;
 
     let screens = get_screen_info();
     let screen_rect = {
@@ -61,13 +61,13 @@ fn refresh_widget(app_handle: &AppHandle) -> Result<()> {
         .decorations(false)
         .skip_taskbar(true)
         .shadow(false)
-        .accept_first_mouse(false)
         .focused(false)
         // settings props on showing hidden window
         .inner_size(window_width, window_height)
         .position(position.x, position.y)
         // ---
-        .build()?;
+        .build()?
+        .set_ignore_cursor_events(true)?;
 
         return Ok(());
     };

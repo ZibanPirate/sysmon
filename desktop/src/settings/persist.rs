@@ -21,6 +21,6 @@ pub fn load_settings(app_handle: &AppHandle) -> Result<Settings> {
         return Ok(Settings::default());
     }
     let file = std::fs::File::open(settings_path)?;
-    let settings: Settings = serde_json::from_reader(file)?;
+    let settings: Settings = serde_json::from_reader(file).unwrap_or_default();
     Ok(settings)
 }

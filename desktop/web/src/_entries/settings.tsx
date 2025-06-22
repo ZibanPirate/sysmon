@@ -215,6 +215,26 @@ function App() {
               }}
             />
           </label>
+
+          <label className="label gap-4">
+            Aspect Ratio
+            <input
+              type="range"
+              min="100"
+              max="500"
+              value={settings.network_widget.aspect_ratio * 100}
+              className="range"
+              onChange={(e) => {
+                saveSettings({
+                  ...settings,
+                  network_widget: {
+                    ...settings.network_widget,
+                    aspect_ratio: Number(e.target.value) / 100,
+                  },
+                });
+              }}
+            />
+          </label>
         </div>
       </div>
 
