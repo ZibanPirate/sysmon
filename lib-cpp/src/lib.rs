@@ -1,7 +1,14 @@
+use anyhow::Result;
 use common_types::screen::{Rect, ScreenInfo};
+use std::sync::{LazyLock, Mutex};
 
 #[cxx::bridge]
 mod ffi {
+
+    #[derive(Debug, PartialEq, Eq, Clone)]
+    enum CppMessage {
+        ScreenInfoChanged,
+    }
 
     extern "Rust" {
         type CRect;
@@ -17,7 +24,7 @@ mod ffi {
             safe: Box<CRect>,
         );
 
-        fn message_from_cpp();
+        fn message_from_cpp(message: CppMessage);
     }
 
     unsafe extern "C++" {
@@ -67,11 +74,33 @@ pub fn get_screen_info() -> Vec<ScreenInfo> {
     ffi::get_screen_info().screens
 }
 
-fn message_from_cpp() {
-    println!("Received message from Cpp");
-    // append log to log.txt
-    std::fs::write("log.txt", "Received message from Cpp\n").expect("Unable to write to log file");
+pub fn observe_screen_info<T: Fn() -> Result<()> + Send + 'static>(callback: T) {
+    MESSAGE_CALLBACKS
+        .lock()
+        .unwrap()
+        .push((ffi::CppMessage::ScreenInfoChanged, Box::new(callback)));
+
+    // starts observing if not already started
+    ffi::start_observing_screen_info();
 }
+
+static MESSAGE_CALLBACKS: LazyLock<
+    Mutex<Vec<(ffi::CppMessage, Box<dyn Fn() -> Result<()> + Send>)>>,
+> = LazyLock::new(|| Mutex::new(Vec::new()));
+
+fn message_from_cpp(message: ffi::CppMessage) {
+    let callbacks = MESSAGE_CALLBACKS.lock().unwrap();
+    for (msg, callback) in callbacks.iter() {
+        if *msg == message {
+            let Ok(_) = callback() else {
+                // todo-zm: report error
+                eprintln!("Error executing callback for message: {:?}", message);
+                continue;
+            };
+        }
+    }
+}
+
 // todo-zm: add proper tests
 #[cfg(test)]
 mod tests {

@@ -11,6 +11,7 @@ publish.workspace = true
 [dependencies]
 cxx = "1"
 common-types = { workspace = true }
+anyhow = { workspace = true }
 
 [build-dependencies]
 cxx-build = "1"

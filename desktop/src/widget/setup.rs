@@ -4,6 +4,11 @@ use crate::{
 };
 use anyhow::Result;
 
+#[cfg(target_os = "windows")]
+use lib_cpp::observe_screen_info;
+#[cfg(target_os = "macos")]
+use lib_swift::observe_screen_info;
+
 pub fn setup_widget<'a>(app: &'a mut tauri::App) -> Result<()> {
     refresh_widget(&app.handle())?;
 
@@ -12,8 +17,8 @@ pub fn setup_widget<'a>(app: &'a mut tauri::App) -> Result<()> {
     #[cfg(target_os = "macos")]
     observe_screen_info(move || refresh_widget(&app_handle));
     #[cfg(target_os = "windows")]
-    // todo-zm: implement windows screen info observation
-    {}
+    observe_screen_info(move || refresh_widget(&app_handle));
+
     observe_settings(|app_handle| {
         refresh_widget(&app_handle)?;
         Ok(())
