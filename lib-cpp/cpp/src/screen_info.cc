@@ -1,4 +1,4 @@
-#include "screen_info.h"
+#include "lib.h"
 #include <windows.h>
 
 float64_t GetScaleFactorFromRegistry()

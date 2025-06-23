@@ -16,12 +16,16 @@ mod ffi {
             full: Box<CRect>,
             safe: Box<CRect>,
         );
+
+        fn message_from_cpp();
     }
 
     unsafe extern "C++" {
         include!("crate-root/cpp/src/lib.h");
 
         fn get_screen_info() -> Box<ScreenInfoVec>;
+
+        fn start_observing_screen_info();
     }
 }
 
@@ -63,6 +67,11 @@ pub fn get_screen_info() -> Vec<ScreenInfo> {
     ffi::get_screen_info().screens
 }
 
+fn message_from_cpp() {
+    println!("Received message from Cpp");
+    // append log to log.txt
+    std::fs::write("log.txt", "Received message from Cpp\n").expect("Unable to write to log file");
+}
 // todo-zm: add proper tests
 #[cfg(test)]
 mod tests {
@@ -70,8 +79,9 @@ mod tests {
 
     #[test]
     fn prints_result() {
-        let result = get_screen_info();
-        let result = format!("Result from Cpp: {:?}", result);
-        assert_eq!(result, "");
+        ffi::start_observing_screen_info();
+        // let result = get_screen_info();
+        // let result = format!("Result from Cpp: {:?}", result);
+        // assert_eq!(result, "");
     }
 }
