@@ -14,3 +14,4 @@ common-types = { workspace = true }
 
 [build-dependencies]
 cxx-build = "1"
+glob = { workspace = true }
