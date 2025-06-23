@@ -19,5 +19,6 @@ anyhow = "1"
 tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
 lib-swift = { path = "./lib-swift" }
+lib-cpp = { path = "./lib-cpp" }
 typeshare = "1"
 tauri = { version = "2", default-features = false }

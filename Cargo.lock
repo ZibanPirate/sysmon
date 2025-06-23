@@ -3313,6 +3313,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "common-types",
+ "lib-cpp",
  "lib-swift",
  "serde",
  "serde_json",

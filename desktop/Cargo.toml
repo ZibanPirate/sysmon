@@ -31,3 +31,6 @@ common-types = { workspace = true }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 lib-swift = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+lib-cpp = { workspace = true }
