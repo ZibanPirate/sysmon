@@ -76,10 +76,14 @@ impl Default for Settings {
             },
             network_widget: SettingsNetworkWidget {
                 enabled: true,
-                // todo-zm: change per OS
-                position: SettingsNetworkWidgetPosition::TopLeft,
-                // todo-zm: change per OS
+                #[cfg(target_os = "macos")]
+                position: SettingsNetworkWidgetPosition::TopRight,
+                #[cfg(target_os = "windows")]
+                position: SettingsNetworkWidgetPosition::BottomRight,
+                #[cfg(target_os = "macos")]
                 safe_area: false,
+                #[cfg(target_os = "windows")]
+                safe_area: true,
                 size: 200.0,
                 aspect_ratio: 3.0,
             },
