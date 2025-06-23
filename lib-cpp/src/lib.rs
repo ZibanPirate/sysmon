@@ -61,6 +61,6 @@ mod tests {
     fn prints_result() {
         let result = get_screen_info();
         let result = format!("Result from Cpp: {:?}", result);
-        assert_eq!(result, "Result from Cpp:");
+        assert_eq!(result, "");
     }
 }
