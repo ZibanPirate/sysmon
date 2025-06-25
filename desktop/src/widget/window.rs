@@ -8,6 +8,7 @@ use lib_cpp::get_screen_info;
 #[cfg(target_os = "macos")]
 use lib_swift::{get_screen_info, observe_screen_info};
 
+// todo-zm: atomic debounce this function
 pub fn refresh_widget(app_handle: &AppHandle) -> Result<()> {
     let settings_lock = app_handle.state::<Mutex<Settings>>();
     let settings = &settings_lock.lock().unwrap().network_widget;

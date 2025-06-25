@@ -4,6 +4,8 @@ use common_types::{monitor::MonitorEvent, network::NetworkInfo};
 use std::sync::{LazyLock, Mutex};
 use tauri::{AppHandle, Emitter, tray::TrayIcon};
 
+#[cfg(target_os = "windows")]
+use lib_cpp::get_network_info;
 #[cfg(target_os = "macos")]
 use lib_swift::get_network_info;
 
@@ -47,8 +49,7 @@ pub async fn run(app_handle: &AppHandle) -> Result<()> {
     #[cfg(target_os = "macos")]
     let current_network_info = get_network_info();
     #[cfg(target_os = "windows")]
-    // todo-zm: implement windows network info retrieval
-    let current_network_info = NetworkInfo::new(0, 0);
+    let current_network_info = get_network_info();
 
     let mut snapshot = NETWORK_SNAPSHOT.lock().unwrap();
     let network_speed = snapshot.refresh_and_get_monitor_event(current_network_info);

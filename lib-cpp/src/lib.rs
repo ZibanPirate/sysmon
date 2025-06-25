@@ -1,4 +1,5 @@
 use anyhow::Result;
+use common_types::network::NetworkInfo;
 use common_types::screen::{Rect, ScreenInfo};
 use std::sync::{LazyLock, Mutex};
 
@@ -25,6 +26,9 @@ mod ffi {
         );
 
         fn message_from_cpp(message: CppMessage);
+
+        type CNetworkInfo;
+        fn new_boxed_network_info(total_sent: u32, total_received: u32) -> Box<CNetworkInfo>;
     }
 
     unsafe extern "C++" {
@@ -33,6 +37,8 @@ mod ffi {
         fn get_screen_info() -> Box<ScreenInfoVec>;
 
         fn start_observing_screen_info();
+
+        fn get_network_info() -> Box<CNetworkInfo>;
     }
 }
 
@@ -101,6 +107,16 @@ fn message_from_cpp(message: ffi::CppMessage) {
     }
 }
 
+struct CNetworkInfo(pub NetworkInfo);
+
+fn new_boxed_network_info(total_sent: u32, total_received: u32) -> Box<CNetworkInfo> {
+    Box::new(CNetworkInfo(NetworkInfo::new(total_sent, total_received)))
+}
+
+pub fn get_network_info() -> NetworkInfo {
+    ffi::get_network_info().0
+}
+
 // todo-zm: add proper tests
 #[cfg(test)]
 mod tests {
@@ -108,9 +124,9 @@ mod tests {
 
     #[test]
     fn prints_result() {
-        ffi::start_observing_screen_info();
-        // let result = get_screen_info();
-        // let result = format!("Result from Cpp: {:?}", result);
-        // assert_eq!(result, "");
+        // ffi::start_observing_screen_info();
+        let result = get_network_info();
+        let result = format!("Result from Cpp: {:?}", result);
+        assert_eq!(result, "");
     }
 }
