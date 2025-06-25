@@ -1,18 +1,29 @@
 #include "lib.h"
-#include <windows.h>
-#include <atomic>
 
-// atomic singleton for network info
-std::atomic<uint32_t> download(10000);
-std::atomic<uint32_t> upload(200);
+#include <winsock2.h>
+#include <ws2tcpip.h>
+
+#pragma comment(lib, "Iphlpapi.lib")
+#include <iphlpapi.h>
 
 rust::Box<CNetworkInfo> get_network_info()
 {
-    // keep incrementing the singleton by 10000 and 200
-    download.fetch_add(10000);
-    upload.fetch_add(200);
+    ULONG64 total_sent(0);
+    ULONG64 total_received(0);
 
-    // mock for now
-    auto networkInfo = new_boxed_network_info(download.load(), upload.load());
+    PMIB_IF_TABLE2 if_table = nullptr;
+    if (GetIfTable2(&if_table) != NO_ERROR)
+    {
+        throw std::runtime_error("GetIfTable2 failed");
+    }
+
+    for (ULONG i = 0; i < if_table->NumEntries; ++i)
+    {
+        const auto &entry = if_table->Table[i];
+        total_received += entry.InOctets;
+        total_sent += entry.OutOctets;
+    }
+
+    auto networkInfo = new_boxed_network_info(static_cast<uint32_t>(total_sent), static_cast<uint32_t>(total_received));
     return networkInfo;
 }

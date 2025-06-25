@@ -1,3 +1,4 @@
+// todo-zm: change from u32 to u64
 #[derive(Debug, Clone)]
 pub struct NetworkInfo {
     pub total_sent: u32,
