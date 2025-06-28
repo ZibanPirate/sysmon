@@ -60,18 +60,21 @@ pub async fn run(app_handle: &AppHandle) -> Result<()> {
         MonitorEvent::new_network_from_tuple(network_speed),
     )?;
 
-    let mut tray_lock = MAIN_TRAY.lock().unwrap();
-    let tray = tray_lock.get_or_insert_with(|| {
-        app_handle
-            .tray_by_id("main")
-            .expect("Tray with ID 'main' not found")
-    });
+    #[cfg(not(target_os = "windows"))]
+    {
+        let mut tray_lock = MAIN_TRAY.lock().unwrap();
+        let tray = tray_lock.get_or_insert_with(|| {
+            app_handle
+                .tray_by_id("main")
+                .expect("Tray with ID 'main' not found")
+        });
 
-    let chosen_speed = match network_speed.1 >= network_speed.0 {
-        true => ("↓", network_speed.1),
-        false => ("↑", network_speed.0),
-    };
+        let chosen_speed = match network_speed.1 >= network_speed.0 {
+            true => ("↓", network_speed.1),
+            false => ("↑", network_speed.0),
+        };
 
-    tray.set_title(Some(&bytes_to_string(chosen_speed.1, chosen_speed.0)))?;
+        tray.set_title(Some(&bytes_to_string(chosen_speed.1, chosen_speed.0)))?;
+    }
     Ok(())
 }
