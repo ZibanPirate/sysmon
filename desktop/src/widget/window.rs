@@ -6,7 +6,7 @@ use tauri::{AppHandle, LogicalPosition, LogicalSize, Manager, WebviewWindowBuild
 #[cfg(target_os = "windows")]
 use lib_cpp::get_screen_info;
 #[cfg(target_os = "macos")]
-use lib_swift::{get_screen_info, observe_screen_info};
+use lib_swift::get_screen_info;
 
 // todo-zm: atomic debounce this function
 pub fn refresh_widget(app_handle: &AppHandle) -> Result<()> {

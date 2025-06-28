@@ -2,6 +2,11 @@ use cxx_build::CFG;
 use glob::glob;
 
 fn main() {
+    if !cfg!(target_os = "windows") {
+        println!("cargo:warning=Skipping C++ build on non-windows platform.");
+        return;
+    }
+
     CFG.include_prefix = "crate-root";
 
     cxx_build::bridge("src/lib.rs")

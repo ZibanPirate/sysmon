@@ -1,3 +1,4 @@
+#[cfg(not(target_os = "windows"))]
 pub fn bytes_to_string(bytes: u64, suffix: &str) -> String {
     format!(
         "{} {}",

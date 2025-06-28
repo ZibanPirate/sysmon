@@ -1,8 +1,12 @@
-use crate::_utils::bytes_to_string::bytes_to_string;
 use anyhow::Result;
 use common_types::{monitor::MonitorEvent, network::NetworkInfo};
 use std::sync::{LazyLock, Mutex};
-use tauri::{AppHandle, Emitter, tray::TrayIcon};
+use tauri::{AppHandle, Emitter};
+
+#[cfg(not(target_os = "windows"))]
+use crate::_utils::bytes_to_string::bytes_to_string;
+#[cfg(not(target_os = "windows"))]
+use tauri::tray::TrayIcon;
 
 #[cfg(target_os = "windows")]
 use lib_cpp::get_network_info;
@@ -43,6 +47,7 @@ static NETWORK_SNAPSHOT: LazyLock<Mutex<NetworkInfo>> = LazyLock::new(|| {
     })
 });
 
+#[cfg(not(target_os = "windows"))]
 static MAIN_TRAY: LazyLock<Mutex<Option<TrayIcon>>> = LazyLock::new(|| Mutex::new(None));
 
 pub async fn run(app_handle: &AppHandle) -> Result<()> {
