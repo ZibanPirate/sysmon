@@ -27,17 +27,23 @@ here's a rough roadmap of the project
 
 ### Checklist
 
-- [x] gether Network speed
-- [x] show network speed graph on an always-on-top widget
+- [x] gether Network speed (`./lib-cpp` and `./lib-swift`)
+- [x] show network speed graph on an always-on-top widget, and on tray icon text
 - [x] Auto-update
-- [x] persist and apply settings
-- [x] Windows support
-- [ ] Linux support
-- [ ] Submit to Apple Store
-- [ ] code quality: no-unwrap, tests
+- [ ] improve rust code quality: no-unwrap, tests, clippy on CI
+- [ ] improve lib-cpp and lib-swift code quality
 - [ ] Telemetry data on user consent
+- [ ] Linux support
+- [ ] Apple Store support
 - [ ] more widgets
   - [ ] CPU
   - [ ] RAM
   - [ ] Storage
 - [ ] optimize Widgets for low CPU consumption
+
+# migration checklist
+
+- todo-zm: open on startup
+- todo-zm: auto-update
+- todo-zm: icons are not shown in macos installer
+- todo-zm: report errors

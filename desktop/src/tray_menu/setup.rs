@@ -9,6 +9,7 @@ pub fn setup_tray_menu<'a>(app: &'a mut tauri::App) -> Result<()> {
 
     tray.set_menu(Some(
         MenuBuilder::new(app)
+            // todo-zm: about don't work on Windows
             .about(None)
             .item(&MenuItemBuilder::new("Settings").id("settings").build(app)?)
             .separator()
