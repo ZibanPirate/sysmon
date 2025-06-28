@@ -2,6 +2,7 @@ use crate::_entry::app_builder;
 
 mod _entry;
 mod _utils;
+mod auto_start;
 mod settings;
 mod tray_menu;
 mod widget;

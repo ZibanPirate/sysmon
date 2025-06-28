@@ -34,3 +34,6 @@ lib-swift = { workspace = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 lib-cpp = { workspace = true }
+
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-autostart = "2.5.0"

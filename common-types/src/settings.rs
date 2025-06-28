@@ -70,9 +70,12 @@ pub struct SettingsGeneral {
 impl Default for Settings {
     fn default() -> Self {
         Self {
-            // toto-zm: use this setting
             general: SettingsGeneral {
+                #[cfg(not(debug_assertions))]
                 start_on_boot: true,
+                #[cfg(debug_assertions)]
+                start_on_boot: false,
+                // toto-zm: use setting send_usage_telemetry
                 send_usage_telemetry: false,
             },
             network_widget: SettingsNetworkWidget {
@@ -88,8 +91,8 @@ impl Default for Settings {
                 size: 200.0,
                 aspect_ratio: 3.0,
             },
-            // toto-zm: use this setting
             tray: SettingsTray {
+                // toto-zm: use setting tray.content
                 content: SettingsTrayContent::Network,
             },
         }
