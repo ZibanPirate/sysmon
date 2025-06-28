@@ -70,6 +70,7 @@ pub struct SettingsGeneral {
 impl Default for Settings {
     fn default() -> Self {
         Self {
+            // toto-zm: use this setting
             general: SettingsGeneral {
                 start_on_boot: true,
                 send_usage_telemetry: false,
@@ -87,6 +88,7 @@ impl Default for Settings {
                 size: 200.0,
                 aspect_ratio: 3.0,
             },
+            // toto-zm: use this setting
             tray: SettingsTray {
                 content: SettingsTrayContent::Network,
             },
