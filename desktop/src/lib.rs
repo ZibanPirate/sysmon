@@ -5,6 +5,7 @@ mod _utils;
 mod auto_start;
 mod settings;
 mod tray_menu;
+mod updater;
 mod widget;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]

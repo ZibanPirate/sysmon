@@ -37,3 +37,4 @@ lib-cpp = { workspace = true }
 
 [target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
 tauri-plugin-autostart = "2.5.0"
+tauri-plugin-updater = "2.9.0"

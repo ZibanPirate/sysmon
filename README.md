@@ -43,6 +43,5 @@ here's a rough roadmap of the project
 
 # migration checklist
 
-- todo-zm: auto-update
-- todo-zm: icons are not shown in macos installer
 - todo-zm: report errors
+- todo-zm: test installers on Windows
