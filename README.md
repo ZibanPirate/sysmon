@@ -43,5 +43,6 @@ here's a rough roadmap of the project
 
 # migration checklist
 
+- todo-zm: complete other todos
 - todo-zm: report errors
 - todo-zm: test installers on Windows

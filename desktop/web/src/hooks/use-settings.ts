@@ -15,7 +15,7 @@ appWebview.listen<SettingsEvent>(EVENT_NAME, (event) => {
 });
 
 function useSettingsEvent(
-  listener: (event: Event<SettingsEvent>) => void
+  listener: (event: Event<SettingsEvent>) => void,
 ): void {
   useEffect(() => {
     let mapKey = `${EVENT_NAME}-${Math.random().toString(36).substring(2, 15)}`;

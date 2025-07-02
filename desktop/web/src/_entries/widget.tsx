@@ -15,7 +15,7 @@ function App() {
     Array.from({ length: MAX_EVENTS }, () => ({
       type: "Network",
       content: { sent: 0, received: 0 },
-    }))
+    })),
   );
 
   useMonitorEvent((event) => {
@@ -63,5 +63,5 @@ function App() {
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );

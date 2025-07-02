@@ -16,15 +16,15 @@ export const Network: FC<NetworkProps> = ({ networkEvents, position }) => {
   const { receivedPath, sentPath } = useMemo(() => {
     let max = Math.max(
       ...networkEvents.map(
-        (event) => event.content.received + event.content.sent
+        (event) => event.content.received + event.content.sent,
       ),
-      MIN_VALUE_BYTES
+      MIN_VALUE_BYTES,
     );
     max = max * 2;
 
     // Helper function to create cubic bezier commands
     const createBezierPath = (
-      points: Array<{ x: number; y: number }>
+      points: Array<{ x: number; y: number }>,
     ): string => {
       if (points.length < 2) return "";
 
@@ -54,7 +54,7 @@ export const Network: FC<NetworkProps> = ({ networkEvents, position }) => {
       const x = Math.round((index * WIDTH) / (networkEvents.length - 1));
       const yReceived = Math.round((event.content.received * HEIGHT) / max);
       const ySent = Math.round(
-        ((event.content.sent + event.content.received) * HEIGHT) / max
+        ((event.content.sent + event.content.received) * HEIGHT) / max,
       );
 
       receivedPoints.push({ x, y: yReceived });
