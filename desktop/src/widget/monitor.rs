@@ -30,8 +30,8 @@ trait NetworkSnapshot {
 impl NetworkSnapshot for NetworkInfo {
     fn refresh_and_get_monitor_event(&mut self, newer: Self) -> (u64, u64) {
         let result = (
-            newer.total_sent as u64 - self.total_sent as u64,
-            newer.total_received as u64 - self.total_received as u64,
+            newer.total_sent - self.total_sent,
+            newer.total_received - self.total_received,
         );
 
         *self = newer;

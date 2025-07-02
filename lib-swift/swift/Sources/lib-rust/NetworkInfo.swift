@@ -1,10 +1,10 @@
 import AppKit
-import Darwin  // For network interface functions
+import Darwin
 import Foundation
 
-func getNetworkStatistics() -> (totalSent: UInt32, totalReceived: UInt32) {
-    var totalSent: UInt32 = 0
-    var totalReceived: UInt32 = 0
+func getNetworkStatistics() -> (totalSent: UInt64, totalReceived: UInt64) {
+    var totalSent: UInt64 = 0
+    var totalReceived: UInt64 = 0
 
     var addrs: UnsafeMutablePointer<ifaddrs>?
     guard getifaddrs(&addrs) == 0 else {
@@ -17,15 +17,14 @@ func getNetworkStatistics() -> (totalSent: UInt32, totalReceived: UInt32) {
         defer { cursor = addr.pointee.ifa_next }
 
         let name = String(cString: addr.pointee.ifa_name)
-        // Skip loopback interfaces
-        if name == "lo0" { continue }
+
+        if name == "lo0" { continue }  // Skip loopback interfaces
 
         if addr.pointee.ifa_addr.pointee.sa_family == UInt8(AF_LINK) {
-            // For AF_LINK interfaces, the ifa_data pointer points to if_data
             if let data = addr.pointee.ifa_data {
                 let ifdata = data.assumingMemoryBound(to: if_data.self)
-                totalSent += ifdata.pointee.ifi_obytes
-                totalReceived += ifdata.pointee.ifi_ibytes
+                totalSent += UInt64(ifdata.pointee.ifi_obytes)
+                totalReceived += UInt64(ifdata.pointee.ifi_ibytes)
             }
         }
     }

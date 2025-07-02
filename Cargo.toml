@@ -20,6 +20,7 @@ tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
 lib-swift = { path = "./lib-swift" }
 lib-cpp = { path = "./lib-cpp" }
-typeshare = "1"
+# todo-zm: switch to upstream once https://github.com/1Password/typeshare/pull/140 is merged
+typeshare = { git = "https://github.com/tomjw64/typeshare", branch = "allow-override-for-disallowed-types" }
 tauri = { version = "2", default-features = false }
 glob = "0.3"

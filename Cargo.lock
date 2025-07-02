@@ -4316,8 +4316,7 @@ checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 [[package]]
 name = "typeshare"
 version = "1.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "19be0f411120091e76e13e5a0186d8e2bcc3e7e244afdb70152197f1a8486ceb"
+source = "git+https://github.com/tomjw64/typeshare?branch=allow-override-for-disallowed-types#32869417df6769be86e2133b315952f3d427d4dd"
 dependencies = [
  "chrono",
  "serde",
@@ -4328,8 +4327,7 @@ dependencies = [
 [[package]]
 name = "typeshare-annotation"
 version = "1.0.4"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a615d6c2764852a2e88a4f16e9ce1ea49bb776b5872956309e170d63a042a34f"
+source = "git+https://github.com/tomjw64/typeshare?branch=allow-override-for-disallowed-types#32869417df6769be86e2133b315952f3d427d4dd"
 dependencies = [
  "quote",
  "syn 2.0.104",

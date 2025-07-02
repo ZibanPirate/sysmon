@@ -24,6 +24,6 @@ rust::Box<CNetworkInfo> get_network_info()
         total_sent += entry.OutOctets;
     }
 
-    auto networkInfo = new_boxed_network_info(static_cast<uint32_t>(total_sent), static_cast<uint32_t>(total_received));
+    auto networkInfo = new_boxed_network_info(total_sent, total_received);
     return networkInfo;
 }

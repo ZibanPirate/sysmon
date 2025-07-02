@@ -18,7 +18,7 @@ mod ffi {
 
         type NetworkInfo;
         #[swift_bridge(associated_to = NetworkInfo)]
-        fn new(total_sent: u32, total_received: u32) -> NetworkInfo;
+        fn new(total_sent: u64, total_received: u64) -> NetworkInfo;
     }
 
     extern "Rust" {

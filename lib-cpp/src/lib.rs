@@ -28,7 +28,7 @@ mod ffi {
         fn message_from_cpp(message: CppMessage);
 
         type CNetworkInfo;
-        fn new_boxed_network_info(total_sent: u32, total_received: u32) -> Box<CNetworkInfo>;
+        fn new_boxed_network_info(total_sent: u64, total_received: u64) -> Box<CNetworkInfo>;
     }
 
     unsafe extern "C++" {
@@ -109,7 +109,7 @@ fn message_from_cpp(message: ffi::CppMessage) {
 
 struct CNetworkInfo(pub NetworkInfo);
 
-fn new_boxed_network_info(total_sent: u32, total_received: u32) -> Box<CNetworkInfo> {
+fn new_boxed_network_info(total_sent: u64, total_received: u64) -> Box<CNetworkInfo> {
     Box::new(CNetworkInfo(NetworkInfo::new(total_sent, total_received)))
 }
 

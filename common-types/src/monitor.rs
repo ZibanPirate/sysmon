@@ -5,15 +5,17 @@ use typeshare::typeshare;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "type", content = "content")]
 pub enum MonitorEvent {
-    // CPU { percentage: f64 }, // todo-zm: implement CPU monitoring
-    Network { sent: f64, received: f64 },
+    // CPU { percentage: fsize }, // todo-zm: implement CPU monitoring
+    Network {
+        #[typeshare(typescript(type = "number"))]
+        sent: u64,
+        #[typeshare(typescript(type = "number"))]
+        received: u64,
+    },
 }
 
 impl MonitorEvent {
-    pub fn new_network_from_tuple(speed: (u64, u64)) -> Self {
-        MonitorEvent::Network {
-            sent: speed.0 as f64,
-            received: speed.1 as f64,
-        }
+    pub fn new_network_from_tuple((sent, received): (u64, u64)) -> Self {
+        MonitorEvent::Network { sent, received }
     }
 }
