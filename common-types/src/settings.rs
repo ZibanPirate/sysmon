@@ -25,6 +25,7 @@ pub struct Settings {
 // tray
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[typeshare]
+// todo-zm: implement tray content settings
 pub struct SettingsTray {
     pub content: SettingsTrayContent,
 }
@@ -63,6 +64,7 @@ pub enum SettingsNetworkWidgetPosition {
 #[typeshare]
 pub struct SettingsGeneral {
     pub start_on_boot: bool,
+    // todo-zm: impl send_usage_telemetry setting
     pub send_usage_telemetry: bool,
 }
 // ---
