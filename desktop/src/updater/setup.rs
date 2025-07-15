@@ -1,7 +1,7 @@
 use tauri::App;
 use tauri_plugin_updater::{Updater, UpdaterExt};
 
-// todo-zm: replace println with tracing
+// todo-zm: report-error
 async fn check_and_download_and_wait_for_restart(updater: Updater) {
     println!("Checking for updates");
     let check_result = updater.check().await;

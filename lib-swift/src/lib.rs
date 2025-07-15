@@ -78,7 +78,7 @@ fn message_from_swift(message: SwiftMessage) {
     for (msg, callback) in callbacks.iter() {
         if *msg == message {
             let Ok(_) = callback() else {
-                // todo-zm: report error
+                // todo-zm: report-error
                 eprintln!("Error executing callback for message: {:?}", message);
                 continue;
             };

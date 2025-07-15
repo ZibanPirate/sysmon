@@ -22,7 +22,7 @@ pub fn setup_tray_menu<'a>(app: &'a mut tauri::App) -> Result<()> {
             tauri::menu::MenuEvent { id, .. } => {
                 if id == "settings" {
                     if let Err(e) = show_settings_window(app) {
-                        // todo-zm: Log the error
+                        // todo-zm: report-error
                         eprintln!("Error opening settings window: {}", e);
                     }
                 }

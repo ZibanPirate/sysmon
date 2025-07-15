@@ -13,11 +13,11 @@ pub fn app_builder() -> tauri::Builder<tauri::Wry> {
             setup_widget(app)?;
             setup_tray_menu(app)?;
             if let Err(err) = setup_autostart(app) {
-                // todo-zm: report error
+                // todo-zm: report-error
                 eprintln!("Failed to setup autostart: {}", err);
             }
             if let Err(err) = setup_updater(app) {
-                // todo-zm: report error
+                // todo-zm: report-error
                 eprintln!("Failed to setup updater: {}", err);
             }
 

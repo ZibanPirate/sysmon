@@ -21,7 +21,7 @@ pub fn set_settings(
 
     for observer in SETTINGS_OBSERVERS.lock().unwrap().iter() {
         if let Err(e) = observer(app_handle.clone()) {
-            // todo-zm: report error
+            // todo-zm: report-error
             eprintln!("Error notifying observer: {}", e);
         }
     }

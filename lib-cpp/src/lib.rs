@@ -99,7 +99,7 @@ fn message_from_cpp(message: ffi::CppMessage) {
     for (msg, callback) in callbacks.iter() {
         if *msg == message {
             let Ok(_) = callback() else {
-                // todo-zm: report error
+                // todo-zm: report-error
                 eprintln!("Error executing callback for message: {:?}", message);
                 continue;
             };

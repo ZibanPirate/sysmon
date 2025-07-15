@@ -17,7 +17,7 @@ function App() {
       });
       setSettings(saved_settings);
     } catch (error) {
-      // todo-zm: capture error in telemetry
+      // todo-zm: report-error
       console.error("Failed to save settings:", error);
     }
   };
@@ -28,7 +28,7 @@ function App() {
       const result = await invoke<Settings>("get_settings");
       setSettings(result);
     } catch (error) {
-      // todo-zm: capture error in telemetry
+      // todo-zm: report-error
       console.error("Failed to load settings:", error);
       setSettings("ERROR");
     }
