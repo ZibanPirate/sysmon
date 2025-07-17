@@ -18,9 +18,8 @@ jobs:
           # todo-zm: bring back x86_64-apple-darwin when
           # - platform: macos-13
           #   arch: x86_64-apple-darwin
-          # todo-zm: bring back
-          # - platform: windows-latest
-          #   arch: x86_64-pc-windows-msvc
+          - platform: windows-latest
+            arch: x86_64-pc-windows-msvc
           - platform: windows-11-arm
             arch: aarch64-pc-windows-msvc
 
