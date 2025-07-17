@@ -15,10 +15,12 @@ jobs:
         include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
           - platform: macos-latest
             arch: aarch64-apple-darwin
-          - platform: macos-13
-            arch: x86_64-apple-darwin
-          - platform: windows-latest
-            arch: x86_64-pc-windows-msvc
+          # todo-zm: bring back x86_64-apple-darwin when
+          # - platform: macos-13
+          #   arch: x86_64-apple-darwin
+          # todo-zm: bring back
+          # - platform: windows-latest
+          #   arch: x86_64-pc-windows-msvc
           - platform: windows-11-arm
             arch: aarch64-pc-windows-msvc
 
