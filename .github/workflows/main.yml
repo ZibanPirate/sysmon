@@ -39,6 +39,8 @@ jobs:
 
       - name: Build Dependencies
         run: cargo build --release --workspace --exclude sysmon
+        env:
+          RUST_BACKTRACE: full
 
       - name: Tauri Build ${{ matrix.arch }}
         uses: tauri-apps/tauri-action@v0
