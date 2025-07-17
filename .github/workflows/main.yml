@@ -35,10 +35,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - if: matrix.platform == 'macos-13'
+
+      - if: startsWith(matrix.platform, 'macos')
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: latest-stable
+      - if: startsWith(matrix.platform, 'macos')
+        uses: swift-actions/setup-swift@v2
+
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.arch }}
