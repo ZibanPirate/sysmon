@@ -26,6 +26,10 @@ jobs:
 
     runs-on: ${{ matrix.platform }}
 
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -38,6 +42,9 @@ jobs:
       # todo-zm: move npm i to `before[Dev/Build]Command`
       - run: npm i
         working-directory: ./desktop/web
+
+      - name: Run sccache-cache
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
 
