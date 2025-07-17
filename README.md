@@ -50,3 +50,4 @@ here's a rough roadmap of the project
 - todo-zm: bug: network widget flashes a scroll bar real quick when ran on windows in debug mode
 - todo-zm: have a landing page for https://sysmon.zak-man.com
 - todo-zm: lint cpp and swift code
+- todo-zm: bring back v:patch script
