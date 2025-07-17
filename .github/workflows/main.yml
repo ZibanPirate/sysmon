@@ -5,6 +5,10 @@ on:
       - main
       - swift-cpp-shell-rust-tauri-core # todo-zm: remove before merging
 
+concurrency:
+  group: "publish-tauri"
+  cancel-in-progress: true
+
 jobs:
   publish-tauri:
     permissions:
