@@ -1,5 +1,11 @@
 #include "lib.h"
 #include <windows.h>
+#include <cstdint> // Add this for standard fixed-width types
+
+// Define float64_t if not already defined
+#ifndef float64_t
+typedef double float64_t;
+#endif
 
 float64_t GetScaleFactorFromRegistry()
 {
