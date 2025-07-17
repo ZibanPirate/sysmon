@@ -51,3 +51,4 @@ here's a rough roadmap of the project
 - todo-zm: have a landing page for https://sysmon.zak-man.com
 - todo-zm: lint cpp and swift code
 - todo-zm: bring back v:patch script
+- todo-zm: change the updater endpoint to sysmon.zak-man.com/...

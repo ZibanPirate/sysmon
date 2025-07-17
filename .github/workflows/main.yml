@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publish-tauri:
+  build-upload-sysmon:
     permissions:
       contents: write
     strategy:
