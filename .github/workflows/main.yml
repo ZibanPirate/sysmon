@@ -37,10 +37,15 @@ jobs:
       - run: npm i
         working-directory: ./desktop/web
 
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+
       - name: Build Dependencies
         run: cargo build --release --workspace --exclude sysmon
         env:
           RUST_BACKTRACE: full
+
+      - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
+        working-directory: ./desktop
 
       - name: Tauri Build ${{ matrix.arch }}
         uses: tauri-apps/tauri-action@v0
