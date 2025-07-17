@@ -33,28 +33,9 @@ jobs:
         with:
           node-version: "lts/*"
 
-      # - name: Rust setup ${{ matrix.arch }}
-      #   uses: dtolnay/rust-toolchain@stable
-      #   with:
-      #     targets: ${{ matrix.arch }}
-
-      # - name: Rust cache
-      #   uses: swatinem/rust-cache@v2
-      #   with:
-      #     workspaces: "./src-tauri -> target"
-
-      # - uses: pnpm/action-setup@v3
-      #   with:
-      #     version: 8
-      # - name: Sync node version and setup cache
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: "lts/*"
-      #     cache: "pnpm" # Set this to npm, yarn or pnpm.
-
-      # - name: Install frontend dependencies
-      #   # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-      #   run: pnpm install # Change this to npm, pnpm or pnpm.
+      # todo-zm: move npm i to `before[Dev/Build]Command`
+      - run: npm i
+        working-directory: ./desktop/web
 
       # - name: Build the app for ${{ matrix.arch }}
       #   uses: tauri-apps/tauri-action@dev
