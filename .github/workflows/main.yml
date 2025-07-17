@@ -37,6 +37,9 @@ jobs:
       - run: npm i
         working-directory: ./desktop/web
 
+      - name: Build Dependencies
+        run: cargo build --release --workspace --exclude sysmon
+
       - name: Tauri Build ${{ matrix.arch }}
         uses: tauri-apps/tauri-action@v0
         env:
