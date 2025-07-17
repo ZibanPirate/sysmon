@@ -12,16 +12,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
           - platform: macos-latest
             arch: aarch64-apple-darwin
-          - platform: macos-latest
+          - platform: macos-13
             arch: x86_64-apple-darwin
           - platform: windows-latest
             arch: x86_64-pc-windows-msvc
-          # arm is not yet available on GH-Actions https://github.com/actions/virtual-environments/issues/768
-          # - platform: windows-latest
-          #   arch: aarch64-pc-windows-msvc
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
 
     runs-on: ${{ matrix.platform }}
 
