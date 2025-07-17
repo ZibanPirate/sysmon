@@ -4,8 +4,8 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 
 **example:**
 
-|                         macOS                         |                        Windows                         |
-| :---------------------------------------------------: | :----------------------------------------------------: |
+|                           macOS                           |                          Windows                           |
+| :-------------------------------------------------------: | :--------------------------------------------------------: |
 | ![alt text](desktop/assets/jpeg/sysmon-sample-macos.jpeg) | ![alt text](desktop/assets/jpeg/sysmon-sample-windows.png) |
 
 ## Download
@@ -14,7 +14,7 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 | ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.32_aarch64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz)                                                                                                                                       |
 | MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.32_x64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)                                                                                                                                               |
-| Windows | Arm           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
+| Windows | Arm           | todo-zm: put link                                                                                                                                                                                                                                                                                                                                                         |
 | Windows | x86           | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.32_x64-setup.exe)<br>- [NSIS Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.32_x64-setup.nsis.zip)<br>- [MSI Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.0.32_x64_en-US.msi) |
 | Linux   | Arm           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
 | Linux   | x86           | N/A                                                                                                                                                                                                                                                                                                                                                                       |
