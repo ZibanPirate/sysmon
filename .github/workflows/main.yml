@@ -28,7 +28,8 @@ jobs:
 
     env:
       SCCACHE_GHA_ENABLED: "true"
-      RUSTC_WRAPPER: "sccache"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
 
     steps:
       - uses: actions/checkout@v3
