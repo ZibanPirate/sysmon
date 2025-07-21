@@ -52,3 +52,4 @@ here's a rough roadmap of the project
 - todo-zm: lint cpp and swift code
 - todo-zm: bring back v:patch script
 - todo-zm: change the updater endpoint to sysmon.zak-man.com/...
+- todo-zm: quit app on SIGINT and SIGTERM in debug mode
