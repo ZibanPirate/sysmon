@@ -1,7 +1,6 @@
 [workspace]
 resolver = "3"
 members = ["desktop", "common-types", "lib-swift", "lib-cpp"]
-exclude = ["scripts"]
 
 package.edition = "2024"
 package.authors = ["ZibanPirate <zakman.dev@gmail.com>"]

@@ -30,6 +30,12 @@ fn main() {
         ],
     );
 
+    #[cfg(target_os = "macos")]
+    {
+        println!("- macOS: Installing swift-bridge-cli");
+        cli_run("cargo", vec!["install", "swift-bridge-cli"]);
+    }
+
     println!("- Generating Tauri icons...");
     let cmd = CliRun::new().with_relative_cwd("./desktop");
     cmd.run(
