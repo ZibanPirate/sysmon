@@ -79,6 +79,7 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # todo-zm: use `assetNamePattern` and remove README.md version update workaround in `./scripts/bump-version.rs`
         with:
           projectPath: ./desktop
           tagName: v__VERSION__
