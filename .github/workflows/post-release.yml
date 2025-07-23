@@ -1,0 +1,35 @@
+name: "post-release"
+on:
+  release:
+    types: [published]
+    branches: [main]
+
+concurrency:
+  group: "post-release"
+  cancel-in-progress: true
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+      - uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: setup committer
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+      - run: cargo +nightly -Zscript ./scripts/bump-version.rs --commit update-readme-with-current-version
+      - run: git push

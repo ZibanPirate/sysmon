@@ -23,10 +23,8 @@ use serde::{Deserialize, Serialize};
 #[nest_struct]
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
+#[derive(PartialEq)]
 struct Args {
-    #[clap(long)]
-    update_readme: bool,
-
     #[clap(long)]
     commit: bool,
 
@@ -36,6 +34,7 @@ struct Args {
         Minor,
         Major,
         InferFromConventionalCommits,
+        UpdateReadmeWithCurrentVersion,
     },
 }
 
@@ -68,6 +67,9 @@ impl ArgsCommand {
                 let inferred_args_command = ArgsCommand::Patch;
                 version = inferred_args_command.bump(&version);
             }
+            _ => {
+                unreachable!();
+            }
         }
         version
     }
@@ -91,49 +93,14 @@ fn main() {
 
     let current_version = Version::parse(&cargo_toml.workspace.package.version)
         .expect("Could not parse version from Cargo.toml");
-    let new_version = args.command.bump(&current_version);
-    println!(
-        "Bumping version from {} to {}",
-        current_version, new_version
-    );
+    let mut commit_message = String::new();
 
-    println!("Updating ./Cargo.toml ...");
-    let cargo_toml_str = include_str!("../Cargo.toml");
-    let new_cargo_toml_str = cargo_toml_str.replace(
-        &format!("version = \"{}\"", current_version.to_string()),
-        &format!("version = \"{}\"", new_version.to_string()),
-    );
-    std::fs::write(cwd.join("Cargo.toml"), new_cargo_toml_str)
-        .expect("Could not write new Cargo.toml");
-
-    println!("Updating ./Cargo.lock ...");
-    cli_run::cli_run("cargo", vec!["generate-lockfile"]);
-
-    println!(
-        "Updating ./desktop/web/package.json ...\nUpdating ./desktop/web/package-lock.json ...",
-    );
-    let cmd = CliRun::new().with_relative_cwd("./desktop/web");
-    cmd.run("npm", vec!["version", &new_version.to_string()]);
-
-    println!("Updating ./desktop/tauri.conf.json ...");
-    let tauri_conf_json_content = include_str!("../desktop/tauri.conf.json");
-    let tauri_pattern = Regex::new(r#""version": "\S+""#).expect("Invalid regex pattern");
-    let tauri_replacement = format!("\"version\": \"{}\"", new_version.to_string());
-    let new_tauri_conf_json_content = tauri_pattern
-        .replace_all(tauri_conf_json_content, tauri_replacement.as_str())
-        .to_string();
-    std::fs::write(
-        cwd.join("desktop/tauri.conf.json"),
-        new_tauri_conf_json_content,
-    )
-    .expect("Could not write new tauri.conf.json");
-
-    if args.update_readme {
+    if args.command == ArgsCommand::UpdateReadmeWithCurrentVersion {
         println!("Updating ./README.md ...");
         let readme_content = include_str!("../README.md");
 
         let pattern = Regex::new(r"System\.Monitor_\d+\.\d+\.\d+").expect("Invalid regex pattern");
-        let replacement = format!("System.Monitor_{}", new_version.to_string());
+        let replacement = format!("System.Monitor_{}", current_version.to_string());
 
         let new_readme_content = pattern
             .replace_all(readme_content, replacement.as_str())
@@ -141,25 +108,57 @@ fn main() {
 
         std::fs::write(cwd.join("README.md"), new_readme_content)
             .expect("Could not write new README.md");
+
+        commit_message = format!(
+            "Update README.md's download section with version {} [skip ci]",
+            current_version
+        );
     } else {
-        println!("Skipping README.md");
+        let new_version = args.command.bump(&current_version);
+        println!(
+            "Bumping version from {} to {}",
+            current_version, new_version
+        );
+
+        println!("Updating ./Cargo.toml ...");
+        let cargo_toml_str = include_str!("../Cargo.toml");
+        let new_cargo_toml_str = cargo_toml_str.replace(
+            &format!("version = \"{}\"", current_version.to_string()),
+            &format!("version = \"{}\"", new_version.to_string()),
+        );
+        std::fs::write(cwd.join("Cargo.toml"), new_cargo_toml_str)
+            .expect("Could not write new Cargo.toml");
+
+        println!("Updating ./Cargo.lock ...");
+        cli_run::cli_run("cargo", vec!["generate-lockfile"]);
+
+        println!(
+            "Updating ./desktop/web/package.json ...\nUpdating ./desktop/web/package-lock.json ...",
+        );
+        let cmd = CliRun::new().with_relative_cwd("./desktop/web");
+        cmd.run("npm", vec!["version", &new_version.to_string()]);
+
+        println!("Updating ./desktop/tauri.conf.json ...");
+        let tauri_conf_json_content = include_str!("../desktop/tauri.conf.json");
+        let tauri_pattern = Regex::new(r#""version": "\S+""#).expect("Invalid regex pattern");
+        let tauri_replacement = format!("\"version\": \"{}\"", new_version.to_string());
+        let new_tauri_conf_json_content = tauri_pattern
+            .replace_all(tauri_conf_json_content, tauri_replacement.as_str())
+            .to_string();
+        std::fs::write(
+            cwd.join("desktop/tauri.conf.json"),
+            new_tauri_conf_json_content,
+        )
+        .expect("Could not write new tauri.conf.json");
+
+        commit_message = format!("Bump version to {} [skip ci]", new_version);
     }
 
     if args.commit {
         println!("Committing changes ...");
         cli_run::cli_run("git", vec!["add", "."]);
-        cli_run::cli_run(
-            "git",
-            vec![
-                "commit",
-                "-m",
-                &format!("Bump version to {} [skip ci]", new_version),
-            ],
-        );
+        cli_run::cli_run("git", vec!["commit", "-m", &commit_message]);
     } else {
         println!("Skipping commit");
     }
-
-    // todo-zm: CI to publish a draft version on each push to `main`
-    // todo-zm: CI to update readme on each Github release published
 }
