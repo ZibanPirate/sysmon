@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - main
-      - swift-cpp-shell-rust-tauri-core # todo-zm: remove before merging
 
 concurrency:
   group: "publish-draft-release"
@@ -60,9 +59,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: pick up changes from bump-version job
-        # todo-zm: change to main before merge
         run: |
-          git checkout swift-cpp-shell-rust-tauri-core
+          git checkout main
           git pull
 
       - if: startsWith(matrix.platform, 'macos')
