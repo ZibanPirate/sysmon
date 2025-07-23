@@ -93,7 +93,7 @@ fn main() {
 
     let current_version = Version::parse(&cargo_toml.workspace.package.version)
         .expect("Could not parse version from Cargo.toml");
-    let mut commit_message = String::new();
+    let commit_message;
 
     if args.command == ArgsCommand::UpdateReadmeWithCurrentVersion {
         println!("Updating ./README.md ...");
