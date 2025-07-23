@@ -126,7 +126,14 @@ fn main() {
     }
 
     if args.commit {
-        todo!("Commit changes");
+        println!("Committing changes ...");
+        cli_run::cli_run("git", vec!["add", "."]);
+        cli_run::cli_run(
+            "git",
+            vec!["commit", "-m", &format!("Bump version to {}", new_version)],
+        );
+    } else {
+        println!("Skipping commit");
     }
 
     // todo-zm: update CI to publish on version push, and add checks to PR
