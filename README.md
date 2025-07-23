@@ -42,6 +42,7 @@ here's a rough roadmap of the project
 - [ ] optimize Widgets for low CPU consumption
 
 #### todos
+
 - todo-zm: bug: settings window flash before loading in Windows
 - todo-zm: bug: tray menue can be hidden in Windows via settings (should we detect it?)
 - todo-zm: bug: auto-start sometimes not working on Windows
@@ -49,4 +50,4 @@ here's a rough roadmap of the project
 - todo-zm: have a landing page for https://sysmon.zak-man.com
 - todo-zm: change the updater endpoint to sysmon.zak-man.com/...
 - todo-zm: quit app on SIGINT and SIGTERM in debug mode
-- todo-zm: add CI checks for PRs
+- todo-zm: add CI checks for PRs with format, lint, build, and tests

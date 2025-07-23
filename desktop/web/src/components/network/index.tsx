@@ -9,6 +9,7 @@ interface NetworkProps {
 
 const MIN_VALUE_BYTES = 10_000;
 
+// todo-zm: improve code, do it in Rust instead?
 export const Network: FC<NetworkProps> = ({ networkEvents, position }) => {
   const WIDTH = window.innerWidth;
   const HEIGHT = window.innerHeight;

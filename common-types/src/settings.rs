@@ -59,7 +59,7 @@ impl Default for Settings {
                 start_on_boot: true,
                 #[cfg(debug_assertions)]
                 start_on_boot: false,
-                // toto-zm: use setting send_usage_telemetry
+                // todo-zm: use setting send_usage_telemetry
                 send_usage_telemetry: false,
             },
             network_widget: SettingsNetworkWidget {
