@@ -1,58 +1,101 @@
-name: "publish"
+name: "publish a draft release"
 on:
   push:
     branches:
       - main
 
+concurrency:
+  group: "publish-draft-release"
+  cancel-in-progress: true
+
 jobs:
-  publish-tauri:
+  bump-version:
+    runs-on: ubuntu-latest
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: nightly
+      - uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - name: setup committer
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+      - run: cargo +nightly -Zscript ./scripts/bump-version.rs --commit infer-from-conventional-commits
+      - run: git push
+
+  build-upload-sysmon:
+    needs: bump-version
     permissions:
       contents: write
     strategy:
       fail-fast: false
       matrix:
-        include:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
           - platform: macos-latest
             arch: aarch64-apple-darwin
-          - platform: macos-latest
+          - platform: macos-13
             arch: x86_64-apple-darwin
           - platform: windows-latest
             arch: x86_64-pc-windows-msvc
-          # arm is not yet available on GH-Actions https://github.com/actions/virtual-environments/issues/768
-          # - platform: windows-latest
-          #   arch: aarch64-pc-windows-msvc
-
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
     runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: pick up changes from bump-version job
+        run: |
+          git checkout main
+          git pull
 
-      - name: Rust setup for ${{ matrix.arch }}
-        uses: dtolnay/rust-toolchain@stable
+      - if: startsWith(matrix.platform, 'macos')
+        uses: swift-actions/setup-swift@v2
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          targets: ${{ matrix.arch }}
+          target: ${{ matrix.arch }}
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
 
-      # - name: Rust cache
-      #   uses: swatinem/rust-cache@v2
-      #   with:
-      #     workspaces: "./src-tauri -> target"
-
-      - uses: pnpm/action-setup@v3
-        with:
-          version: 8
-      - name: Sync node version and setup cache
-        uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-          cache: "pnpm" # Set this to npm, yarn or pnpm.
 
-      - name: Install frontend dependencies
-        # If you don't have `beforeBuildCommand` configured you may want to build your frontend here too.
-        run: pnpm install # Change this to npm, pnpm or pnpm.
+      # todo-zm: move npm i to `before[Dev/Build]Command`
+      - run: npm i
+        working-directory: ./desktop/web
 
-      - name: Build the app for ${{ matrix.arch }}
-        uses: tauri-apps/tauri-action@dev
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+
+      - if: startsWith(matrix.platform, 'macos')
+        run: cargo install swift-bridge-cli
+
+      - name: Build Dependencies
+        run: cargo build --release --workspace --exclude sysmon
+        env:
+          RUST_BACKTRACE: full
+
+      - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
+        working-directory: ./desktop
+
+      - name: Tauri Build ${{ matrix.arch }}
+        uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
@@ -63,11 +106,12 @@ jobs:
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # todo-zm: use `assetNamePattern` and remove README.md version update workaround in `./scripts/bump-version.rs`
         with:
-          tagName: v__VERSION__ # the action automatically replaces \_\_VERSION\_\_ with the app version
+          projectPath: ./desktop
+          tagName: v__VERSION__
           releaseName: "v__VERSION__"
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: false
-          # args: --verbose
-          args: --target ${{ matrix.arch }}
+          args: --target ${{ matrix.arch }} # --verbose

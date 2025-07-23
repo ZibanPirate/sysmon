@@ -1,0 +1,40 @@
+[package]
+name = "sysmon"
+version = { workspace = true }
+edition = { workspace = true }
+publish = { workspace = true }
+authors = { workspace = true }
+readme = { workspace = true }
+license = { workspace = true }
+repository = { workspace = true }
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "sysmon_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { workspace = true, default-features = true, features = [
+    "macos-private-api",
+    "tray-icon",
+] }
+serde = { workspace = true }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+common-types = { workspace = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+lib-swift = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+lib-cpp = { workspace = true }
+
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-autostart = "2.5.0"
+tauri-plugin-updater = "2.9.0"

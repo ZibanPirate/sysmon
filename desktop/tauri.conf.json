@@ -1,0 +1,47 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "System Monitor",
+  "version": "0.1.6",
+  "identifier": "com.zak-man.sysmon",
+  "build": {
+    "beforeDevCommand": {
+      "cwd": "./web",
+      "script": "npm run dev"
+    },
+    "beforeBuildCommand": {
+      "cwd": "./web",
+      "script": "npm run build"
+    },
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "./web/dist"
+  },
+  "app": {
+    "macOSPrivateApi": true,
+    "trayIcon": {
+      "id": "main",
+      "iconPath": "icons/32x32.png"
+    }
+  },
+  "bundle": {
+    "createUpdaterArtifacts": true,
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://github.com/ZibanPirate/sysmon/releases/latest/download/latest.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDk1QThENzMzRkY0QTAzRjkKUldUNUEwci9NOWVvbGJMeHQvZlJhT1hYZ2pFbndDVFhsSldZemhlTFQxYWhtZGIwbkFwaFJZMHIK"
+    }
+  }
+}

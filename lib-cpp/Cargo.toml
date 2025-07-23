@@ -1,0 +1,18 @@
+[package]
+name = "lib-cpp"
+edition.workspace = true
+authors.workspace = true
+readme.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[dependencies]
+cxx = "1"
+common-types = { workspace = true }
+anyhow = { workspace = true }
+
+[build-dependencies]
+cxx-build = "1"
+glob = { workspace = true }

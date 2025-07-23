@@ -1,0 +1,17 @@
+[package]
+name = "lib-swift"
+edition.workspace = true
+authors.workspace = true
+readme.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+publish.workspace = true
+
+[dependencies]
+swift-bridge = "0.1"
+common-types = { workspace = true }
+anyhow = { workspace = true }
+
+[build-dependencies]
+swift-bridge-build = "0.1"

@@ -1,0 +1,25 @@
+[workspace]
+resolver = "3"
+members = ["desktop", "common-types", "lib-swift", "lib-cpp"]
+
+package.edition = "2024"
+package.authors = ["ZibanPirate <zakman.dev@gmail.com>"]
+package.readme = "README.md"
+package.license = "MIT"
+package.repository = "https://github.com/ZibanPirate/sysmon"
+package.version = "0.1.6"
+package.publish = false
+
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+tokio = { version = "1", features = ["full"] }
+common-types = { path = "./common-types" }
+lib-swift = { path = "./lib-swift" }
+lib-cpp = { path = "./lib-cpp" }
+# todo-zm: switch to upstream once https://github.com/1Password/typeshare/pull/140 is merged
+typeshare = { git = "https://github.com/tomjw64/typeshare", branch = "allow-override-for-disallowed-types" }
+tauri = { version = "2", default-features = false }
+glob = "0.3"
