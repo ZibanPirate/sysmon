@@ -413,7 +413,7 @@ dependencies = [
 
 [[package]]
 name = "common-types"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "serde",
  "serde_json",
@@ -1819,7 +1819,7 @@ checksum = "bbd2bcb4c963f2ddae06a2efc7e9f3591312473c50c6685e1f298068316e66fe"
 
 [[package]]
 name = "lib-cpp"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "common-types",
@@ -1830,7 +1830,7 @@ dependencies = [
 
 [[package]]
 name = "lib-swift"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "common-types",
@@ -3643,7 +3643,7 @@ dependencies = [
 
 [[package]]
 name = "sysmon"
-version = "0.1.5"
+version = "0.1.6"
 dependencies = [
  "anyhow",
  "common-types",
