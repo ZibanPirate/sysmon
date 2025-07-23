@@ -22,6 +22,7 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: nightly
+      - uses: mozilla-actions/sccache-action@v0.0.9
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
@@ -29,7 +30,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-      - run: RUST_BACKTRACE=1 cargo +nightly -Zscript ./scripts/bump-version.rs --commit infer-from-conventional-commits
+      - run: ./scripts/bump-version.rs --commit infer-from-conventional-commits
       - run: git push
 
   build-upload-sysmon:
@@ -63,7 +64,9 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.arch }}
-      - uses: mozilla-actions/sccache-action@v0.0.9
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
 
       - uses: actions/setup-node@v4
         with:
@@ -72,10 +75,6 @@ jobs:
       # todo-zm: move npm i to `before[Dev/Build]Command`
       - run: npm i
         working-directory: ./desktop/web
-
-      # todo-zm: remove conditional ...(see above)
-      - if: matrix.platform != 'windows-11-arm'
-        uses: mozilla-actions/sccache-action@v0.0.9
 
       - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
 
