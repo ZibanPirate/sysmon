@@ -4,7 +4,6 @@ import "../_utils/import-daisyui.css";
 import {
   Settings,
   SettingsNetworkWidgetPosition,
-  SettingsTrayContent,
 } from "../../../../common-types/bindings";
 import { invoke } from "@tauri-apps/api/core";
 
@@ -235,36 +234,6 @@ function App() {
               }}
             />
           </label>
-        </div>
-      </div>
-
-      <input type="radio" name="tab" className="tab" aria-label="Tray" />
-      <div className="tab-content bg-base-100 border-base-300 p-6">
-        <div className="label gap-4">
-          Shown on title
-          <div className="join">
-            {Object.values(SettingsTrayContent).map((content) => (
-              <input
-                className={`join-item btn btn-ghost ${
-                  settings.tray.content === content ? "btn-active" : ""
-                }`}
-                type="radio"
-                name="options"
-                aria-label={content}
-                key={content}
-                checked={settings.tray.content === content}
-                onChange={() => {
-                  saveSettings({
-                    ...settings,
-                    tray: {
-                      ...settings.tray,
-                      content: content,
-                    },
-                  });
-                }}
-              />
-            ))}
-          </div>
         </div>
       </div>
     </div>

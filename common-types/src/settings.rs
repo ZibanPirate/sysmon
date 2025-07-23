@@ -17,26 +17,9 @@ impl SettingsEvent {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[typeshare]
 pub struct Settings {
-    pub tray: SettingsTray,
     pub network_widget: SettingsNetworkWidget,
     pub general: SettingsGeneral,
 }
-
-// tray
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[typeshare]
-// todo-zm: implement tray content settings
-pub struct SettingsTray {
-    pub content: SettingsTrayContent,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone)]
-#[typeshare]
-pub enum SettingsTrayContent {
-    Fixed,
-    Network,
-}
-// ---
 
 // widget
 #[derive(Serialize, Deserialize, Debug, Clone)]
@@ -91,10 +74,6 @@ impl Default for Settings {
                 safe_area: true,
                 size: 200.0,
                 aspect_ratio: 3.0,
-            },
-            tray: SettingsTray {
-                // toto-zm: use setting tray.content
-                content: SettingsTrayContent::Network,
             },
         }
     }
