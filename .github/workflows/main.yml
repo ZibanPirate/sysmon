@@ -62,8 +62,8 @@ jobs:
       - name: pick up changes from bump-version job
         # todo-zm: change to main before merge
         run: |
-          | git checkout swift-cpp-shell-rust-tauri-core
-          | git pull
+          git checkout swift-cpp-shell-rust-tauri-core
+          git pull
 
       - if: startsWith(matrix.platform, 'macos')
         uses: swift-actions/setup-swift@v2
