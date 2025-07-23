@@ -130,7 +130,11 @@ fn main() {
         cli_run::cli_run("git", vec!["add", "."]);
         cli_run::cli_run(
             "git",
-            vec!["commit", "-m", &format!("Bump version to {}", new_version)],
+            vec![
+                "commit",
+                "-m",
+                &format!("Bump version to {} [skip ci]", new_version),
+            ],
         );
     } else {
         println!("Skipping commit");
