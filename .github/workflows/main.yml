@@ -27,7 +27,7 @@ jobs:
         run: |
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
-      - run: ./scripts/bump-version.rs --commit infer-from-conventional-commits
+      - run: RUST_BACKTRACE=1 cargo +nightly -Zscript ./scripts/bump-version.rs --commit infer-from-conventional-commits
       - run: git push
 
   build-upload-sysmon:
