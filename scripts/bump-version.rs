@@ -35,6 +35,7 @@ struct Args {
         Patch,
         Minor,
         Major,
+        InferFromConventionalCommits,
     },
 }
 
@@ -62,6 +63,11 @@ impl ArgsCommand {
                 }
                 version.patch = 0;
             }
+            ArgsCommand::InferFromConventionalCommits => {
+                // todo-zm: Implement logic to infer version bump from conventional commits
+                let inferred_args_command = ArgsCommand::Patch;
+                version = inferred_args_command.bump(&version);
+            }
         }
         version
     }
@@ -81,6 +87,7 @@ fn main() {
     let args = Args::parse();
     let cargo_toml = toml::from_str::<CargoToml>(include_str!("../Cargo.toml"))
         .expect("Could not parse Cargo.toml");
+    let cwd = cli_run::get_cli_run_cwd();
 
     let current_version = Version::parse(&cargo_toml.workspace.package.version)
         .expect("Could not parse version from Cargo.toml");
@@ -96,7 +103,8 @@ fn main() {
         &format!("version = \"{}\"", current_version.to_string()),
         &format!("version = \"{}\"", new_version.to_string()),
     );
-    std::fs::write("../Cargo.toml", new_cargo_toml_str).expect("Could not write new Cargo.toml");
+    std::fs::write(cwd.join("Cargo.toml"), new_cargo_toml_str)
+        .expect("Could not write new Cargo.toml");
 
     println!("Updating ./Cargo.lock ...");
     cli_run::cli_run("cargo", vec!["generate-lockfile"]);
@@ -114,8 +122,11 @@ fn main() {
     let new_tauri_conf_json_content = tauri_pattern
         .replace_all(tauri_conf_json_content, tauri_replacement.as_str())
         .to_string();
-    std::fs::write("../desktop/tauri.conf.json", new_tauri_conf_json_content)
-        .expect("Could not write new tauri.conf.json");
+    std::fs::write(
+        cwd.join("desktop/tauri.conf.json"),
+        new_tauri_conf_json_content,
+    )
+    .expect("Could not write new tauri.conf.json");
 
     if args.update_readme {
         println!("Updating ./README.md ...");
@@ -128,7 +139,8 @@ fn main() {
             .replace_all(readme_content, replacement.as_str())
             .to_string();
 
-        std::fs::write("../README.md", new_readme_content).expect("Could not write new README.md");
+        std::fs::write(cwd.join("README.md"), new_readme_content)
+            .expect("Could not write new README.md");
     } else {
         println!("Skipping README.md");
     }
