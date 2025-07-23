@@ -5,7 +5,6 @@ use typeshare::typeshare;
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(tag = "type", content = "content")]
 pub enum MonitorEvent {
-    // CPU { percentage: fsize }, // todo-zm: implement CPU monitoring
     Network {
         #[typeshare(typescript(type = "number"))]
         sent: u64,

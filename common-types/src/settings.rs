@@ -64,7 +64,6 @@ pub enum SettingsNetworkWidgetPosition {
 #[typeshare]
 pub struct SettingsGeneral {
     pub start_on_boot: bool,
-    // todo-zm: impl send_usage_telemetry setting
     pub send_usage_telemetry: bool,
 }
 // ---

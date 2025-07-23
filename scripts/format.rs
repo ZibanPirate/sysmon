@@ -25,9 +25,6 @@ fn main() {
     println!("- Formatting Rust workspace ...");
     cli_run::cli_run("cargo", vec!["fmt"]);
 
-    // todo-zm: format swift code with `swift format`
-    // todo-zm: format cpp code with `clang-format`
-
     println!("- Formatting everything else with Prettier ...");
     // todo:zm replace with https://biomejs.dev/internals/language-support or https://github.com/oxc-project
     cli_run::cli_run("npx", vec!["-y", "prettier", "--write", "."]);

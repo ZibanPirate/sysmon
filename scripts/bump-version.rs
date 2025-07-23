@@ -136,5 +136,6 @@ fn main() {
         println!("Skipping commit");
     }
 
-    // todo-zm: update CI to publish on version push, and add checks to PR
+    // todo-zm: CI to publish a draft version on each push to `main`
+    // todo-zm: CI to update readme on each Github release published
 }

@@ -30,8 +30,8 @@ here's a rough roadmap of the project
 - [x] gether Network speed (`./lib-cpp` and `./lib-swift`)
 - [x] show network speed graph on an always-on-top widget, and on tray icon text
 - [x] Auto-update
-- [ ] improve rust code quality: no-unwrap, tests, clippy on CI
-- [ ] improve lib-cpp and lib-swift code quality
+- [ ] improve rust code quality: no-unwrap, tests, clippy on CI checks
+- [ ] improve lib-cpp and lib-swift code quality, formatting, tests, lint, CI checks
 - [ ] Telemetry data on user consent
 - [ ] Linux support
 - [ ] Apple Store support
@@ -41,15 +41,12 @@ here's a rough roadmap of the project
   - [ ] Storage
 - [ ] optimize Widgets for low CPU consumption
 
-# migration checklist
-
-- todo-zm: settings window flash before loading in Windows
-- todo-zm: secrets
+#### todos
+- todo-zm: bug: settings window flash before loading in Windows
 - todo-zm: bug: tray menue can be hidden in Windows via settings (should we detect it?)
 - todo-zm: bug: auto-start sometimes not working on Windows
 - todo-zm: bug: network widget flashes a scroll bar real quick when ran on windows in debug mode
 - todo-zm: have a landing page for https://sysmon.zak-man.com
-- todo-zm: lint cpp and swift code
-- todo-zm: bring back v:patch script
 - todo-zm: change the updater endpoint to sysmon.zak-man.com/...
 - todo-zm: quit app on SIGINT and SIGTERM in debug mode
+- todo-zm: add CI checks for PRs
