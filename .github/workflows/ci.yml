@@ -24,7 +24,7 @@ jobs:
             arch: x86_64-pc-windows-msvc
           - platform: windows-11-arm
             arch: aarch64-pc-windows-msvc
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.platform }}
     env:
       SCCACHE_GHA_ENABLED: "true"
       # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
