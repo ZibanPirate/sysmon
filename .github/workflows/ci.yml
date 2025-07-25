@@ -38,6 +38,6 @@ jobs:
       # - name: lint todo-zm: bring this back
       #   run: cargo clippy -- -D warnings
       - name: test
-        run: cargo test
+        run: cargo test --target ${{ matrix.arch }}
       - name: build
-        run: cargo build
+        run: cargo build --target ${{ matrix.arch }}
