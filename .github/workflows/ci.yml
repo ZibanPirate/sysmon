@@ -1,0 +1,43 @@
+name: "CI"
+on:
+  pull_request:
+
+concurrency:
+  group: "ci"
+  cancel-in-progress: true
+
+jobs:
+  # todo: cover all these points bellow
+  # lint, format, test, build
+  # rust, tauri, web, rest, cpp, swift
+  # macos, windows, linux
+  rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
+          - platform: macos-latest
+            arch: aarch64-apple-darwin
+          - platform: macos-13
+            arch: x86_64-apple-darwin
+          - platform: windows-latest
+            arch: x86_64-pc-windows-msvc
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
+    runs-on: ubuntu-latest
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: "sccache"
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: mozilla-actions/sccache-action@v0.0.9
+      - name: format
+        run: cargo fmt --all --check
+      - name: lint
+        run: cargo clippy -- -D warnings
+      - name: test
+        run: cargo test
+      - name: build
+        run: cargo build
