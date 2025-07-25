@@ -28,13 +28,12 @@ serde_json = { workspace = true }
 anyhow = { workspace = true }
 tokio = { workspace = true }
 common-types = { workspace = true }
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-updater = "2"
 
 [target.'cfg(target_os = "macos")'.dependencies]
 lib-swift = { workspace = true }
 
 [target.'cfg(target_os = "windows")'.dependencies]
 lib-cpp = { workspace = true }
-
-[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
-tauri-plugin-autostart = "2.5.0"
-tauri-plugin-updater = "2.9.0"
