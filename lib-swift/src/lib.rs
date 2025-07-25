@@ -87,6 +87,7 @@ fn message_from_swift(message: SwiftMessage) {
 }
 
 // todo-zm: add proper tests
+#[cfg(target_os = "macos")]
 #[cfg(test)]
 mod tests {
     use super::*;

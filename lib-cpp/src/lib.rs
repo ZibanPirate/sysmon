@@ -119,6 +119,7 @@ pub fn get_network_info() -> NetworkInfo {
 
 // todo-zm: add proper tests
 #[cfg(test)]
+#[cfg(target_os = "windows")]
 mod tests {
     use super::*;
 
