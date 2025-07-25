@@ -40,6 +40,10 @@ jobs:
       # todo-zm: remove conditional ...(see above)
       - if: matrix.platform != 'windows-11-arm'
         uses: mozilla-actions/sccache-action@v0.0.9
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+      - if: startsWith(matrix.platform, 'macos')
+        run: cargo install swift-bridge-cli
+
       - name: format
         run: cargo fmt --all --check
       # - name: lint todo-zm: bring this back
