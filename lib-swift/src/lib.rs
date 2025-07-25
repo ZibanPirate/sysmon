@@ -93,9 +93,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn prints_result() {
+    fn network_info_should_be_more_than_zero_bytes() {
         let result = get_network_info();
-        let result = format!("Result from Swift: {:?}", result);
-        assert_eq!(result, "Result from Swift:");
+        assert!(
+            result.total_sent > 0 || result.total_received > 0,
+            "Network info should not be zero"
+        );
     }
 }
