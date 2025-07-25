@@ -32,6 +32,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - if: startsWith(matrix.platform, 'macos')
+        uses: swift-actions/setup-swift@v2
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.arch }}
@@ -45,4 +47,6 @@ jobs:
       - name: test
         run: cargo test --target ${{ matrix.arch }}
       - name: build
-        run: cargo build --target ${{ matrix.arch }}
+        run: cargo build --release --target ${{ matrix.arch }}
+        env:
+          RUST_BACKTRACE: full
