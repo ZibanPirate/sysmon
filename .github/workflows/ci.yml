@@ -43,6 +43,8 @@ jobs:
       - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
       - if: startsWith(matrix.platform, 'macos')
         run: cargo install swift-bridge-cli
+      - run: cargo tauri icon ./assets/svg/logo.svg
+        working-directory: ./desktop
 
       - name: format
         run: cargo fmt --all --check
