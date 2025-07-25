@@ -36,6 +36,7 @@ jobs:
         uses: swift-actions/setup-swift@v2
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
+          target: ${{ matrix.arch }}
           components: clippy, rustfmt
       # todo-zm: remove conditional ...(see above)
       - if: matrix.platform != 'windows-11-arm'
