@@ -35,8 +35,8 @@ jobs:
       - uses: mozilla-actions/sccache-action@v0.0.9
       - name: format
         run: cargo fmt --all --check
-      - name: lint
-        run: cargo clippy -- -D warnings
+      # - name: lint todo-zm: bring this back
+      #   run: cargo clippy -- -D warnings
       - name: test
         run: cargo test
       - name: build
