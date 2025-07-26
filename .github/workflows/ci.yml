@@ -65,3 +65,31 @@ jobs:
         # todo-zm: fix swift build issue on old mac: dyld[34620]: Library not loaded: @rpath/libswiftCore.dylib
         if: matrix.platform != 'macos-13'
         run: cargo test
+
+  web:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
+          - platform: macos-latest
+          - platform: windows-latest
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: npm install
+        working-directory: ./desktop/web
+      - name: format
+        run: npx -y prettier --check .
+      - name: lint
+        run: npm run lint
+        working-directory: ./desktop/web
+      - name: build
+        run: npm run build
+        working-directory: ./desktop/web
+      - name: test
+        run: npm run test
+        working-directory: ./desktop/web
