@@ -98,6 +98,8 @@ jobs:
           git config core.autocrlf false
           git config core.eol lf
       - name: format
+        # todo-zm: make prettier ignore LF/CRLF
+        if: startsWith(matrix.platform, 'windows') == false
         run: npx -y prettier --check .
       - name: lint
         run: npm run lint
