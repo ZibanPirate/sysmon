@@ -44,11 +44,14 @@ jobs:
       # todo-zm: remove conditional ...(see above)
       - if: matrix.platform != 'windows-11-arm'
         uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: cargo install cargo-binstall
       - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
       - if: startsWith(matrix.platform, 'macos')
-        run: cargo install swift-bridge-cli
-      - run: cargo install tauri-cli
-      - run: cargo tauri icon ./assets/svg/logo.svg
+        run: cargo binstall swift-bridge-cli
+      - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
         working-directory: ./desktop
 
       - name: format
