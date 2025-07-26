@@ -58,7 +58,7 @@ jobs:
       # - name: lint todo-zm: bring this back
       #   run: cargo clippy -- -D warnings
       - name: build
-        run: cargo build --release
+        run: cargo build
         env:
           RUST_BACKTRACE: full
       - name: test
