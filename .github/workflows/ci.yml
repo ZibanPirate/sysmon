@@ -74,12 +74,27 @@ jobs:
           - platform: macos-latest
           - platform: windows-latest
     runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
 
     steps:
       - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.arch }}
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+      - name: Build common-types
+        run: cargo build --release -p common-types
+        env:
+          RUST_BACKTRACE: full
       - run: npm install
         working-directory: ./desktop/web
       - name: format
