@@ -7,10 +7,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # todo: cover all these points bellow
-  # lint, format, test, build
-  # rust, tauri, web, rest, cpp, swift
-  # macos, windows, linux
+  # todo: setup CI for cpp, swift, rest. (lint, format, test, build)
   rust:
     strategy:
       fail-fast: false
@@ -97,6 +94,9 @@ jobs:
           RUST_BACKTRACE: full
       - run: npm install
         working-directory: ./desktop/web
+      - run: |
+          git config core.autocrlf false
+          git config core.eol lf
       - name: format
         run: npx -y prettier --check .
       - name: lint
