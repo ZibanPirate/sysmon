@@ -33,7 +33,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - if: startsWith(matrix.platform, 'macos')
-        uses: swift-actions/setup-swift@v2
+        # todo-zm: change to @3 once released
+        uses: swift-actions/setup-swift@next
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.arch }}
