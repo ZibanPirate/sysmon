@@ -1,0 +1,112 @@
+name: "CI"
+on:
+  pull_request:
+
+concurrency:
+  group: "ci"
+  cancel-in-progress: true
+
+jobs:
+  # todo: setup CI for cpp, swift, rest. (lint, format, test, build)
+  rust:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
+          - platform: macos-latest
+            arch: aarch64-apple-darwin
+          - platform: macos-13
+            arch: x86_64-apple-darwin
+          - platform: windows-latest
+            arch: x86_64-pc-windows-msvc
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - if: startsWith(matrix.platform, 'macos')
+        # todo-zm: change to @3 once https://github.com/swift-actions/setup-swift/pull/710 is resolved
+        uses: swift-actions/setup-swift@next
+        with:
+          swift-version: "6.1"
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.arch }}
+          components: clippy, rustfmt
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+      - if: startsWith(matrix.platform, 'macos')
+        run: cargo install swift-bridge-cli
+      - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
+        working-directory: ./desktop
+
+      - name: format
+        run: cargo fmt --all --check
+      # - name: lint todo-zm: bring this back
+      #   run: cargo clippy -- -D warnings
+      - name: build
+        run: cargo build
+        env:
+          RUST_BACKTRACE: full
+      - name: test
+        # todo-zm: fix swift build issue on old mac: dyld[34620]: Library not loaded: @rpath/libswiftCore.dylib
+        if: matrix.platform != 'macos-13'
+        run: cargo test
+
+  web:
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
+          - platform: macos-latest
+          - platform: windows-latest
+    runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.arch }}
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+      - name: Build common-types
+        run: cargo build --release -p common-types
+        env:
+          RUST_BACKTRACE: full
+      - run: npm install
+        working-directory: ./desktop/web
+      - run: |
+          git config core.autocrlf false
+          git config core.eol lf
+      - name: format
+        # todo-zm: make prettier ignore LF/CRLF
+        if: startsWith(matrix.platform, 'windows') == false
+        run: npx -y prettier --check .
+      - name: lint
+        run: npm run lint
+        working-directory: ./desktop/web
+      - name: build
+        run: npm run build
+        working-directory: ./desktop/web
+      - name: test
+        run: npm run test
+        working-directory: ./desktop/web

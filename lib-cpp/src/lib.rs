@@ -119,14 +119,16 @@ pub fn get_network_info() -> NetworkInfo {
 
 // todo-zm: add proper tests
 #[cfg(test)]
+#[cfg(target_os = "windows")]
 mod tests {
     use super::*;
 
     #[test]
     fn prints_result() {
-        // ffi::start_observing_screen_info();
         let result = get_network_info();
-        let result = format!("Result from Cpp: {:?}", result);
-        assert_eq!(result, "");
+        assert!(
+            result.total_sent > 0 || result.total_received > 0,
+            "Network info should not be zero"
+        );
     }
 }

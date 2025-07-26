@@ -50,4 +50,6 @@ here's a rough roadmap of the project
 - todo-zm: have a landing page for https://sysmon.zak-man.com
 - todo-zm: change the updater endpoint to sysmon.zak-man.com/...
 - todo-zm: quit app on SIGINT and SIGTERM in debug mode
-- todo-zm: add CI checks for PRs with format, lint, build, and tests
+- todo-zm: figure out how to show numbers in tray icon on windows (via icon?)
+- todo-zm: sign Windows app https://v2.tauri.app/distribute/sign/windows/#azure-key-vault
+- todo-zm: don't focus on the app on boot (only apply in debug mode?)

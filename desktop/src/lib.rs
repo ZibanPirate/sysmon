@@ -4,6 +4,7 @@ mod _entry;
 mod _utils;
 mod auto_start;
 mod settings;
+mod single_instance;
 mod tray_menu;
 mod updater;
 mod widget;

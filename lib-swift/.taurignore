@@ -1,0 +1,3 @@
+# so `tauri dev` doesn't keep re-runing in a loop
+swift/.build/
+swift/Sources/lib-rust/generated/

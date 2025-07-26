@@ -16,6 +16,9 @@ fn main() {
     let cmd = CliRun::new().with_relative_cwd("./desktop/web");
     cmd.run("npm", vec!["install"]);
 
+    println!("- Installing tauri-cli...");
+    cli_run("cargo", vec!["install", "tauri-cli"]);
+
     println!("- Installing typeshare...");
     // todo-zm: switch to upstream once https://github.com/1Password/typeshare/pull/140 is merged
     cli_run(
@@ -38,8 +41,5 @@ fn main() {
 
     println!("- Generating Tauri icons...");
     let cmd = CliRun::new().with_relative_cwd("./desktop");
-    cmd.run(
-        "npx",
-        vec!["-y", "@tauri-apps/cli", "icon", "./assets/svg/logo.svg"],
-    );
+    cmd.run("cargo", vec!["tauri", "icon", "./assets/svg/logo.svg"]);
 }
