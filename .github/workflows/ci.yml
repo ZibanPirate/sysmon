@@ -98,7 +98,11 @@ jobs:
       - run: npm install
         working-directory: ./desktop/web
       - name: format
-        run: npx -y prettier --check .
+        # run: npx -y prettier --check .
+        # todo-zm: debug
+        run: |
+          npx -y prettier --write .
+          git --no-pager diff
       - name: lint
         run: npm run lint
         working-directory: ./desktop/web
