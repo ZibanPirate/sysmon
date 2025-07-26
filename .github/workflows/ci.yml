@@ -33,8 +33,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - if: startsWith(matrix.platform, 'macos')
-        # todo-zm: change to @3 once released
+        # todo-zm: change to @3 once https://github.com/swift-actions/setup-swift/pull/710 is resolved
         uses: swift-actions/setup-swift@next
+        with:
+          swift-version: "6.1"
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           target: ${{ matrix.arch }}
