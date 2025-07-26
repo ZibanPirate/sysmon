@@ -47,10 +47,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
-      - run: cargo install cargo-binstall
       - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
       - if: startsWith(matrix.platform, 'macos')
-        run: cargo binstall swift-bridge-cli
+        run: cargo install swift-bridge-cli
       - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
         working-directory: ./desktop
 
@@ -58,9 +57,9 @@ jobs:
         run: cargo fmt --all --check
       # - name: lint todo-zm: bring this back
       #   run: cargo clippy -- -D warnings
-      - name: test
-        run: cargo test
       - name: build
         run: cargo build --release
         env:
           RUST_BACKTRACE: full
+      - name: test
+        run: cargo test
