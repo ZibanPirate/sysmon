@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext .ts,.tsx",
+    "lint": "npx -y oxlint@latest",
     "test": "vitest run"
   },
   "dependencies": {
@@ -23,6 +23,7 @@
     "daisyui": "^5.0.43",
     "tailwindcss": "^4.1.10",
     "typescript": "~5.6.2",
-    "vite": "^6.0.3"
+    "vite": "^6.0.3",
+    "vitest": "^3.2.4"
   }
 }
