@@ -20,6 +20,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - run: |
+          git checkout main
+          git pull
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: nightly
