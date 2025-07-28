@@ -157,7 +157,10 @@ fn main() {
     if args.commit {
         println!("Committing changes ...");
         cli_run::cli_run("git", vec!["add", "."]);
-        cli_run::cli_run("git", vec!["commit", "-m", &commit_message]);
+        cli_run::cli_run(
+            "git",
+            vec!["commit", "--allow-empty", "-m", &commit_message],
+        );
     } else {
         println!("Skipping commit");
     }

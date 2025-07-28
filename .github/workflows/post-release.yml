@@ -3,6 +3,10 @@ on:
   release:
     types: [published]
     branches: [main]
+  # todo-zm: remove, debugging only
+  push:
+    branches:
+      - main
 
 concurrency:
   group: "post-release"
@@ -19,10 +23,9 @@ jobs:
       contents: write
 
     steps:
-      - uses: actions/checkout@v3
-      - run: |
-          git checkout main
-          git pull
+      - uses: actions/checkout@v4
+        with:
+          ref: main
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           toolchain: nightly
