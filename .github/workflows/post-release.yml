@@ -3,10 +3,6 @@ on:
   release:
     types: [published]
     branches: [main]
-  # todo-zm: remove, debugging only
-  push:
-    branches:
-      - main
 
 concurrency:
   group: "post-release"

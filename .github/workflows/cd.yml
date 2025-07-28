@@ -2,8 +2,7 @@ name: "publish a draft release"
 on:
   push:
     branches:
-      # todo-zm: remove, debugging only
-      - main-debug
+      - main
 
 concurrency:
   group: "publish-draft-release"
