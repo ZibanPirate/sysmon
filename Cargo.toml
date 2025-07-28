@@ -7,7 +7,7 @@ package.authors = ["ZibanPirate <zakman.dev@gmail.com>"]
 package.readme = "README.md"
 package.license = "MIT"
 package.repository = "https://github.com/ZibanPirate/sysmon"
-package.version = "0.1.10"
+package.version = "0.1.11"
 package.publish = false
 
 
