@@ -1,6 +1,7 @@
 #include "lib.h"
 #include <windows.h>
 #include <cstdint> // Add this for standard fixed-width types
+#include <string>
 
 // Define float64_t if not already defined
 #ifndef float64_t
@@ -27,8 +28,8 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
 {
     rust::Box<ScreenInfoVec> *pScreenInfos = reinterpret_cast<rust::Box<ScreenInfoVec> *>(dwData);
 
-    MONITORINFO monitorInfo;
-    monitorInfo.cbSize = sizeof(MONITORINFO);
+    MONITORINFOEX monitorInfo;
+    monitorInfo.cbSize = sizeof(MONITORINFOEX);
 
     if (GetMonitorInfo(hMonitor, &monitorInfo))
     {
@@ -39,7 +40,23 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
 
         float64_t scaleFactor = GetScaleFactorFromRegistry();
 
-        (*pScreenInfos)->push_new_screen_info(isPrimary, scaleFactor, std::move(new_boxed_rect(rcMonitor.left, rcMonitor.top, rcMonitor.right - rcMonitor.left, rcMonitor.bottom - rcMonitor.top)), std::move(new_boxed_rect(rcWork.left, rcWork.top, rcWork.right - rcWork.left, rcWork.bottom - rcWork.top)));
+        // Convert szDevice to std::string (UTF-8)
+        std::string monitorId;
+#ifdef UNICODE
+        // szDevice is wchar_t[32]
+        int len = WideCharToMultiByte(CP_UTF8, 0, monitorInfo.szDevice, -1, nullptr, 0, nullptr, nullptr);
+        if (len > 0)
+        {
+            std::string temp(len - 1, 0); // exclude null terminator
+            WideCharToMultiByte(CP_UTF8, 0, monitorInfo.szDevice, -1, &temp[0], len, nullptr, nullptr);
+            monitorId = std::move(temp);
+        }
+#else
+        // szDevice is char[32]
+        monitorId = monitorInfo.szDevice;
+#endif
+
+        (*pScreenInfos)->push_new_screen_info(monitorId, isPrimary, scaleFactor, std::move(new_boxed_rect(rcMonitor.left, rcMonitor.top, rcMonitor.right - rcMonitor.left, rcMonitor.bottom - rcMonitor.top)), std::move(new_boxed_rect(rcWork.left, rcWork.top, rcWork.right - rcWork.left, rcWork.bottom - rcWork.top)));
     }
 
     return TRUE; // Continue enumeration

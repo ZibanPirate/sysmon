@@ -14,7 +14,7 @@ mod ffi {
 
         type ScreenInfo;
         #[swift_bridge(associated_to = ScreenInfo)]
-        fn new(isMain: bool, full: Rect, safe: Rect) -> ScreenInfo;
+        fn new(id: String, isMain: bool, full: Rect, safe: Rect) -> ScreenInfo;
 
         type NetworkInfo;
         #[swift_bridge(associated_to = NetworkInfo)]
@@ -91,6 +91,12 @@ fn message_from_swift(message: SwiftMessage) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn screen_info_should_be_non_empty_array() {
+        let result = get_screen_info();
+        assert!(!result.is_empty(), "Screen info should not be empty");
+    }
 
     #[test]
     fn network_info_should_be_more_than_zero_bytes() {

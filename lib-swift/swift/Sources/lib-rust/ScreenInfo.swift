@@ -6,11 +6,20 @@ func getScreenInfo() -> RustVec<ScreenInfo> {
     let vec = RustVec<ScreenInfo>()
 
     for screen in NSScreen.screens {
+        let id: String
+        if let screenNumber = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")]
+            as? NSNumber
+        {
+            id = screenNumber.stringValue
+        } else {
+            id = String(screen.hash)
+        }
         let frame = screen.frame
         let safeFrame = screen.visibleFrame
         let isMain = (screen == NSScreen.main)
 
         let screenInfo = ScreenInfo.new(
+            id,
             isMain,
             // full
             Rect.new(

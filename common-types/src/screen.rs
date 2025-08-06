@@ -3,6 +3,7 @@ use tauri::Position;
 
 #[derive(Debug)]
 pub struct ScreenInfo {
+    pub id: String,
     // todo-zm: remove is_main
     pub is_main: bool,
     pub full: Rect,
@@ -10,8 +11,9 @@ pub struct ScreenInfo {
 }
 
 impl ScreenInfo {
-    pub fn new(is_main: bool, full: Rect, safe: Rect) -> Self {
+    pub fn new(id: String, is_main: bool, full: Rect, safe: Rect) -> Self {
         ScreenInfo {
+            id,
             is_main,
             full,
             safe,
