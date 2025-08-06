@@ -19,6 +19,7 @@ mod ffi {
         fn new_boxed_screen_info_vec() -> Box<ScreenInfoVec>;
         fn push_new_screen_info(
             self: &mut ScreenInfoVec,
+            id: String,
             is_main: bool,
             scale_factor: f64,
             full: Box<CRect>,
@@ -57,12 +58,14 @@ struct ScreenInfoVec {
 impl ScreenInfoVec {
     pub fn push_new_screen_info(
         &mut self,
+        id: String,
         is_main: bool,
         scale_factor: f64,
         full: Box<CRect>,
         safe: Box<CRect>,
     ) {
         self.screens.push(ScreenInfo::new(
+            id,
             is_main,
             full.0 / scale_factor,
             safe.0 / scale_factor,
@@ -124,7 +127,13 @@ mod tests {
     use super::*;
 
     #[test]
-    fn prints_result() {
+    fn screen_info_should_be_non_empty_array() {
+        let result = get_screen_info();
+        assert!(!result.is_empty(), "Screen info should not be empty");
+    }
+
+    #[test]
+    fn network_info_should_be_more_than_zero_bytes() {
         let result = get_network_info();
         assert!(
             result.total_sent > 0 || result.total_received > 0,
