@@ -1,10 +1,26 @@
+use serde::{Deserialize, Serialize};
 use std::ops::Div;
 use tauri::Position;
+use typeshare::typeshare;
 
-#[derive(Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[typeshare]
+pub struct CurrentScreenIdSetEvent {
+    updated_current_screen_id_set: Vec<String>,
+}
+
+impl CurrentScreenIdSetEvent {
+    pub fn new(updated_current_screen_id_set: Vec<String>) -> Self {
+        Self {
+            updated_current_screen_id_set,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[typeshare]
 pub struct ScreenInfo {
     pub id: String,
-    // todo-zm: remove is_main
     pub is_main: bool,
     pub full: Rect,
     pub safe: Rect,
@@ -21,11 +37,16 @@ impl ScreenInfo {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
+#[typeshare]
 pub struct Rect {
+    #[typeshare(typescript(type = "number"))]
     pub x: i64,
+    #[typeshare(typescript(type = "number"))]
     pub y: i64,
+    #[typeshare(typescript(type = "number"))]
     pub width: i64,
+    #[typeshare(typescript(type = "number"))]
     pub height: i64,
 }
 

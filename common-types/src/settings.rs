@@ -1,3 +1,4 @@
+use crate::screen::ScreenInfo;
 use serde::{Deserialize, Serialize};
 use typeshare::typeshare;
 
@@ -26,19 +27,86 @@ pub struct Settings {
 #[typeshare]
 pub struct SettingsNetworkWidget {
     pub enabled: bool,
-    pub position: SettingsNetworkWidgetPosition,
+    pub position_per_screen_set: Vec<WidgetPositionForScreenIdSet>,
     pub safe_area: bool,
     pub size: f64,
     pub aspect_ratio: f64,
 }
 
+pub trait ListOfWidgetPositionForScreenIdSet {
+    fn get_for_screen_set(
+        &self,
+        screen_set: &Vec<ScreenInfo>,
+    ) -> Option<&WidgetPositionForScreenIdSet>;
+    fn insert_new_screen_set(
+        &mut self,
+        screen_set: &Vec<ScreenInfo>,
+    ) -> &WidgetPositionForScreenIdSet;
+}
+
+impl ListOfWidgetPositionForScreenIdSet for Vec<WidgetPositionForScreenIdSet> {
+    fn get_for_screen_set(
+        &self,
+        screen_set: &Vec<ScreenInfo>,
+    ) -> Option<&WidgetPositionForScreenIdSet> {
+        let screen_id_set: Vec<String> =
+            screen_set.iter().map(|screen| screen.id.clone()).collect();
+
+        self.iter()
+            .find(|widget| widget.screen_id_set == screen_id_set)
+    }
+
+    fn insert_new_screen_set(
+        &mut self,
+        screen_set: &Vec<ScreenInfo>,
+    ) -> &WidgetPositionForScreenIdSet {
+        let screen_id_set: Vec<String> =
+            screen_set.iter().map(|screen| screen.id.clone()).collect();
+        let main_screen = screen_set
+            .iter()
+            .find(|screen| screen.is_main)
+            .or_else(|| screen_set.first())
+            .expect("At least one screen should exist");
+        let screen_id = main_screen.id.clone();
+
+        let new_item = WidgetPositionForScreenIdSet {
+            screen_id_set,
+            screen_id,
+            position: WidgetPosition::default(),
+        };
+
+        self.push(new_item);
+
+        &self
+            .last()
+            .expect("Just pushed an item, so it should exist")
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone)]
 #[typeshare]
-pub enum SettingsNetworkWidgetPosition {
+pub struct WidgetPositionForScreenIdSet {
+    pub screen_id_set: Vec<String>,
+    pub screen_id: String,
+    pub position: WidgetPosition,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+#[typeshare]
+pub enum WidgetPosition {
     TopLeft,
     TopRight,
     BottomLeft,
     BottomRight,
+}
+
+impl Default for WidgetPosition {
+    fn default() -> Self {
+        #[cfg(target_os = "macos")]
+        return WidgetPosition::TopRight;
+        #[cfg(target_os = "windows")]
+        return WidgetPosition::BottomRight;
+    }
 }
 // ---
 
@@ -64,10 +132,7 @@ impl Default for Settings {
             },
             network_widget: SettingsNetworkWidget {
                 enabled: true,
-                #[cfg(target_os = "macos")]
-                position: SettingsNetworkWidgetPosition::TopRight,
-                #[cfg(target_os = "windows")]
-                position: SettingsNetworkWidgetPosition::BottomRight,
+                position_per_screen_set: vec![],
                 #[cfg(target_os = "macos")]
                 safe_area: false,
                 #[cfg(target_os = "windows")]

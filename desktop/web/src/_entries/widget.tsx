@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import { useState } from "react";
 import { useMonitorEvent } from "../hooks/use-monitor-event";
@@ -7,6 +7,7 @@ import { Network } from "../components/network";
 import { useSettings } from "../hooks/use-settings";
 import "../_utils/import-daisyui.css";
 import "../_utils/transparent-window.css";
+import { useCurrentScreenIdSet } from "../hooks/use-current-screen-id-set";
 
 const MAX_EVENTS = 50;
 
@@ -31,6 +32,23 @@ function App() {
   });
 
   const { settings, reload } = useSettings();
+  const { currentScreenIdSet } = useCurrentScreenIdSet();
+  // todo-zm: DRY this logic
+  const position = useMemo(() => {
+    if (
+      settings === "ERROR" ||
+      settings === null ||
+      currentScreenIdSet === "ERROR" ||
+      currentScreenIdSet === null
+    )
+      return;
+
+    const currentScreenIdSetString = currentScreenIdSet.join("-");
+
+    return settings.network_widget.position_per_screen_set.find((pos) => {
+      return pos.screen_id_set.join("-") === currentScreenIdSetString;
+    })?.position;
+  }, [currentScreenIdSet, settings]);
 
   if (settings === null) {
     return (
@@ -54,7 +72,7 @@ function App() {
     <div className="flex flex-col w-full h-full bg-transparent">
       <Network
         networkEvents={events.filter((event) => event.type === "Network")}
-        position={settings.network_widget.position}
+        position={position!}
       />
     </div>
   );
