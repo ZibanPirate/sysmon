@@ -39,7 +39,7 @@ async fn check_and_download_and_wait_for_restart(updater: Updater) {
 
 pub fn setup_updater(app: &mut App) -> Result<(), Box<dyn std::error::Error>> {
     if cfg!(debug_assertions) {
-        println!("Skipping updater setup because debug build");
+        println!("Debug mode: skipping updater setup");
         return Ok(());
     }
 
