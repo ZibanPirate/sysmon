@@ -5,7 +5,7 @@ func getScreenInfo() -> RustVec<ScreenInfo> {
 
     let vec = RustVec<ScreenInfo>()
 
-    let mainScreenHeigh = NSScreen.main?.frame.size.height ?? 0
+    let mainScreenHeight = NSScreen.main?.frame.size.height ?? 0
 
     for screen in NSScreen.screens {
         let id: String
@@ -20,9 +20,9 @@ func getScreenInfo() -> RustVec<ScreenInfo> {
         let safeFrame = screen.visibleFrame
         let isMain = (screen == NSScreen.main)
 
-        // note: in macos, cordinate system starts from the bottom left corner of main screen
-        // this only effects the y coordinate, so we need to adjust it
-        let y = -(frame.origin.y - (mainScreenHeigh - frame.size.height))
+        // note: in macos, coordinate system starts from the bottom left corner of main screen
+        // this only affects the y coordinate, so we need to adjust it
+        let y = -(frame.origin.y - (mainScreenHeight - frame.size.height))
 
         let screenInfo = ScreenInfo.new(
             id,
