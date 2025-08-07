@@ -4,9 +4,11 @@ import "../_utils/import-daisyui.css";
 import { Settings, WidgetPosition } from "../../../../common-types/bindings";
 import { invoke } from "@tauri-apps/api/core";
 import { useCurrentScreenIdSet } from "../hooks/use-current-screen-id-set";
+import { extractPositionForScreenIdSet } from "../_utils/extract-position-for-screen-id-set";
+import { Loadable } from "../_utils/type";
 
 function App() {
-  let [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+  let [settings, setSettings] = useState<Loadable<Settings>>(null);
   let saveSettings = async (updatedSettings: Settings) => {
     try {
       let saved_settings = await invoke<Settings>("set_settings", {
@@ -36,21 +38,10 @@ function App() {
   }, []);
 
   const { currentScreenIdSet } = useCurrentScreenIdSet();
-  const positionForScreenIdSet = useMemo(() => {
-    if (
-      settings === "ERROR" ||
-      settings === null ||
-      currentScreenIdSet === "ERROR" ||
-      currentScreenIdSet === null
-    )
-      return;
-
-    const currentScreenIdSetString = currentScreenIdSet.join("-");
-
-    return settings.network_widget.position_per_screen_set.find((pos) => {
-      return pos.screen_id_set.join("-") === currentScreenIdSetString;
-    });
-  }, [currentScreenIdSet, settings]);
+  const positionForScreenIdSet = useMemo(
+    () => extractPositionForScreenIdSet(settings, currentScreenIdSet),
+    [currentScreenIdSet, settings],
+  );
 
   if (settings === null) {
     return (
@@ -171,7 +162,6 @@ function App() {
                                         ? {
                                             ...pos,
                                             position,
-                                            // todo-zm: camel case the payload?
                                             screen_id: screenId,
                                           }
                                         : pos,

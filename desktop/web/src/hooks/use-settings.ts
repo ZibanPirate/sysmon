@@ -3,6 +3,7 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect, useState } from "react";
 import { Settings, SettingsEvent } from "../../../../common-types/bindings";
 import { invoke } from "@tauri-apps/api/core";
+import { Loadable } from "../_utils/type";
 
 const hookListeners: Map<string, (event: Event<any>) => void> = new Map();
 const EVENT_NAME = "settings_changed";
@@ -27,10 +28,10 @@ function useSettingsEvent(
 }
 
 export function useSettings(): {
-  settings: Settings | null | "ERROR";
+  settings: Loadable<Settings>;
   reload: () => void;
 } {
-  const [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+  const [settings, setSettings] = useState<Loadable<Settings>>(null);
 
   async function loadSettings() {
     try {

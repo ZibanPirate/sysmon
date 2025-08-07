@@ -8,6 +8,7 @@ import { useSettings } from "../hooks/use-settings";
 import "../_utils/import-daisyui.css";
 import "../_utils/transparent-window.css";
 import { useCurrentScreenIdSet } from "../hooks/use-current-screen-id-set";
+import { extractPositionForScreenIdSet } from "../_utils/extract-position-for-screen-id-set";
 
 const MAX_EVENTS = 50;
 
@@ -33,22 +34,10 @@ function App() {
 
   const { settings, reload } = useSettings();
   const { currentScreenIdSet } = useCurrentScreenIdSet();
-  // todo-zm: DRY this logic
-  const position = useMemo(() => {
-    if (
-      settings === "ERROR" ||
-      settings === null ||
-      currentScreenIdSet === "ERROR" ||
-      currentScreenIdSet === null
-    )
-      return;
-
-    const currentScreenIdSetString = currentScreenIdSet.join("-");
-
-    return settings.network_widget.position_per_screen_set.find((pos) => {
-      return pos.screen_id_set.join("-") === currentScreenIdSetString;
-    })?.position;
-  }, [currentScreenIdSet, settings]);
+  const position = useMemo(
+    () => extractPositionForScreenIdSet(settings, currentScreenIdSet)?.position,
+    [currentScreenIdSet, settings],
+  );
 
   if (settings === null) {
     return (

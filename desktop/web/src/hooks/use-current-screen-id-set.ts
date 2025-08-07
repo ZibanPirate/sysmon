@@ -3,6 +3,7 @@ import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CurrentScreenIdSetEvent } from "../../../../common-types/bindings";
+import { Loadable } from "../_utils/type";
 
 const hookListeners: Map<string, (event: Event<any>) => void> = new Map();
 // todo-zm: share event names
@@ -29,12 +30,11 @@ function useCurrentScreenIdSetEvent(
 }
 
 export function useCurrentScreenIdSet(): {
-  currentScreenIdSet: string[] | null | "ERROR";
+  currentScreenIdSet: Loadable<string[]>;
   reload: () => void;
 } {
-  const [currentScreenIdSet, setCurrentScreenIdSet] = useState<
-    string[] | null | "ERROR"
-  >(null);
+  const [currentScreenIdSet, setCurrentScreenIdSet] =
+    useState<Loadable<string[]>>(null);
 
   async function loadCurrentScreenIdSet() {
     try {
