@@ -1,33 +1,11 @@
-import { Event } from "@tauri-apps/api/event";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import { CurrentScreenIdSetEvent } from "../../../../common-types/bindings";
 import { Loadable } from "../_utils/type";
+import { useEventListener } from "./use-event-listener";
 
-const hookListeners: Map<string, (event: Event<any>) => void> = new Map();
 // todo-zm: share event names
 const EVENT_NAME = "current_screen_id_set_changed";
-
-const appWebview = getCurrentWebviewWindow();
-appWebview.listen<CurrentScreenIdSetEvent>(EVENT_NAME, (event) => {
-  hookListeners.forEach((listener) => {
-    listener(event);
-  });
-});
-
-// todo-zm: DRY event listener logic
-function useCurrentScreenIdSetEvent(
-  listener: (event: Event<CurrentScreenIdSetEvent>) => void,
-): void {
-  useEffect(() => {
-    let mapKey = `${EVENT_NAME}-${Math.random().toString(36).substring(2, 15)}`;
-    hookListeners.set(mapKey, listener);
-    return () => {
-      hookListeners.delete(mapKey);
-    };
-  }, [listener]);
-}
 
 export function useCurrentScreenIdSet(): {
   currentScreenIdSet: Loadable<string[]>;
@@ -50,8 +28,8 @@ export function useCurrentScreenIdSet(): {
   useEffect(() => {
     loadCurrentScreenIdSet();
   }, []);
-  useEffect(() => {}, []);
-  useCurrentScreenIdSetEvent((event) => {
+
+  useEventListener<CurrentScreenIdSetEvent>(EVENT_NAME, (event) => {
     setCurrentScreenIdSet(event.payload.updated_current_screen_id_set);
   });
 
