@@ -43,7 +43,7 @@ function App() {
     [currentScreenIdSet, settings],
   );
 
-  if (settings === null) {
+  if (settings === null || !positionForScreenIdSet) {
     return (
       <div className="flex flex-col w-full justify-center p-6">
         <progress className="progress w-full"></progress>
@@ -137,13 +137,13 @@ function App() {
           </label>
           <div className="label gap-4">
             Position
-            {positionForScreenIdSet!.screen_id_set.map((screenId) => {
+            {positionForScreenIdSet.screen_id_set.map((screenId) => {
               return (
                 <div>
                   {Object.values(WidgetPosition).map((position, index) => {
                     const isSelected =
-                      screenId === positionForScreenIdSet!.screen_id &&
-                      position === positionForScreenIdSet!.position;
+                      screenId === positionForScreenIdSet.screen_id &&
+                      position === positionForScreenIdSet.position;
                     return (
                       <Fragment key={position}>
                         <button

@@ -39,7 +39,7 @@ function App() {
     [currentScreenIdSet, settings],
   );
 
-  if (settings === null) {
+  if (settings === null || !position) {
     return (
       <div className="flex flex-col w-full justify-center p-6">
         <progress className="progress w-full"></progress>
@@ -61,7 +61,7 @@ function App() {
     <div className="flex flex-col w-full h-full bg-transparent">
       <Network
         networkEvents={events.filter((event) => event.type === "Network")}
-        position={position!}
+        position={position}
       />
     </div>
   );
