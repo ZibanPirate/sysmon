@@ -2,6 +2,6 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "listen-to-event",
   "description": "Capability for windows to listen to events.",
-  "windows": ["widget"],
+  "windows": ["widget", "settings"],
   "permissions": ["core:event:allow-listen"]
 }
