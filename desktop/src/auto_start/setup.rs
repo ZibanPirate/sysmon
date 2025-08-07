@@ -6,6 +6,11 @@ use tauri::Manager;
 use tauri_plugin_autostart::{MacosLauncher, ManagerExt};
 
 pub fn setup_autostart<'a>(app: &'a mut tauri::App) -> Result<()> {
+    if cfg!(debug_assertions) {
+        println!("Debug mode: skipping autostart setup");
+        return Ok(());
+    }
+
     app.handle().plugin(tauri_plugin_autostart::init(
         MacosLauncher::LaunchAgent,
         None,

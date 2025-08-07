@@ -16,6 +16,11 @@ pub fn persist_settings(settings: &Settings, app_handle: AppHandle) -> Result<()
 pub fn load_settings(app_handle: &AppHandle) -> Result<Settings> {
     let config_dir = app_handle.path().app_config_dir()?;
     let settings_path = config_dir.join("settings.json");
+    #[cfg(debug_assertions)]
+    println!(
+        "Debug mode: Loading settings from {}",
+        settings_path.display()
+    );
     if !settings_path.exists() {
         return Ok(Settings::default());
     }

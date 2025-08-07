@@ -28,6 +28,7 @@ pub fn app_builder() -> tauri::Builder<tauri::Wry> {
         })
         .invoke_handler(tauri::generate_handler![
             crate::settings::command::get_settings,
-            crate::settings::command::set_settings
+            crate::settings::command::set_settings,
+            crate::widget::command::get_current_screen_id_set,
         ])
 }

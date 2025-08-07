@@ -1,14 +1,14 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "../_utils/import-daisyui.css";
-import {
-  Settings,
-  SettingsNetworkWidgetPosition,
-} from "../../../../common-types/bindings";
+import { Settings, WidgetPosition } from "../../../../common-types/bindings";
 import { invoke } from "@tauri-apps/api/core";
+import { useCurrentScreenIdSet } from "../hooks/use-current-screen-id-set";
+import { extractPositionForScreenIdSet } from "../_utils/extract-position-for-screen-id-set";
+import { Loadable } from "../_utils/type";
 
 function App() {
-  let [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+  let [settings, setSettings] = useState<Loadable<Settings>>(null);
   let saveSettings = async (updatedSettings: Settings) => {
     try {
       let saved_settings = await invoke<Settings>("set_settings", {
@@ -37,7 +37,13 @@ function App() {
     loadSettings();
   }, []);
 
-  if (settings === null) {
+  const { currentScreenIdSet } = useCurrentScreenIdSet();
+  const positionForScreenIdSet = useMemo(
+    () => extractPositionForScreenIdSet(settings, currentScreenIdSet),
+    [currentScreenIdSet, settings],
+  );
+
+  if (settings === null || !positionForScreenIdSet) {
     return (
       <div className="flex flex-col w-full justify-center p-6">
         <progress className="progress w-full"></progress>
@@ -131,51 +137,66 @@ function App() {
           </label>
           <div className="label gap-4">
             Position
-            <div>
-              {Object.values(SettingsNetworkWidgetPosition).map(
-                (position, index) => (
-                  <Fragment key={position}>
-                    <button
-                      className={`btn btn-sm ${
-                        position === settings.network_widget.position
-                          ? "btn-soft"
-                          : "btn-ghost"
-                      }`}
-                      onClick={() => {
-                        saveSettings({
-                          ...settings,
-                          network_widget: {
-                            ...settings.network_widget,
-                            position: position,
-                          },
-                        });
-                      }}
-                    >
-                      <svg
-                        style={{
-                          transform: `scaleX(${
-                            position.includes("Right") ? -1 : 1
-                          }) scaleY(${position.includes("Top") ? 1 : -1})`,
-                        }}
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25"
-                        />
-                      </svg>
-                    </button>
-                    {index === 1 && <br className="flex flex-auto" />}
-                  </Fragment>
-                ),
-              )}
-            </div>
+            {positionForScreenIdSet.screen_id_set.map((screenId) => {
+              return (
+                <div>
+                  {Object.values(WidgetPosition).map((position, index) => {
+                    const isSelected =
+                      screenId === positionForScreenIdSet.screen_id &&
+                      position === positionForScreenIdSet.position;
+                    return (
+                      <Fragment key={position}>
+                        <button
+                          className={`btn btn-sm ${
+                            isSelected ? "btn-soft" : "btn-ghost"
+                          }`}
+                          onClick={() => {
+                            saveSettings({
+                              ...settings,
+                              network_widget: {
+                                ...settings.network_widget,
+                                position_per_screen_set:
+                                  settings.network_widget.position_per_screen_set.map(
+                                    (pos) =>
+                                      pos === positionForScreenIdSet
+                                        ? {
+                                            ...pos,
+                                            position,
+                                            screen_id: screenId,
+                                          }
+                                        : pos,
+                                  ),
+                              },
+                            });
+                          }}
+                        >
+                          <svg
+                            style={{
+                              transform: `scaleX(${
+                                position.includes("Right") ? -1 : 1
+                              }) scaleY(${position.includes("Top") ? 1 : -1})`,
+                            }}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="size-2"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m19.5 19.5-15-15m0 0v11.25m0-11.25h11.25"
+                            />
+                          </svg>
+                        </button>
+                        {index === 1 && <br className="flex flex-auto" />}
+                      </Fragment>
+                    );
+                  })}
+                </div>
+              );
+            })}
           </div>
           <label className="label gap-4">
             <input

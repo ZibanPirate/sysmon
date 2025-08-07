@@ -1,36 +1,16 @@
-import { Event } from "@tauri-apps/api/event";
-import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
 import { useEffect, useState } from "react";
 import { Settings, SettingsEvent } from "../../../../common-types/bindings";
 import { invoke } from "@tauri-apps/api/core";
+import { Loadable } from "../_utils/type";
+import { useEventListener } from "./use-event-listener";
 
-const hookListeners: Map<string, (event: Event<any>) => void> = new Map();
 const EVENT_NAME = "settings_changed";
 
-const appWebview = getCurrentWebviewWindow();
-appWebview.listen<SettingsEvent>(EVENT_NAME, (event) => {
-  hookListeners.forEach((listener) => {
-    listener(event);
-  });
-});
-
-function useSettingsEvent(
-  listener: (event: Event<SettingsEvent>) => void,
-): void {
-  useEffect(() => {
-    let mapKey = `${EVENT_NAME}-${Math.random().toString(36).substring(2, 15)}`;
-    hookListeners.set(mapKey, listener);
-    return () => {
-      hookListeners.delete(mapKey);
-    };
-  }, [listener]);
-}
-
 export function useSettings(): {
-  settings: Settings | null | "ERROR";
+  settings: Loadable<Settings>;
   reload: () => void;
 } {
-  const [settings, setSettings] = useState<Settings | null | "ERROR">(null);
+  const [settings, setSettings] = useState<Loadable<Settings>>(null);
 
   async function loadSettings() {
     try {
@@ -43,11 +23,12 @@ export function useSettings(): {
       setSettings("ERROR");
     }
   }
+
   useEffect(() => {
     loadSettings();
   }, []);
-  useEffect(() => {}, []);
-  useSettingsEvent((event) => {
+
+  useEventListener<SettingsEvent>(EVENT_NAME, (event) => {
     setSettings(event.payload.updated_settings);
   });
 

@@ -1,10 +1,13 @@
 import { FC, useMemo } from "react";
-import { MonitorEvent, Settings } from "../../../../../common-types/bindings";
+import {
+  MonitorEvent,
+  WidgetPosition,
+} from "../../../../../common-types/bindings";
 import styles from "./style.module.css";
 
 interface NetworkProps {
   networkEvents: Array<MonitorEvent & { type: "Network" }>;
-  position: Settings["network_widget"]["position"];
+  position: WidgetPosition;
 }
 
 const MIN_VALUE_BYTES = 10_000;

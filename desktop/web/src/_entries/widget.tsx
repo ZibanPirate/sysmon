@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import ReactDOM from "react-dom/client";
 import { useState } from "react";
 import { useMonitorEvent } from "../hooks/use-monitor-event";
@@ -7,6 +7,8 @@ import { Network } from "../components/network";
 import { useSettings } from "../hooks/use-settings";
 import "../_utils/import-daisyui.css";
 import "../_utils/transparent-window.css";
+import { useCurrentScreenIdSet } from "../hooks/use-current-screen-id-set";
+import { extractPositionForScreenIdSet } from "../_utils/extract-position-for-screen-id-set";
 
 const MAX_EVENTS = 50;
 
@@ -31,8 +33,13 @@ function App() {
   });
 
   const { settings, reload } = useSettings();
+  const { currentScreenIdSet } = useCurrentScreenIdSet();
+  const position = useMemo(
+    () => extractPositionForScreenIdSet(settings, currentScreenIdSet)?.position,
+    [currentScreenIdSet, settings],
+  );
 
-  if (settings === null) {
+  if (settings === null || !position) {
     return (
       <div className="flex flex-col w-full justify-center p-6">
         <progress className="progress w-full"></progress>
@@ -54,7 +61,7 @@ function App() {
     <div className="flex flex-col w-full h-full bg-transparent">
       <Network
         networkEvents={events.filter((event) => event.type === "Network")}
-        position={settings.network_widget.position}
+        position={position}
       />
     </div>
   );
