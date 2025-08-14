@@ -42,20 +42,23 @@ fn main() {
     let cmd = CliRun::new().with_relative_cwd("./desktop");
     cmd.run("cargo", vec!["tauri", "icon", "./assets/svg/logo.svg"]);
 
-    println!("- Generating .PS1 files...");
-    let cwd = cli_run::get_cli_run_cwd();
-    for entry in std::fs::read_dir(cwd.join("scripts")).unwrap() {
-        let entry = entry.unwrap();
-        if entry.path().extension().and_then(|s| s.to_str()) == Some("rs") {
-            let ps1_path = entry.path().with_extension("rs.ps1");
-            let mut file = std::fs::File::create(ps1_path).unwrap();
-            writeln!(file, r#"$env:RUST_BACKTRACE = "1""#).unwrap();
-            writeln!(
-                file,
-                r#"cargo +nightly -Zscript "{}" @args"#,
-                entry.path().strip_prefix(&cwd).unwrap().to_string_lossy()
-            )
-            .unwrap();
+    #[cfg(target_os = "windows")]
+    {
+        println!("- Generating .PS1 files...");
+        let cwd = cli_run::get_cli_run_cwd();
+        for entry in std::fs::read_dir(cwd.join("scripts")).unwrap() {
+            let entry = entry.unwrap();
+            if entry.path().extension().and_then(|s| s.to_str()) == Some("rs") {
+                let ps1_path = entry.path().with_extension("rs.ps1");
+                let mut file = std::fs::File::create(ps1_path).unwrap();
+                writeln!(file, r#"$env:RUST_BACKTRACE = "1""#).unwrap();
+                writeln!(
+                    file,
+                    r#"cargo +nightly -Zscript "{}" @args"#,
+                    entry.path().strip_prefix(&cwd).unwrap().to_string_lossy()
+                )
+                .unwrap();
+            }
         }
     }
 }
