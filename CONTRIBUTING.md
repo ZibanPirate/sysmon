@@ -1,10 +1,10 @@
 **Prerequisites**
 
-Have these intalled:
+Have these installed:
 
 - Rust
 - NodeJS
-- On Windows: Have Vistual Studio installed with the component:
+- On Windows: Have Visual Studio installed with the component:
   - Desktop C++
   - Clang tools for Desktop C++ (make sure to add it to PATH, should be somewhere like "C:\Program Files\Microsoft Visual Studio\20xx\Community\VC\Tools\Llvm\bin")
   - Powershell

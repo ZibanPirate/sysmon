@@ -32,7 +32,6 @@ static DPI_AWARENESS_CONTEXT SafeSetThreadDpiAwarenessContext(DPI_AWARENESS_CONT
 {
     InitDpiAwarenessFunc();
     return pSetThreadDpiAwarenessContext ? pSetThreadDpiAwarenessContext(ctx) : NULL;
-    return NULL;
 }
 // ---
 
