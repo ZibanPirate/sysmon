@@ -19,7 +19,7 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 | Linux   | Arm           | N/A                                                                                                                                                                                                                                          |
 | Linux   | x86           | N/A                                                                                                                                                                                                                                          |
 
-### Minimum supported OS verion
+### Minimum supported OS version
 
 - **Windows**: Windows 10 and later
 - **macOS**: macOS Catalina (10.15) and later
