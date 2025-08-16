@@ -56,7 +56,7 @@ jobs:
       # - name: lint todo-zm: bring this back
       #   run: cargo clippy -- -D warnings
       - name: build
-        run: cargo build --target ${{ matrix.arch }}
+        run: cargo build
         env:
           RUST_BACKTRACE: full
       - name: test
