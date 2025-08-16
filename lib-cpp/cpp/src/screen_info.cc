@@ -9,32 +9,6 @@
 typedef double float64_t;
 #endif
 
-// --- todo-zm: move this to a seperate file
-typedef DPI_AWARENESS_CONTEXT(WINAPI *PFN_SetThreadDpiAwarenessContext)(DPI_AWARENESS_CONTEXT);
-
-static PFN_SetThreadDpiAwarenessContext pSetThreadDpiAwarenessContext = NULL;
-
-static void InitDpiAwarenessFunc(void)
-{
-    if (!pSetThreadDpiAwarenessContext)
-    {
-        HMODULE hUser32 = GetModuleHandleW(L"user32.dll");
-        if (hUser32)
-        {
-            pSetThreadDpiAwarenessContext =
-                (PFN_SetThreadDpiAwarenessContext)
-                    GetProcAddress(hUser32, "SetThreadDpiAwarenessContext");
-        }
-    }
-}
-
-static DPI_AWARENESS_CONTEXT SafeSetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT ctx)
-{
-    InitDpiAwarenessFunc();
-    return pSetThreadDpiAwarenessContext ? pSetThreadDpiAwarenessContext(ctx) : NULL;
-}
-// ---
-
 BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
 {
     // only when running cargo test, to mimic Tauri's DPI awareness
@@ -46,7 +20,7 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
     monitorInfo.cbSize = sizeof(MONITORINFOEX);
 
     // temporarily be DPI-unaware
-    DPI_AWARENESS_CONTEXT originalContext = SafeSetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
+    DPI_AWARENESS_CONTEXT originalContext = SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT_UNAWARE);
 
     if (GetMonitorInfo(hMonitor, &monitorInfo))
     {
@@ -74,7 +48,7 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMoni
     }
 
     // Restore original DPI awareness context
-    SafeSetThreadDpiAwarenessContext(originalContext);
+    SetThreadDpiAwarenessContext(originalContext);
 
     return TRUE; // Continue enumeration
 }
