@@ -10,14 +10,19 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 
 ## Download
 
-| OS      | Processor     | Download                                                                                                                                                                                                                                   |
-| ------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_aarch64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz)         |
-| MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_x64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)                 |
+| OS      | Processor     | Download                                                                                                                                                                                                                                     |
+| ------- | ------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| MacOS   | Apple Silicon | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_aarch64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_aarch64.app.tar.gz)          |
+| MacOS   | Intel         | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_x64.dmg)<br>- [Standalone](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_x64.app.tar.gz)                  |
 | Windows | Arm           | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_arm64-setup.exe)<br>- [MSI Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_x64_en-US.msi) |
 | Windows | x86           | - [Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_x64-setup.exe)<br>- [MSI Installer](https://github.com/ZibanPirate/sysmon/releases/latest/download/System.Monitor_0.1.14_x64_en-US.msi)   |
-| Linux   | Arm           | N/A                                                                                                                                                                                                                                        |
-| Linux   | x86           | N/A                                                                                                                                                                                                                                        |
+| Linux   | Arm           | N/A                                                                                                                                                                                                                                          |
+| Linux   | x86           | N/A                                                                                                                                                                                                                                          |
+
+### Minimum supported OS verion
+
+- **Windows**: Windows 10 and later
+- **macOS**: macOS Catalina (10.15) and later
 
 ## Contributing
 
