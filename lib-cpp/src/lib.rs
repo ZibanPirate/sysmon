@@ -21,7 +21,6 @@ mod ffi {
             self: &mut ScreenInfoVec,
             id: String,
             is_main: bool,
-            scale_factor: f64,
             full: Box<CRect>,
             safe: Box<CRect>,
         );
@@ -60,16 +59,11 @@ impl ScreenInfoVec {
         &mut self,
         id: String,
         is_main: bool,
-        scale_factor: f64,
         full: Box<CRect>,
         safe: Box<CRect>,
     ) {
-        self.screens.push(ScreenInfo::new(
-            id,
-            is_main,
-            full.0 / scale_factor,
-            safe.0 / scale_factor,
-        ));
+        self.screens
+            .push(ScreenInfo::new(id, is_main, full.0, safe.0));
     }
 }
 

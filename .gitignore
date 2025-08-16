@@ -6,3 +6,6 @@ desktop/icons/
 .env
 common-types/bindings/
 .DS_Store
+
+scripts/*.ps1
+!scripts/setup.rs.ps1

@@ -22,34 +22,3 @@ Cross-platform Widget showing download/upload speed at the corner of your screen
 ## Contributing
 
 Contributions are welcome, please read [`CONTRIBUTING.md`](./CONTRIBUTING.md) to get started.
-
-here's a rough roadmap of the project
-
-### Checklist
-
-- [x] gether Network speed (`./lib-cpp` and `./lib-swift`)
-- [x] show network speed graph on an always-on-top widget, and on tray icon text
-- [x] Auto-update
-- [ ] improve rust code quality: no-unwrap, tests, clippy on CI checks
-- [ ] improve lib-cpp and lib-swift code quality, formatting, tests, lint, CI checks
-- [ ] Telemetry data on user consent
-- [ ] Linux support
-- [ ] Apple Store support
-- [ ] more widgets
-  - [ ] CPU
-  - [ ] RAM
-  - [ ] Storage
-- [ ] optimize Widgets for low CPU consumption
-
-#### todos
-
-- todo-zm: bug: settings window flash before loading in Windows
-- todo-zm: bug: tray menue can be hidden in Windows via settings (should we detect it?)
-- todo-zm: bug: auto-start sometimes not working on Windows
-- todo-zm: bug: network widget flashes a scroll bar real quick when ran on windows in debug mode
-- todo-zm: have a landing page for https://sysmon.zak-man.com
-- todo-zm: change the updater endpoint to sysmon.zak-man.com/...
-- todo-zm: quit app on SIGINT and SIGTERM in debug mode
-- todo-zm: figure out how to show numbers in tray icon on windows (via icon?)
-- todo-zm: sign Windows app https://v2.tauri.app/distribute/sign/windows/#azure-key-vault
-- todo-zm: don't focus on the app on boot (only apply in debug mode?)

@@ -27,5 +27,8 @@ fn main() {
 
     println!("- Formatting everything else with Prettier ...");
     // todo:zm replace with https://biomejs.dev/internals/language-support or https://github.com/oxc-project
-    cli_run::cli_run("npx", vec!["-y", "prettier", "--write", "."]);
+    cli_run::cli_run(
+        "npx",
+        vec!["-y", "prettier", "--write", ".", "--end-of-line", "auto"],
+    );
 }
