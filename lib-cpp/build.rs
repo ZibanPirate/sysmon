@@ -10,6 +10,7 @@ fn main() {
     CFG.include_prefix = "crate-root";
 
     cxx_build::bridge("src/lib.rs")
+        .flag("/MT")
         .files(
             glob("cpp/src/*.cc")
                 .expect("Failed to read cpp files")
