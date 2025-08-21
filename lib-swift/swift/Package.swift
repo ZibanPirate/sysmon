@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "lib-rust",
+    platforms: [
+        .macOS(.v10_15)
+    ],
     products: [
         .library(
             name: "rust",
@@ -13,6 +16,9 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "lib-rust")
-    ]
+            name: "lib-rust",
+            swiftSettings: [
+                .define("SWIFT_PACKAGE_ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES")
+            ])
+    ],
 )
