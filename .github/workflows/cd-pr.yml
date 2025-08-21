@@ -1,0 +1,92 @@
+name: "publish a draft release for a PR"
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: "cd-pr"
+  cancel-in-progress: true
+
+jobs:
+  build-upload-sysmon:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include: # https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#standard-github-hosted-runners-for-public-repositories
+          - platform: macos-latest
+            arch: aarch64-apple-darwin
+          - platform: macos-13
+            arch: x86_64-apple-darwin
+          - platform: windows-latest
+            arch: x86_64-pc-windows-msvc
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
+    runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      # todo-zm: remove conditional once https://github.com/Mozilla-Actions/sccache-action/issues/189 is resolved
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
+      RUSTFLAGS: -Ctarget-feature=+crt-static
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - if: startsWith(matrix.platform, 'macos')
+        # todo-zm: change to @3 once https://github.com/swift-actions/setup-swift/pull/710 is resolved
+        uses: swift-actions/setup-swift@next
+        with:
+          swift-version: "6.1"
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.arch }}
+      # todo-zm: remove conditional ...(see above)
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      # todo-zm: move npm i to `before[Dev/Build]Command`
+      - run: npm i
+        working-directory: ./desktop/web
+
+      - run: cargo install typeshare-cli --git https://github.com/tomjw64/typeshare.git --branch allow-override-for-disallowed-types
+
+      - if: startsWith(matrix.platform, 'macos')
+        run: cargo install swift-bridge-cli
+
+      - name: Build Dependencies
+        run: cargo build --release --workspace --exclude sysmon
+        env:
+          RUST_BACKTRACE: full
+
+      - run: npx -y @tauri-apps/cli icon ./assets/svg/logo.svg
+        working-directory: ./desktop
+
+      - name: Tauri Build ${{ matrix.arch }}
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          # todo-zm: use `assetNamePattern` and remove README.md version update workaround in `./scripts/bump-version.rs`
+        with:
+          projectPath: ./desktop
+          tagName: "v__VERSION__-pr-${{ env.PR_NUMBER }}"
+          releaseName: "v__VERSION__-pr-${{ env.PR_NUMBER }}"
+          releaseBody: "See the assets to download this version and install."
+          releaseDraft: true
+          prerelease: true
+          args: --target ${{ matrix.arch }} # --verbose
