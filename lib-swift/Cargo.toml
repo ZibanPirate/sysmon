@@ -8,10 +8,17 @@ repository.workspace = true
 version.workspace = true
 publish.workspace = true
 
+[[bin]]
+path = "src/main.rs"
+name = "lib-swift-cli"
+
 [dependencies]
 swift-bridge = "0.1"
 common-types = { workspace = true }
 anyhow = { workspace = true }
+
+clap = { version = "4", features = ["derive"] }
+clap_derive = "4"
 
 [build-dependencies]
 swift-bridge-build = "0.1"
