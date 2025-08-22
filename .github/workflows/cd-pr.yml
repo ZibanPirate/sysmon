@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - main
+    types: [opened, synchronize, reopened, labeled, unlabeled]
 
 concurrency:
   group: "cd-pr"
@@ -10,6 +11,8 @@ concurrency:
 
 jobs:
   build-upload-sysmon:
+    # Only run this job for PRs with the "preview" label
+    if: contains(github.event.pull_request.labels.*.name, 'preview')
     permissions:
       contents: write
     strategy:
