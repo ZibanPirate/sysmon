@@ -1,5 +1,4 @@
 import AppKit
-import Cocoa
 import Foundation
 
 public class ScreenChangeObserver {

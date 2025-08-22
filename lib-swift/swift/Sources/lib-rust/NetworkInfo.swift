@@ -1,5 +1,4 @@
 import AppKit
-import Darwin
 import Foundation
 
 func getNetworkStatistics() -> (totalSent: UInt64, totalReceived: UInt64) {
