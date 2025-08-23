@@ -93,3 +93,62 @@ jobs:
           releaseDraft: true
           prerelease: true
           args: --target ${{ matrix.arch }} # --verbose
+
+  build-native-libs:
+    if: contains(github.event.pull_request.labels.*.name, 'preview')
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            arch: aarch64-apple-darwin
+            crate: lib-swift
+          - platform: macos-13
+            arch: x86_64-apple-darwin
+            crate: lib-swift
+          - platform: windows-latest
+            arch: x86_64-pc-windows-msvc
+            crate: lib-cpp
+          - platform: windows-11-arm
+            arch: aarch64-pc-windows-msvc
+            crate: lib-cpp
+    runs-on: ${{ matrix.platform }}
+    env:
+      SCCACHE_GHA_ENABLED: "true"
+      RUSTC_WRAPPER: ${{ matrix.platform != 'windows-11-arm' && 'sccache' || '' }}
+      RUSTFLAGS: -Ctarget-feature=+crt-static
+      PR_NUMBER: ${{ github.event.pull_request.number }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - if: startsWith(matrix.platform, 'macos')
+        uses: swift-actions/setup-swift@next
+        with:
+          swift-version: "6.1"
+
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          target: ${{ matrix.arch }}
+
+      - if: matrix.platform != 'windows-11-arm'
+        uses: mozilla-actions/sccache-action@v0.0.9
+
+      - if: startsWith(matrix.platform, 'macos')
+        run: cargo install swift-bridge-cli
+
+      - name: Build ${{ matrix.crate }} binary
+        run: cargo build --release --bin ${{ matrix.crate }}-cli --target ${{ matrix.arch }}
+        working-directory: ./${{ matrix.crate }}
+        env:
+          RUST_BACKTRACE: full
+
+      - name: Upload ${{ matrix.crate }} binary
+        # todo-zm: upload to the draft release instead of as an artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.crate }}-cli-${{ matrix.arch }}-pr-${{ env.PR_NUMBER }}
+          path: ./${{ matrix.crate }}/target/${{ matrix.arch }}/release/${{ matrix.crate }}-cli${{ matrix.crate == 'lib-cpp' && '.exe' || '' }}
+          retention-days: 7
