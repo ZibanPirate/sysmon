@@ -141,7 +141,7 @@ jobs:
         run: cargo install swift-bridge-cli
 
       - name: Build ${{ matrix.crate }} binary
-        run: cargo build --release --bin ${{ matrix.crate }}-cli --target ${{ matrix.arch }}
+        run: cargo build --release --bin ${{ matrix.crate }}-cli-${{ matrix.arch }} --target ${{ matrix.arch }}
         working-directory: ./${{ matrix.crate }}
         env:
           RUST_BACKTRACE: full

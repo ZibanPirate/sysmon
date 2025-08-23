@@ -5,7 +5,7 @@ on:
       - main
 
 concurrency:
-  group: "publish-draft-release"
+  group: "cd"
   cancel-in-progress: true
 
 jobs:

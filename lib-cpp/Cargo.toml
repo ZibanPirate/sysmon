@@ -10,7 +10,11 @@ publish.workspace = true
 
 [[bin]]
 path = "src/main.rs"
-name = "lib-cpp-cli"
+name = "lib-cpp-cli-x86_64-pc-windows-msvc"
+
+[[bin]]
+path = "src/main.rs"
+name = "lib-cpp-cli-aarch64-pc-windows-msvc"
 
 [dependencies]
 cxx = "1"

@@ -10,7 +10,11 @@ publish.workspace = true
 
 [[bin]]
 path = "src/main.rs"
-name = "lib-swift-cli"
+name = "lib-swift-cli-aarch64-apple-darwin"
+
+[[bin]]
+path = "src/main.rs"
+name = "lib-swift-cli-x86_64-apple-darwin"
 
 [dependencies]
 swift-bridge = "0.1"
