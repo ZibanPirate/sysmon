@@ -148,7 +148,8 @@ jobs:
 
       - name: Extract version from Cargo.toml
         id: get_version
-        run: echo "VERSION=$(grep '^package.version =' Cargo.toml | cut -d '"' -f2)" >> $GITHUB_OUTPUT
+        working-directory: .
+        run: echo "VERSION=$(grep '^package.version =' ./Cargo.toml | cut -d '"' -f2)" >> $GITHUB_OUTPUT
 
       - name: Upload ${{ matrix.crate }} binary to release
         uses: softprops/action-gh-release@v2
