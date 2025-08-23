@@ -64,7 +64,7 @@ jobs:
         run: cargo install swift-bridge-cli
 
       - name: Build Dependencies
-        run: cargo build --release --workspace --exclude sysmon
+        run: cargo build --lib --release --no-default-features --workspace --exclude sysmon
         env:
           RUST_BACKTRACE: full
 
