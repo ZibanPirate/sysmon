@@ -23,12 +23,12 @@ fn main() {
         Commands::ScreenInfo => {
             println!("=== Screen Info ===");
             let screen_info = lib_swift::get_screen_info();
-            println!("Screen Info: {:?}", screen_info);
+            println!("Screen Info: {:#?}", screen_info);
         }
         Commands::NetworkInfo => {
             println!("=== Network Info ===");
             let network_info = lib_swift::get_network_info();
-            println!("Network Info: {:?}", network_info);
+            println!("Network Info: {:#?}", network_info);
         }
     }
 }
