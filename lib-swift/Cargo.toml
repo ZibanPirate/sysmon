@@ -16,9 +16,13 @@ name = "lib-swift-cli"
 swift-bridge = "0.1"
 common-types = { workspace = true }
 anyhow = { workspace = true }
-# todo-zm: put cli deps bheind "cli" feature flag, so CI doesn't build them for lib usage
-clap = { version = "4", features = ["derive"] }
-clap_derive = "4"
+# todo-zm: move this two to workspace level
+clap = { version = "4", features = ["derive"], optional = true }
+clap_derive = { version = "4", optional = true }
 
 [build-dependencies]
 swift-bridge-build = "0.1"
+
+[features]
+default = ["lib-cli"]
+lib-cli = ["clap", "clap_derive"]

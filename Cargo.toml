@@ -17,8 +17,8 @@ serde_json = "1"
 anyhow = "1"
 tokio = { version = "1", features = ["full"] }
 common-types = { path = "./common-types" }
-lib-swift = { path = "./lib-swift" }
-lib-cpp = { path = "./lib-cpp" }
+lib-swift = { path = "./lib-swift", default-features = false }
+lib-cpp = { path = "./lib-cpp", default-features = false }
 # todo-zm: switch to upstream once https://github.com/1Password/typeshare/pull/140 is merged
 typeshare = { git = "https://github.com/tomjw64/typeshare", branch = "allow-override-for-disallowed-types" }
 tauri = { version = "2", default-features = false }
