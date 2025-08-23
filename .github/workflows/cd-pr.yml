@@ -151,5 +151,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.crate }}-cli-${{ matrix.arch }}-pr-${{ env.PR_NUMBER }}
-          path: ./${{ matrix.crate }}/target/${{ matrix.arch }}/release/${{ matrix.crate }}-cli${{ matrix.crate == 'lib-cpp' && '.exe' || '' }}
+          path: ./target/**/${{ matrix.crate }}-cli${{ startsWith(matrix.platform, 'windows') && '.exe' || '' }}
           retention-days: 7
