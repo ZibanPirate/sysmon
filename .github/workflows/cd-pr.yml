@@ -1,4 +1,5 @@
 # todo-zm: create a merge to main job that deletes old draft releases
+# todo-zm: clean the release assets (only keep: dmg, setup.exe, .exe, .app)
 name: "CD PR"
 on:
   pull_request:
@@ -148,6 +149,7 @@ jobs:
           RUST_BACKTRACE: full
 
       - name: Extract version from package.json
+        shell: bash
         run: |
           VERSION=$(jq -r '.version' ./desktop/web/package.json)
           echo "Extracted version: $VERSION"
