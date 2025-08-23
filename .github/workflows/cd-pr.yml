@@ -1,4 +1,4 @@
-name: "publish a draft release for a PR"
+name: "CD PR"
 on:
   pull_request:
     branches:

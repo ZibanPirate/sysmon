@@ -1,4 +1,4 @@
-name: "publish a draft release"
+name: "CD"
 on:
   push:
     branches:
