@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-upload-sysmon:
+  sysmon-build-upload:
     if: contains(github.event.pull_request.labels.*.name, 'preview')
     permissions:
       contents: write
@@ -93,7 +93,7 @@ jobs:
           prerelease: true
           args: --target ${{ matrix.arch }} -- -p sysmon # --verbose
 
-  build-native-libs:
+  native-libs-build-upload:
     if: contains(github.event.pull_request.labels.*.name, 'preview')
     permissions:
       contents: read
