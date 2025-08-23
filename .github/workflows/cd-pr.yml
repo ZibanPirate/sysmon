@@ -1,3 +1,4 @@
+# todo-zm: create a merge to main job that deletes old draft releases
 name: "CD PR"
 on:
   pull_request:
@@ -146,10 +147,9 @@ jobs:
         env:
           RUST_BACKTRACE: full
 
-      - name: Extract version from Cargo.toml
+      - name: Extract version from package.json
         id: get_version
-        working-directory: .
-        run: echo "VERSION=$(grep '^package.version =' ./Cargo.toml | cut -d '"' -f2)" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(jq -r '.version' ./desktop/web/package.json)" >> $GITHUB_OUTPUT
 
       - name: Upload ${{ matrix.crate }} binary to release
         uses: softprops/action-gh-release@v2
