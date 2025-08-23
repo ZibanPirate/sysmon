@@ -11,7 +11,6 @@ concurrency:
 
 jobs:
   build-upload-sysmon:
-    # Only run this job for PRs with the "preview" label
     if: contains(github.event.pull_request.labels.*.name, 'preview')
     permissions:
       contents: write
@@ -92,7 +91,7 @@ jobs:
           releaseBody: "See the assets to download this version and install."
           releaseDraft: true
           prerelease: true
-          args: --target ${{ matrix.arch }} # --verbose
+          args: --target ${{ matrix.arch }} -- -p sysmon # --verbose
 
   build-native-libs:
     if: contains(github.event.pull_request.labels.*.name, 'preview')
