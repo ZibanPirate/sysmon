@@ -96,7 +96,7 @@ jobs:
   native-libs-build-upload:
     if: contains(github.event.pull_request.labels.*.name, 'preview')
     permissions:
-      contents: read
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -146,10 +146,9 @@ jobs:
         env:
           RUST_BACKTRACE: full
 
-      - name: Upload ${{ matrix.crate }} binary
-        # todo-zm: upload to the draft release instead of as an artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload ${{ matrix.crate }} binary to release
+        uses: softprops/action-gh-release@v2
         with:
-          name: ${{ matrix.crate }}-cli-${{ matrix.arch }}-pr-${{ env.PR_NUMBER }}
-          path: ./target/**/${{ matrix.crate }}-cli${{ startsWith(matrix.platform, 'windows') && '.exe' || '' }}
-          retention-days: 7
+          tag_name: "v__VERSION__-pr-${{ env.PR_NUMBER }}"
+          draft: true
+          files: ./target/**/${{ matrix.crate }}-cli${{ startsWith(matrix.platform, 'windows') && '.exe' || '' }}
