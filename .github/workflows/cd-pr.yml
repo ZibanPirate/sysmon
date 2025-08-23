@@ -155,4 +155,4 @@ jobs:
         with:
           tag_name: "v${{ steps.get_version.outputs.VERSION }}-pr-${{ env.PR_NUMBER }}"
           draft: true
-          files: ./target/**/${{ matrix.crate }}-cli${{ startsWith(matrix.platform, 'windows') && '.exe' || '' }}
+          files: ./target/**/${{ matrix.crate }}-cli*
