@@ -148,7 +148,10 @@ jobs:
           RUST_BACKTRACE: full
 
       - name: Extract version from package.json
-        run: echo "VERSION=$(jq -r '.version' ./desktop/web/package.json)" >> $GITHUB_ENV
+        run: |
+          VERSION=$(jq -r '.version' ./desktop/web/package.json)
+          echo "Extracted version: $VERSION"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Upload ${{ matrix.crate }} binary to release
         uses: softprops/action-gh-release@v2
